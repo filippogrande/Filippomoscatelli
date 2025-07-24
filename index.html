@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filippo Moscatelli - CV</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <button class="lang-btn active" data-lang="it">
+            <img src="https://flagcdn.com/24x18/it.png" alt="Italiano"> IT
+        </button>
+        <button class="lang-btn" data-lang="en">
+            <img src="https://flagcdn.com/24x18/gb.png" alt="English"> EN
+        </button>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top" aria-label="Torna all'inizio">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="profile-section">
+                <div class="profile-image">
+                    <img src="https://avatars.githubusercontent.com/u/35425860?s=400&u=67f3f62f5d202537c1fed54db800531662db392a&v=4" alt="Filippo Moscatelli">
+                </div>
+                <div class="profile-info">
+                    <h1 class="name">Filippo Moscatelli</h1>
+                    <p class="title" data-key="job-title">Studente in Informatica per la Comunicazione Digitale</p>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <a href="mailto:filipp28mo@gmail.com">filipp28mo@gmail.com</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span data-key="location">Milano, Italia</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fab fa-linkedin"></i>
+                            <a href="https://www.linkedin.com/in/filippo-moscatelli-52b566202/" target="_blank">linkedin.com</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fab fa-github"></i>
+                            <a href="https://github.com/filippogrande" target="_blank">github.com</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- About Section -->
+            <section class="section">
+                <h2 class="section-title" data-key="about-title">Chi Sono</h2>
+                <div class="section-content">
+                    <p data-key="about-description">
+                        Sono uno sviluppatore full stack appassionato con esperienza nello sviluppo di applicazioni web moderne. 
+                        Mi piace creare soluzioni innovative e user-friendly utilizzando le tecnologie più recenti.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Skills Section -->
+            <section class="section">
+                <h2 class="section-title" data-key="skills-title">Competenze</h2>
+                <div class="section-content">
+                    <div class="skills-grid">
+                        <div class="skill-category">
+                            <h3 data-key="frontend-title">Frontend</h3>
+                            <div class="skills-list">
+                                <span class="skill-tag">HTML5/CSS3</span>
+                                <span class="skill-tag">JavaScript</span>
+                                <span class="skill-tag">React</span>
+                                <span class="skill-tag">React Native</span>
+                                <span class="skill-tag">Bootstrap</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <h3 data-key="backend-title">Backend</h3>
+                            <div class="skills-list">
+                                <span class="skill-tag">Node.js</span>
+                                <span class="skill-tag">Python</span>
+                                <span class="skill-tag">PHP</span>
+                                <span class="skill-tag">Java</span>
+                                <span class="skill-tag">Kotlin</span>
+                                <span class="skill-tag">C</span>
+                                <span class="skill-tag">Go</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <h3 data-key="database-title">Database</h3>
+                            <div class="skills-list">
+                                <span class="skill-tag">PostgreSQL</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <h3 data-key="tools-title">Strumenti</h3>
+                            <div class="skills-list">
+                                <span class="skill-tag">Git/GitHub</span>
+                                <span class="skill-tag">Docker</span>
+                                <span class="skill-tag">VS Code</span>
+                                <span class="skill-tag">Linux</span>
+                                <span class="skill-tag">WordPress</span>
+                                <span class="skill-tag">Self-hosting</span>
+                                <span class="skill-tag">Excel</span>
+                                <span class="skill-tag">PowerPoint</span>
+                                <span class="skill-tag">Word</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Languages Section -->
+            <section class="section">
+                <h2 class="section-title" data-key="languages-title">Lingue</h2>
+                <div class="section-content">
+                    <div class="languages-grid">
+                        <div class="language-item">
+                            <div class="language-header">
+                                <h3 data-key="italian-title">Italiano</h3>
+                                <span class="language-level" data-key="native-level">Madrelingua</span>
+                            </div>
+                            <div class="language-bar">
+                                <div class="language-progress" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="language-item">
+                            <div class="language-header">
+                                <h3 data-key="english-title">Inglese</h3>
+                                <span class="language-level" data-key="b2-level">B2 (non certificato)</span>
+                            </div>
+                            <div class="language-bar">
+                                <div class="language-progress" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Education Section -->
+            <section class="section">
+                <h2 class="section-title" data-key="education-title">Istruzione</h2>
+                <div class="section-content">
+                    <div class="education-item">
+                        <h3 data-key="education1-title">Laurea in Informatica per la Comunicazione Digitale</h3>
+                        <p class="school" data-key="education1-school">Università degli Studi di Milano</p>
+                        <p class="period" data-key="education1-period">Set 2021 - Set 2026 (in corso)</p>
+                        <p data-key="education1-description">Laurea triennale in Scienze e Tecnologie Informatiche con focus sulla comunicazione digitale.</p>
+                        <div class="education-skills">
+                            <h4 data-key="skills-learned">Competenze acquisite:</h4>
+                            <div class="skills-list">
+                                <span class="skill-tag">HTML5/CSS3</span>
+                                <span class="skill-tag">JavaScript</span>
+                                <span class="skill-tag">React</span>
+                                <span class="skill-tag">React Native</span>
+                                <span class="skill-tag">Bootstrap</span>
+                                <span class="skill-tag">Python</span>
+                                <span class="skill-tag">PHP</span>
+                                <span class="skill-tag">Java</span>
+                                <span class="skill-tag">Kotlin</span>
+                                <span class="skill-tag">Go</span>
+                                <span class="skill-tag">PostgreSQL</span>
+                                <span class="skill-tag">Git/GitHub</span>
+                                <span class="skill-tag">Linux</span>
+                                <span class="skill-tag">VS Code</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="education-item">
+                        <h3 data-key="education2-title">Diploma di Liceo Scientifico - Scienze Applicate</h3>
+                        <p class="school" data-key="education2-school">Ettore Conti, Milano</p>
+                        <p class="period" data-key="education2-period">2016 - 2021</p>
+                        <p data-key="education2-description">Diploma con specializzazione in scienze applicate e informatica.</p>
+                        <div class="education-skills">
+                            <h4 data-key="skills-learned">Competenze acquisite:</h4>
+                            <div class="skills-list">
+                                <span class="skill-tag">C</span>
+                                <span class="skill-tag">Excel</span>
+                                <span class="skill-tag">PowerPoint</span>
+                                <span class="skill-tag">Word</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Experience Section -->
+            <section class="section">
+                <h2 class="section-title" data-key="experience-title">Esperienza di Volontariato</h2>
+                <div class="section-content">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <h3 data-key="volunteer1-title">Educatore Gruppo Medie</h3>
+                                <p class="company" data-key="volunteer1-organization">Oratorio Santa Maria di Lourdes, Milano</p>
+                                <p class="period" data-key="volunteer1-period">Ott 2020 - Presente</p>
+                                <ul data-key="volunteer1-description">
+                                    <li>Coordinamento e supporto educativo per ragazzi delle scuole medie in ambiente oratoriano</li>
+                                    <li>Sviluppo di attività formative, ricreative e di animazione</li>
+                                    <li>Gestione dinamiche di gruppo e mediazione conflitti tra adolescenti</li>
+                                    <li>Collaborazione con altri educatori, coordinatori e famiglie</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section class="section">
+                <h2 class="section-title" data-key="projects-title">Progetti</h2>
+                <div class="section-content">
+                    <div class="projects-grid">
+                        <div class="project-card">
+                            <h3 data-key="project1-title">Sito Web CV Self-Hosted</h3>
+                            <p data-key="project1-description">Sviluppo e hosting personale di questo sito web CV multilingue, gestito tramite infrastruttura self-hosted domestica.</p>
+                            <div class="project-tech">
+                                <span class="tech-tag">HTML/CSS</span>
+                                <span class="tech-tag">JavaScript</span>
+                                <span class="tech-tag">Self-hosting</span>
+                                <span class="tech-tag">Linux</span>
+                            </div>
+                            <p class="project-period" data-key="project1-period">2025</p>
+                            <a href="#" class="project-link" data-key="view-project">Stai guardando il progetto!</a>
+                        </div>
+                        <div class="project-card">
+                            <h3 data-key="project2-title">Software Inc. Print Manager</h3>
+                            <p data-key="project2-description">Tool web per ottimizzare la gestione dei contratti di stampa nel videogioco Software Inc. Include analisi di fattibilità, calcolo capacità e raccomandazioni strategiche.</p>
+                            <div class="project-tech">
+                                <span class="tech-tag">JavaScript</span>
+                                <span class="tech-tag">HTML/CSS</span>
+                                <span class="tech-tag">JSON</span>
+                                <span class="tech-tag">LocalStorage</span>
+                                <span class="tech-tag">Python</span>
+                            </div>
+                            <p class="project-period" data-key="project2-period">Lug 2024</p>
+                            <a href="https://github.com/filippogrande/Software-Inc-Print-Manager" target="_blank" class="project-link" data-key="view-github">Visualizza su GitHub</a>
+                        </div>
+                        <div class="project-card">
+                            <h3 data-key="project3-title">NAO Challenge 2020</h3>
+                            <p data-key="project3-description">Competizione di robotica con robot umanoide NAO. Partecipazione alle fasi di selezione e regionali con focus su programmazione e lavoro di squadra.</p>
+                            <div class="project-tech">
+                                <span class="tech-tag">Robotica</span>
+                                <span class="tech-tag">NAO Robot</span>
+                                <span class="tech-tag">Teamwork</span>
+                                <span class="tech-tag">Problem Solving</span>
+                            </div>
+                            <p class="project-period" data-key="project3-period">Nov 2019 - Feb 2020</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Filippo Moscatelli. <span data-key="rights">Tutti i diritti riservati.</span></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
