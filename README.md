@@ -111,19 +111,59 @@ Il sito è ottimizzato per:
 
 Possibili miglioramenti da implementare:
 
-- [ ] Modalità scura/chiara
-- [ ] Più lingue (Francese, Spagnolo, Tedesco)
-- [ ] Animazioni più avanzate
-- [ ] Integrazione con CMS
-- [ ] Versione PDF scaricabile
-- [ ] Sezione blog
-- [ ] Galleria progetti più dettagliata
+### 🎨 Miglioramenti UX/UI
 
-## 📞 Supporto
+- [ ] **Modalità scura/chiara**: Toggle per passare tra tema chiaro e scuro
+
+### 📄 Funzionalità CV
+
+- [x] **Versione PDF scaricabile**: Pulsante per generare e scaricare automaticamente il CV in formato PDF (implementato con html2pdf.js)
+- [ ] **Schema markup**: Codice strutturato (JSON-LD) per aiutare i motori di ricerca a riconoscere il CV
+- [ ] **Galleria progetti estesa**: Pagina dedicata con screenshot, descrizioni dettagliate e demo live
+
+### � Monitoring e Analytics _(richiede backend)_
+
+- [ ] **Statistiche di visita**: Analytics per monitorare visualizzazioni e interazioni
+- [ ] **Performance monitoring**: Monitoraggio velocità di caricamento e ottimizzazioni
+
+### 📝 Contenuti Futuri
+
+- [ ] **Certificazioni**: Sezione dedicata quando otterrai certificazioni tecniche
+- [ ] **Pubblicazioni**: Se inizierai a scrivere articoli o paper
+
+## � Dettagli Tecnici
+
+### Download PDF Automatico
+
+Il sito include una funzionalità di **download PDF diretto** completamente ottimizzata:
+
+- **Libreria**: html2pdf.js (basata su jsPDF e html2canvas)
+- **Formato**: A4, alta qualità (scala 1.5x)
+- **Tecnologia avanzata**:
+  - **Generazione diretta**: Nessuna finestra esterna o popup
+  - **Layout ottimizzato**: Design compatto a griglia per sfruttare al meglio lo spazio A4
+  - **Element temporaneo nascosto**: Generazione invisibile all'utente
+  - **Cleanup automatico**: Rimozione automatica delle risorse temporanee
+  - **Gestione errori completa**: Feedback utente con notifiche animate
+- **Caratteristiche**:
+  - Download automatico senza passaggi manuali per l'utente
+  - Nome file personalizzato: `Filippo_Moscatelli_CV_[LINGUA].pdf`
+  - Margini ottimizzati (8mm) per massimizzare il contenuto
+  - Notifiche di stato con animazioni (generazione, successo, errore)
+  - Supporto multilingue completo
+  - Velocità di generazione ottimizzata (< 3 secondi)
+
+### Self-Hosting e Performance
+
+- **Hosting**: Self-hosted su infrastruttura domestica
+- **Ottimizzazioni**: CSS minificato, immagini ottimizzate, favicon multi-formato
+- **Compatibilità**: Supporto cross-browser per tutte le funzionalità
+
+## �📞 Supporto
 
 Per domande o suggerimenti, contatta:
 
-- **Email**: filippomoscatelli@email.com
+- **Email**: filipp28mo@gmail.com
 - **LinkedIn**: [linkedin.com/in/filippomoscatelli](https://linkedin.com/in/filippomoscatelli)
 - **GitHub**: [github.com/filippomoscatelli](https://github.com/filippomoscatelli)
 
