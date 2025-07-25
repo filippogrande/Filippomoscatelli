@@ -128,7 +128,7 @@ body {
 .contact-item a {
     color: white;
     text-decoration: none;
-    transition: opacity 0.2s ease;
+    transition: all 0.3s ease;
     word-break: break-all;
 }
 
@@ -138,6 +138,7 @@ body {
 
 .contact-item a:hover {
     opacity: 0.8;
+    text-decoration: underline;
 }
 
 /* Main Content */
@@ -208,37 +209,25 @@ body {
     transform: translateY(-2px);
 }
 
-/* Timeline */
+/* Timeline - Stile Uniformato con Education */
 .timeline {
-    position: relative;
-    padding-left: 2rem;
+    position: static;
+    padding-left: 0;
 }
 
 .timeline::before {
-    content: '';
-    position: absolute;
-    left: 0.75rem;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: #e5e7eb;
+    display: none;
 }
 
 .timeline-item {
     position: relative;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #4f46e5;
+    padding-left: 1.5rem;
 }
 
 .timeline-marker {
-    position: absolute;
-    left: -2rem;
-    top: 0.5rem;
-    width: 1rem;
-    height: 1rem;
-    background: #4f46e5;
-    border-radius: 50%;
-    border: 3px solid white;
-    box-shadow: 0 0 0 3px #e5e7eb;
+    display: none;
 }
 
 .timeline-content h3 {
@@ -524,11 +513,11 @@ body {
     }
     
     .timeline {
-        padding-left: 1.5rem;
+        padding-left: 0;
     }
     
     .timeline-marker {
-        left: -1.5rem;
+        display: none;
     }
 }
 
@@ -553,7 +542,30 @@ body {
     }
 }
 
-/* Animation */
+/* Animations for notifications */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Additional animation utilities */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -571,21 +583,131 @@ body {
 
 /* Print Styles */
 @media print {
-    .language-selector {
-        display: none;
+    /* Nascondi elementi non necessari */
+    .language-selector,
+    .back-to-top,
+    .pdf-download-link {
+        display: none !important;
     }
     
+    /* Forza background bianco */
+    body {
+        background: white !important;
+        background-color: white !important;
+        color: black !important;
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+    
+    /* Header ottimizzato per stampa */
     .header {
-        background: #4f46e5 !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color: white !important;
+        page-break-after: avoid;
+        margin-bottom: 1rem;
     }
     
+    /* Sezioni ottimizzate */
     .section {
+        background: white !important;
+        background-color: white !important;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        border-radius: 8px !important;
+        padding: 1.5rem !important;
+        margin-bottom: 1rem !important;
         break-inside: avoid;
-        box-shadow: none;
-        border: 1px solid #e5e7eb;
+        page-break-inside: avoid;
     }
+    
+    /* Main content */
+    .main {
+        background: white !important;
+        background-color: white !important;
+    }
+    
+    /* Container */
+    .container {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* Titoli delle sezioni */
+    .section-title {
+        color: #4f46e5 !important;
+        font-size: 18pt !important;
+        margin-bottom: 1rem !important;
+        border-bottom: 2px solid #4f46e5 !important;
+        padding-bottom: 0.5rem !important;
+    }
+    
+    /* Progetti e altri elementi */
+    .project-card,
+    .education-item,
+    .timeline-item {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-bottom: 1rem !important;
+    }
+    
+    /* Skills tags */
+    .skill-tag,
+    .tech-tag {
+        border: 1px solid #4f46e5 !important;
+        color: #4f46e5 !important;
+        background: white !important;
+        padding: 0.25rem 0.5rem !important;
+        margin: 0.25rem !important;
+        font-size: 10pt !important;
+    }
+    
+    /* Timeline */
+    .timeline-item::before {
+        display: none !important;
+    }
+    
+    /* Footer */
+    .footer {
+        background: #f8f9fa !important;
+        color: #666 !important;
+        border-top: 1px solid #ddd !important;
+        margin-top: 2rem !important;
+        padding: 1rem !important;
+    }
+    
+    /* Links */
+    a {
+        color: #4f46e5 !important;
+        text-decoration: underline !important;
+    }
+    
+    /* Forza tutti i colori per la stampa */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    /* Evita interruzioni di pagina indesiderate */
+    h1, h2, h3 {
+        page-break-after: avoid;
+    }
+    
+    /* Margini pagina */
+    @page {
+        margin: 1.5cm;
+        size: A4;
+    }
+}
+
+/* Nascondi elementi durante la stampa */
+.printing .language-selector,
+.printing .back-to-top,
+.printing .pdf-download-link,
+.printing .word-download-link {
+    display: none !important;
 }
 
 /* Back to Top Button */
@@ -636,5 +758,292 @@ body {
         width: 45px;
         height: 45px;
         font-size: 1rem;
+    }
+}
+
+/* Stili per la generazione PDF */
+.pdf-generation .language-selector,
+.pdf-generation #backToTop {
+    display: none !important;
+}
+
+.pdf-generation {
+    background: white !important;
+    font-size: 7px !important; /* Ridotto ulteriormente per compensare scala ridotta */
+    margin: 0 !important;
+    padding: 0 !important; 
+    overflow-x: hidden !important;
+    position: relative !important;
+    left: 0 !important;
+    transform: none !important;
+    min-height: auto !important;
+    box-sizing: border-box !important;
+    width: auto !important; /* Larghezza automatica */
+    max-width: none !important; /* Nessun limite di larghezza */
+}
+
+.pdf-generation .container {
+    max-width: 100% !important;
+    padding: 0 1.5rem !important; /* Padding più generoso per evitare tagli */
+    margin: 0 auto !important; /* Centra il contenuto */
+    width: auto !important;
+    box-sizing: border-box !important;
+}
+
+.pdf-generation .section {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    padding: 0.6rem !important; /* Ridotto ulteriormente */
+    margin-bottom: 0.6rem !important;
+}
+
+/* Header PDF - Layout mobile-like */
+.pdf-generation .header {
+    padding: 1rem 0 !important; /* Ridotto ulteriormente */
+}
+
+.pdf-generation .profile-section {
+    flex-direction: column !important; /* Forza layout verticale come mobile */
+    text-align: center !important;
+    gap: 1rem !important;
+}
+
+.pdf-generation .name {
+    font-size: 1.4rem !important; /* Ridotto da 1.8rem */
+    margin-bottom: 0.2rem !important;
+}
+
+.pdf-generation .title {
+    font-size: 0.7rem !important; /* Ridotto da 0.9rem */
+    margin-bottom: 0.8rem !important;
+}
+
+.pdf-generation .profile-image img {
+    width: 60px !important; /* Ridotto da 80px */
+    height: 60px !important;
+}
+
+.pdf-generation .contact-info {
+    gap: 0.3rem !important;
+    grid-template-columns: 1fr !important; /* Singola colonna come mobile */
+    text-align: left !important;
+}
+
+.pdf-generation .contact-item {
+    font-size: 0.6rem !important; /* Ridotto da 0.75rem */
+}
+
+/* Titoli sezioni PDF */
+.pdf-generation .section-title {
+    font-size: 0.9rem !important; /* Ridotto da 1.1rem */
+    margin-bottom: 0.6rem !important;
+    padding-bottom: 0.2rem !important;
+}
+
+/* Contenuto sezioni PDF */
+.pdf-generation .section-content {
+    font-size: 0.65rem !important; /* Ridotto da 0.8rem */
+    line-height: 1.3 !important;
+}
+
+/* Skills PDF - Layout mobile */
+.pdf-generation .skills-grid {
+    gap: 0.6rem !important;
+    grid-template-columns: 1fr !important; /* Singola colonna */
+    width: 100% !important;
+}
+
+.pdf-generation .skill-category {
+    width: 100% !important;
+    margin-bottom: 0.6rem !important;
+}
+
+.pdf-generation .skill-category h3 {
+    font-size: 0.7rem !important; /* Ridotto */
+    margin-bottom: 0.4rem !important;
+}
+
+.pdf-generation .skills-list {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.15rem !important;
+    width: 100% !important;
+}
+
+.pdf-generation .skill-tag,
+.pdf-generation .tech-tag {
+    padding: 0.15rem 0.4rem !important;
+    font-size: 0.55rem !important; /* Ridotto ulteriormente */
+    margin: 0.05rem !important;
+    flex-shrink: 0 !important;
+}
+
+/* Timeline PDF - Stile Uniformato */
+.pdf-generation .timeline {
+    padding-left: 0 !important;
+}
+
+.pdf-generation .timeline-item {
+    margin-bottom: 0.8rem !important;
+    border-left: 3px solid #4f46e5 !important;
+    padding-left: 1rem !important;
+}
+
+.pdf-generation .timeline-content h3 {
+    font-size: 0.7rem !important; /* Ridotto */
+    margin-bottom: 0.2rem !important;
+}
+
+.pdf-generation .company {
+    font-size: 0.65rem !important;
+    margin-bottom: 0.15rem !important;
+}
+
+.pdf-generation .period,
+.pdf-generation .project-period {
+    font-size: 0.6rem !important;
+    margin-bottom: 0.4rem !important;
+}
+
+.pdf-generation .timeline-content ul {
+    margin-left: 0 !important;
+}
+
+.pdf-generation .timeline-content li {
+    font-size: 0.6rem !important;
+    padding-left: 1rem !important;
+    margin-bottom: 0.3rem !important;
+}
+
+/* Progetti PDF - Layout mobile */
+.pdf-generation .projects-grid {
+    gap: 0.8rem !important;
+    grid-template-columns: 1fr !important; /* Singola colonna */
+}
+
+.pdf-generation .project-card {
+    padding: 0.8rem !important;
+}
+
+.pdf-generation .project-card h3 {
+    font-size: 0.7rem !important;
+    margin-bottom: 0.4rem !important;
+}
+
+.pdf-generation .project-card p {
+    margin-bottom: 0.6rem !important;
+    font-size: 0.6rem !important;
+}
+
+.pdf-generation .project-tech {
+    gap: 0.2rem !important;
+    margin-bottom: 0.6rem !important;
+}
+
+/* Lingue PDF - Layout mobile */
+.pdf-generation .languages-grid {
+    gap: 0.8rem !important;
+    grid-template-columns: 1fr !important; /* Singola colonna */
+}
+
+.pdf-generation .language-item {
+    padding: 0.6rem !important;
+}
+
+.pdf-generation .language-header h3 {
+    font-size: 0.7rem !important;
+}
+
+.pdf-generation .language-level {
+    font-size: 0.55rem !important;
+    padding: 0.1rem 0.3rem !important;
+}
+
+.pdf-generation .language-bar {
+    height: 4px !important;
+}
+
+/* Educazione PDF */
+.pdf-generation .education-item {
+    padding-left: 0.8rem !important;
+    margin-bottom: 0.8rem !important;
+}
+
+.pdf-generation .education-item h3 {
+    font-size: 0.7rem !important;
+    margin-bottom: 0.2rem !important;
+}
+
+.pdf-generation .school {
+    font-size: 0.65rem !important;
+    margin-bottom: 0.15rem !important;
+}
+
+.pdf-generation .education-skills {
+    margin-top: 0.6rem !important;
+    padding-top: 0.4rem !important;
+}
+
+.pdf-generation .education-skills h4 {
+    font-size: 0.65rem !important;
+    margin-bottom: 0.3rem !important;
+}
+
+/* Footer PDF */
+.pdf-generation .footer {
+    padding: 0.8rem 0 !important;
+    font-size: 0.6rem !important;
+}
+
+/* Animazioni per le notifiche */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Classi per il controllo delle interruzioni di pagina nel PDF */
+.page-break-before {
+    page-break-before: always !important;
+    break-before: page !important;
+}
+
+.page-break-after {
+    page-break-after: always !important;
+    break-after: page !important;
+}
+
+.page-break-avoid {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
+
+/* Ottimizzazioni specifiche per PDF */
+@media print {
+    .section {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+    
+    .project-card, .education-item, .timeline-item {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
     }
 }
