@@ -11,6 +11,7 @@ Un sito web moderno e responsive per il curriculum vitae con supporto multilingu
 - **Accessibilità**: Supporto per tastiera e lettori di schermo
 - **Print-Friendly**: Ottimizzato per la stampa
 - **Performance**: Caricamento veloce e ottimizzato
+- **Analytics**: Integrazione con Umami Analytics per tracking privacy-friendly
 
 ## 🚀 Come Utilizzare
 
@@ -83,6 +84,17 @@ Il sito ricorda automaticamente la lingua scelta dall'utente utilizzando il loca
 ### Rilevamento Lingua Automatico
 
 Il sito rileva automaticamente la lingua preferita del browser dell'utente al primo accesso.
+
+### Analytics Privacy-Friendly
+
+Il sito integra Umami Analytics per tracciare:
+
+- Visite e pagine viste
+- Interazioni con link (social media, progetti, contatti)
+- Cambio di lingua e preferenze utente
+- Comportamento di navigazione (scroll depth, tempo sulla pagina)
+
+**Privacy**: Gli analytics sono self-hosted e non condividono dati con terze parti.
 
 ## 🌐 Browser Supportati
 

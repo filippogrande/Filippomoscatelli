@@ -140,6 +140,11 @@ function changeLanguage(lang) {
     
     // Aggiorna il titolo della pagina
     document.title = `Filippo Moscatelli - ${lang === 'it' ? 'CV' : 'Resume'}`;
+    
+    // Track language change in Umami
+    if (typeof umami !== 'undefined') {
+        umami.track('language-change', { language: lang });
+    }
 }
 
 // Funzione per rilevare la lingua preferita
@@ -242,6 +247,73 @@ function addKeyboardSupport() {
     });
 }
 
+// Funzione per configurare il tracking di Umami
+function setupUmamiTracking() {
+    // Track clicks sui link esterni
+    document.querySelectorAll('a[href^="http"], a[href^="mailto:"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const href = e.target.href;
+            const linkText = e.target.textContent.trim();
+            
+            if (typeof umami !== 'undefined') {
+                if (href.includes('linkedin')) {
+                    umami.track('social-link-click', { platform: 'linkedin' });
+                } else if (href.includes('github.com/filippogrande')) {
+                    umami.track('social-link-click', { platform: 'github-profile' });
+                } else if (href.includes('github.com') && href.includes('Software-Inc-Print-Manager')) {
+                    umami.track('project-link-click', { project: 'software-inc-print-manager' });
+                } else if (href.includes('github.com')) {
+                    umami.track('project-link-click', { project: 'github-other' });
+                } else if (href.includes('mailto:')) {
+                    umami.track('contact-click', { method: 'email' });
+                } else {
+                    umami.track('external-link-click', { url: href, text: linkText });
+                }
+            }
+        });
+    });
+    
+    // Track page language on load
+    if (typeof umami !== 'undefined') {
+        setTimeout(() => {
+            umami.track('page-language', { language: currentLanguage });
+        }, 1000);
+    }
+    
+    // Track scroll depth
+    let scrollDepthTracked = {
+        25: false,
+        50: false,
+        75: false,
+        100: false
+    };
+    
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = Math.round((scrollTop / docHeight) * 100);
+        
+        Object.keys(scrollDepthTracked).forEach(depth => {
+            if (scrollPercent >= parseInt(depth) && !scrollDepthTracked[depth]) {
+                scrollDepthTracked[depth] = true;
+                if (typeof umami !== 'undefined') {
+                    umami.track('scroll-depth', { percentage: depth });
+                }
+            }
+        });
+    });
+    
+    // Track time on page intervals
+    let timeOnPage = 0;
+    setInterval(() => {
+        timeOnPage += 10;
+        // Track ogni 30 secondi, 1 minuto, 2 minuti, 5 minuti
+        if ([30, 60, 120, 300].includes(timeOnPage) && typeof umami !== 'undefined') {
+            umami.track('time-on-page', { seconds: timeOnPage });
+        }
+    }, 10000); // Ogni 10 secondi
+}
+
 // Funzione per gestire il pulsante "Torna all'inizio"
 function setupBackToTop() {
     const backToTopBtn = document.getElementById('backToTop');
@@ -265,6 +337,11 @@ function setupBackToTop() {
             top: 0,
             behavior: 'smooth'
         });
+        
+        // Track back to top click in Umami
+        if (typeof umami !== 'undefined') {
+            umami.track('back-to-top-click');
+        }
     });
 }
 
@@ -288,6 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupPrintHandler();
     addKeyboardSupport();
     setupBackToTop();
+    setupUmamiTracking();
     
     // Messaggio di benvenuto nella console (easter egg per sviluppatori)
     console.log(`
