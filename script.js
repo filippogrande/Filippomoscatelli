@@ -11,6 +11,10 @@ console.log('Immediate Umami check:', typeof umami !== 'undefined' ? 'AVAILABLE'
 // Log di tutte le variabili globali
 console.log('Window object keys (first 10):', Object.keys(window).slice(0, 10));
 
+// Test di ogni sezione del codice con try-catch
+try {
+    console.log('✅ Section 1: Declaring translations...');
+
 // Traduzioni
 const translations = {
     it: {
@@ -113,8 +117,12 @@ const translations = {
     }
 };
 
+console.log('✅ Translations declared successfully');
+
 // Lingua corrente
 let currentLanguage = 'it';
+
+console.log('✅ Current language declared');
 
 // Debug immediato - controlla Umami ogni secondo per 10 secondi
 let umamiCheckCount = 0;
@@ -135,6 +143,8 @@ const umamiChecker = setInterval(() => {
         clearInterval(umamiChecker);
     }
 }, 1000);
+
+console.log('✅ Umami checker setup completed');
 
 // Ascolta quando gli script vengono caricati
 document.addEventListener('DOMContentLoaded', () => {
