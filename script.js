@@ -1,3 +1,16 @@
+// INIZIO DEBUG IMMEDIATO
+console.log('===== SCRIPT LOADING =====');
+console.log('Script started at:', new Date().toISOString());
+console.log('User agent:', navigator.userAgent);
+console.log('Current URL:', window.location.href);
+console.log('Document ready state:', document.readyState);
+
+// Test immediato di Umami
+console.log('Immediate Umami check:', typeof umami !== 'undefined' ? 'AVAILABLE' : 'NOT AVAILABLE');
+
+// Log di tutte le variabili globali
+console.log('Window object keys (first 10):', Object.keys(window).slice(0, 10));
+
 // Traduzioni
 const translations = {
     it: {
@@ -781,8 +794,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Gestione degli errori
 window.addEventListener('error', (e) => {
-    console.error('Si è verificato un errore:', e.error);
+    console.error('❌ ERRORE JAVASCRIPT CATTURATO:', {
+        message: e.message,
+        filename: e.filename,
+        lineno: e.lineno,
+        colno: e.colno,
+        error: e.error,
+        stack: e.error ? e.error.stack : 'No stack trace'
+    });
 });
+
+// Gestione degli errori di promesse non catturate
+window.addEventListener('unhandledrejection', (e) => {
+    console.error('❌ PROMISE REJECTION NON GESTITA:', e.reason);
+});
+
+// Log di fine script
+console.log('===== SCRIPT LOADED SUCCESSFULLY =====');
+console.log('All functions defined. Ready for DOM events.');
+
+// Verifica finale se tutto è stato caricato
+setTimeout(() => {
+    console.log('===== FINAL STATUS CHECK =====');
+    console.log('Document ready state:', document.readyState);
+    console.log('Umami available:', typeof umami !== 'undefined');
+    console.log('Script functions available:', {
+        testUmamiTracking: typeof testUmamiTracking !== 'undefined',
+        testAllUmamiMethods: typeof testAllUmamiMethods !== 'undefined',
+        beforeSendHandler: typeof beforeSendHandler !== 'undefined'
+    });
+}, 5000);
 
 // Export per possibili test (se necessario)
 if (typeof module !== 'undefined' && module.exports) {

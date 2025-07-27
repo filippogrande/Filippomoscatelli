@@ -23,6 +23,25 @@
         data-before-send="beforeSendHandler"
     ></script>
     
+    <!-- DEBUG IMMEDIATO HTML -->
+    <script>
+        console.log('🟢 HTML INLINE SCRIPT EXECUTED');
+        console.log('Time:', new Date().toISOString());
+        console.log('Location:', window.location.href);
+        
+        // Controlla se beforeSendHandler è già definito
+        if (typeof beforeSendHandler !== 'undefined') {
+            console.log('✅ beforeSendHandler already defined');
+        } else {
+            console.log('❌ beforeSendHandler not yet defined');
+            // Definisci una versione temporanea per debug
+            window.beforeSendHandler = function(type, payload) {
+                console.log('🚀 TEMP beforeSendHandler called:', { type, payload });
+                return payload;
+            };
+        }
+    </script>
+    
     <!-- Schema.org JSON-LD structured data -->
     <script type="application/ld+json">
     {
@@ -392,6 +411,46 @@
         </div>
     </footer>
 
+    <!-- DEBUG PRE-SCRIPT -->
+    <script>
+        console.log('🔵 PRE-SCRIPT DEBUG');
+        console.log('About to load script.js');
+        console.log('Current scripts in document:', document.scripts.length);
+        
+        // Lista tutti gli script presenti
+        Array.from(document.scripts).forEach((script, index) => {
+            console.log(`Script ${index}:`, {
+                src: script.src,
+                id: script.id,
+                async: script.async,
+                defer: script.defer,
+                readyState: script.readyState
+            });
+        });
+    </script>
+
     <script src="script.js"></script>
+    
+    <!-- Auto-track outbound links -->
+    <script type="text/javascript">
+      (() => {
+        console.log('🔗 Setting up automatic outbound link tracking...');
+        const name = 'outbound-link-click';
+        const links = document.querySelectorAll('a');
+        let outboundCount = 0;
+        
+        links.forEach(a => {
+          if (a.host !== window.location.host && !a.getAttribute('data-umami-event')) {
+            a.setAttribute('data-umami-event', name);
+            a.setAttribute('data-umami-event-url', a.href);
+            a.setAttribute('data-umami-event-domain', a.host);
+            outboundCount++;
+            console.log('🔗 Added tracking to:', a.href);
+          }
+        });
+        
+        console.log(`✅ Outbound link tracking setup complete: ${outboundCount} links configured`);
+      })();
+    </script>
 </body>
 </html>
