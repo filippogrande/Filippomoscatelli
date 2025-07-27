@@ -121,23 +121,34 @@ Il sito è ottimizzato per:
 
 ## 🛠️ Estensioni Future
 
-Possibili miglioramenti da implementare:
+### 🎨 Miglioramenti UI/UX
 
-- [ ] Modalità scura/chiara
-- [ ] Più lingue (Francese, Spagnolo, Tedesco)
-- [ ] Animazioni più avanzate
-- [ ] Integrazione con CMS
-- [ ] Versione PDF scaricabile
-- [ ] Sezione blog
-- [ ] Galleria progetti più dettagliata
+- [x] **Sistema di Analytics** (Umami Analytics integrato)
+- [ ] **Modalità scura/chiara**: Toggle per switchare tra tema chiaro e scuro
+
+### 📄 Funzionalità CV
+
+- [ ] **Versione PDF scaricabile**: Pulsante per generare e scaricare automaticamente il CV in formato PDF (implementato con html2pdf.js)
+- [x] **Schema markup**: Codice strutturato (JSON-LD) per aiutare i motori di ricerca a riconoscere il CV
+- [ ] **Galleria progetti estesa**: Pagina dedicata con screenshot, descrizioni dettagliate e demo live
+
+### 📊 Monitoring e Analytics _(richiede backend)_
+
+- [x] **Statistiche di visita**: Analytics per monitorare visualizzazioni e interazioni (Umami integrato)
+- [ ] **Performance monitoring**: Monitoraggio velocità di caricamento e ottimizzazioni
+
+### 📝 Contenuti Futuri
+
+- [ ] **Certificazioni**: Sezione dedicata quando otterrai certificazioni tecniche
+- [ ] **Pubblicazioni**: Se inizierai a scrivere articoli o paper
 
 ## 📞 Supporto
 
 Per domande o suggerimenti, contatta:
 
-- **Email**: filippomoscatelli@email.com
-- **LinkedIn**: [linkedin.com/in/filippomoscatelli](https://linkedin.com/in/filippomoscatelli)
-- **GitHub**: [github.com/filippomoscatelli](https://github.com/filippomoscatelli)
+- **Email**: filipp28mo@gmail.com
+- **LinkedIn**: [linkedin.com](https://www.linkedin.com/in/filippo-moscatelli-52b566202/)
+- **GitHub**: [github.com](https://github.com/filippogrande)
 
 ## 📄 Licenza
 
