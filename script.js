@@ -141,9 +141,20 @@ function changeLanguage(lang) {
     // Aggiorna il titolo della pagina
     document.title = `Filippo Moscatelli - ${lang === 'it' ? 'CV' : 'Resume'}`;
     
-    // Track language change in Umami
+    // Track language change in Umami (solo per cambi effettivi)
+    console.log('Tracking language change to:', lang);
     if (typeof umami !== 'undefined') {
-        umami.track('language-change', { language: lang });
+        // Solo traccia se è un cambio effettivo, non il caricamento iniziale
+        if (document.readyState === 'complete') {
+            umami.track('language-change', { 
+                language: lang,
+                previous_language: currentLanguage !== lang ? currentLanguage : null,
+                is_user_action: true
+            });
+            console.log('Umami language change tracking sent');
+        }
+    } else {
+        console.log('Umami not available for language change tracking');
     }
 }
 
@@ -249,58 +260,147 @@ function addKeyboardSupport() {
 
 // Funzione per configurare il tracking di Umami
 function setupUmamiTracking() {
+    console.log('=== Setting up Umami tracking ===');
+    
+    // Trova tutti i link cliccabili
+    const allLinks = document.querySelectorAll('a[href^="http"], a[href^="mailto:"]');
+    console.log(`Found ${allLinks.length} trackable links:`, 
+        Array.from(allLinks).map(link => ({ href: link.href, text: link.textContent.trim() }))
+    );
+    
     // Track clicks sui link esterni
-    document.querySelectorAll('a[href^="http"], a[href^="mailto:"]').forEach(link => {
+    allLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             const href = e.target.href;
             const linkText = e.target.textContent.trim();
             
+            console.log('Link clicked:', { href, linkText, element: e.target });
+            
             if (typeof umami !== 'undefined') {
-                if (href.includes('linkedin')) {
-                    umami.track('social-link-click', { platform: 'linkedin' });
+                let tracked = false;
+                
+                if (href.includes('linkedin.com')) {
+                    umami.track('social-link-click', { platform: 'linkedin', text: linkText });
+                    console.log('✅ Tracked: LinkedIn click');
+                    tracked = true;
+                } else if (href.includes('mailto:filipp28mo@gmail.com')) {
+                    umami.track('contact-click', { method: 'email', address: 'filipp28mo@gmail.com' });
+                    console.log('✅ Tracked: Email contact click');
+                    tracked = true;
+                } else if (href.includes('github.com/filippogrande/Software-Inc-Print-Manager')) {
+                    umami.track('project-link-click', { 
+                        project: 'software-inc-print-manager', 
+                        url: href,
+                        text: linkText 
+                    });
+                    console.log('✅ Tracked: Software Inc Print Manager project click');
+                    tracked = true;
                 } else if (href.includes('github.com/filippogrande')) {
-                    umami.track('social-link-click', { platform: 'github-profile' });
-                } else if (href.includes('github.com') && href.includes('Software-Inc-Print-Manager')) {
-                    umami.track('project-link-click', { project: 'software-inc-print-manager' });
+                    umami.track('social-link-click', { 
+                        platform: 'github-profile', 
+                        url: href,
+                        text: linkText 
+                    });
+                    console.log('✅ Tracked: GitHub profile click');
+                    tracked = true;
                 } else if (href.includes('github.com')) {
-                    umami.track('project-link-click', { project: 'github-other' });
+                    umami.track('project-link-click', { 
+                        project: 'github-other', 
+                        url: href,
+                        text: linkText 
+                    });
+                    console.log('✅ Tracked: Other GitHub project click');
+                    tracked = true;
                 } else if (href.includes('mailto:')) {
-                    umami.track('contact-click', { method: 'email' });
+                    umami.track('contact-click', { 
+                        method: 'email', 
+                        address: href.replace('mailto:', ''),
+                        text: linkText 
+                    });
+                    console.log('✅ Tracked: Email contact click');
+                    tracked = true;
                 } else {
-                    umami.track('external-link-click', { url: href, text: linkText });
+                    umami.track('external-link-click', { 
+                        url: href, 
+                        text: linkText,
+                        domain: new URL(href).hostname
+                    });
+                    console.log('✅ Tracked: External link click');
+                    tracked = true;
                 }
+                
+                if (!tracked) {
+                    console.log('⚠️ Link not tracked:', { href, linkText });
+                }
+            } else {
+                console.log('❌ Umami not available for link tracking');
             }
         });
     });
     
-    // Track page language on load
+    // Track current language state (separato dal page-load)
+    console.log('Setting up current language state tracking for:', currentLanguage);
     if (typeof umami !== 'undefined') {
         setTimeout(() => {
-            umami.track('page-language', { language: currentLanguage });
-        }, 1000);
+            umami.track('current-language-state', { 
+                language: currentLanguage,
+                is_default: currentLanguage === 'it' ? true : false
+            });
+            console.log('Umami current language state tracking sent');
+        }, 3000); // Dopo il page-load tracking
+    } else {
+        console.log('Umami not available for current language state tracking');
     }
     
-    // Track scroll depth
+    // Track scroll depth con più dettagli
     let scrollDepthTracked = {
+        10: false,
         25: false,
         50: false,
         75: false,
+        90: false,
         100: false
     };
+    
+    let maxScrollReached = 0;
+    let scrollStartTime = Date.now();
     
     window.addEventListener('scroll', () => {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         const scrollPercent = Math.round((scrollTop / docHeight) * 100);
         
+        // Traccia la percentuale massima raggiunta
+        if (scrollPercent > maxScrollReached) {
+            maxScrollReached = scrollPercent;
+        }
+        
+        // Track punti di scroll specifici
         Object.keys(scrollDepthTracked).forEach(depth => {
             if (scrollPercent >= parseInt(depth) && !scrollDepthTracked[depth]) {
                 scrollDepthTracked[depth] = true;
+                const timeToReach = Math.round((Date.now() - scrollStartTime) / 1000);
+                
                 if (typeof umami !== 'undefined') {
-                    umami.track('scroll-depth', { percentage: depth });
+                    umami.track('scroll-depth', { 
+                        percentage: depth,
+                        time_to_reach: timeToReach,
+                        max_reached: maxScrollReached
+                    });
+                    console.log(`Scroll depth ${depth}% reached in ${timeToReach}s`);
                 }
             }
         });
+    });
+    
+    // Track scroll summary quando l'utente lascia la pagina
+    window.addEventListener('beforeunload', () => {
+        if (typeof umami !== 'undefined' && maxScrollReached > 0) {
+            umami.track('scroll-summary', {
+                max_scroll_reached: maxScrollReached,
+                total_time_on_page: Math.round((Date.now() - scrollStartTime) / 1000)
+            });
+        }
     });
     
     // Track time on page intervals
@@ -345,16 +445,71 @@ function setupBackToTop() {
     });
 }
 
+// Funzione per testare Umami
+function testUmamiTracking() {
+    console.log('=== Testing Umami Tracking ===');
+    console.log('typeof umami:', typeof umami);
+    console.log('umami object:', umami);
+    
+    if (typeof umami !== 'undefined') {
+        console.log('Umami is available, testing track function...');
+        try {
+            umami.track('test-event', { test: 'manual-test', timestamp: new Date().toISOString() });
+            console.log('✅ Test event sent successfully');
+        } catch (error) {
+            console.error('❌ Error sending test event:', error);
+        }
+    } else {
+        console.log('❌ Umami is not available');
+        
+        // Verifica se lo script è stato caricato
+        const umamiScript = document.querySelector('script[data-website-id]');
+        if (umamiScript) {
+            console.log('✅ Umami script tag found:', umamiScript.src);
+        } else {
+            console.log('❌ Umami script tag not found');
+        }
+    }
+    console.log('=== End Umami Test ===');
+}
+
 // Inizializzazione quando il DOM è carico
 document.addEventListener('DOMContentLoaded', () => {
     // Rileva e imposta la lingua preferita
     const preferredLang = detectPreferredLanguage();
+    console.log('Detected preferred language:', preferredLang);
+    
+    // Track della lingua iniziale PRIMA di cambiarla
+    setTimeout(() => {
+        console.log('Tracking initial page load with language:', preferredLang);
+        if (typeof umami !== 'undefined') {
+            umami.track('page-load', { 
+                initial_language: preferredLang,
+                from_storage: localStorage.getItem('preferred-language') ? true : false,
+                browser_language: navigator.language || navigator.userLanguage
+            });
+            console.log('Umami page load tracking sent');
+        } else {
+            console.log('Umami not available for page load tracking');
+        }
+    }, 2000);
+    
     changeLanguage(preferredLang);
     
     // Aggiungi event listeners per i pulsanti delle lingue
     document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (e) => {
             const lang = btn.getAttribute('data-lang');
+            console.log('Language button clicked:', lang);
+            
+            // Track button click in Umami
+            if (typeof umami !== 'undefined') {
+                umami.track('language-button-click', { language: lang, from: currentLanguage });
+                console.log('Umami button click tracking sent');
+            } else {
+                console.log('Umami not available for button tracking');
+            }
+            
             changeLanguage(lang);
         });
     });
@@ -375,8 +530,16 @@ document.addEventListener('DOMContentLoaded', () => {
     • Alt + I: Cambia in Italiano
     • Alt + E: Cambia in Inglese
     
+    Debug Commands:
+    • testUmamiTracking() - Testa il funzionamento di Umami
+    
     Grazie per aver visitato il mio CV!
     `);
+    
+    // Test Umami dopo il caricamento completo
+    setTimeout(() => {
+        testUmamiTracking();
+    }, 3000);
 });
 
 // Gestione degli errori
@@ -392,3 +555,6 @@ if (typeof module !== 'undefined' && module.exports) {
         detectPreferredLanguage
     };
 }
+
+// Rendi testUmamiTracking disponibile globalmente per debug
+window.testUmamiTracking = testUmamiTracking;
