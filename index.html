@@ -4,24 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Filippo Moscatelli - CV</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/main.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Umami Analytics - Configurazione Sicura -->
-    <!-- Dashboard rimane privata, solo tracking pubblico -->
-    <script
-        defer
-        src="/analytics/script.js"
-        data-website-id="a912f285-ced0-4c7f-9260-434d0ee8674a"
-        data-endpoint="/analytics/api"
-        data-tag="cv-debug"
-        data-domains="192.168.1.100,filippomoscatelli.it,localhost"
-        data-exclude-search="false"
-        data-exclude-hash="true"
-        data-do-not-track="false"
-        data-before-send="beforeSendHandler"
-    ></script>
+    <!-- Umami Analytics - Auto-detect environment -->
+    <script>
+        // Auto-detect se siamo in sviluppo o produzione
+        const isLocalDevelopment = window.location.hostname === 'localhost' || 
+                                   window.location.hostname === '127.0.0.1' ||
+                                   window.location.hostname.includes('192.168.');
+        
+        const umamiConfig = {
+            websiteId: 'a912f285-ced0-4c7f-9260-434d0ee8674a',
+            tag: isLocalDevelopment ? 'cv-development' : 'cv-production',
+            src: isLocalDevelopment ? 
+                'http://192.168.1.4:3000/script.js' : 
+                'https://filippomoscatelli.com/analytics/script.js'
+        };
+        
+        // Carica script Umami dinamicamente
+        const script = document.createElement('script');
+        script.defer = true;
+        script.src = umamiConfig.src;
+        script.setAttribute('data-website-id', umamiConfig.websiteId);
+        script.setAttribute('data-tag', umamiConfig.tag);
+        script.setAttribute('data-exclude-search', 'false');
+        script.setAttribute('data-exclude-hash', 'true');
+        script.setAttribute('data-do-not-track', 'false');
+        script.setAttribute('data-cache', 'true');
+        script.setAttribute('data-domains', 'filippomoscatelli.com');
+        
+        // Headers per privacy (GDPR)
+        if (!isLocalDevelopment) {
+            script.setAttribute('data-respect-dnt', 'true');
+            script.setAttribute('data-cookie-consent', 'true');
+        }
+        
+        document.head.appendChild(script);
+    </script>
+    
+    <!-- Fallback per browser che non supportano JavaScript -->
+    <noscript>
+        <img src="https://filippomoscatelli.com/analytics/api/collect?website-id=a912f285-ced0-4c7f-9260-434d0ee8674a&url=fallback&title=NoJS" alt="" />
+    </noscript>
     
     <!-- DEBUG IMMEDIATO HTML -->
     <script>
@@ -201,8 +227,7 @@
                 <h2 class="section-title" data-key="about-title">Chi Sono</h2>
                 <div class="section-content">
                     <p data-key="about-description">
-                        Sono uno sviluppatore full stack appassionato con esperienza nello sviluppo di applicazioni web moderne. 
-                        Mi piace creare soluzioni innovative e user-friendly utilizzando le tecnologie più recenti.
+                        Ciao! Sono uno studente in Informatica per la Comunicazione Digitale presso l'Università Statale di Milano. Sono appassionato di tecnologia, computer e software, e mi piace esplorare nuove soluzioni per risolvere problemi pratici. Tra i miei interessi ci sono anche i videogiochi e i veicoli di trasporto, con un particolare focus sulle innovazioni come la guida autonoma e i sistemi intelligenti applicati alla mobilità.<br><br>Sono anche un appassionato di sistemi autogestiti. Ho scelto di ospitare personalmente questo sito web a casa mia e di gestire diverse applicazioni self-hosted. Questa esperienza mi permette di esplorare più a fondo le infrastrutture tecnologiche e di sviluppare competenze pratiche che considero fondamentali.<br><br>Il mio obiettivo è approfondire e condividere le conoscenze che acquisisco, in modo da poter contribuire a progetti e settori che mi appassionano, con un focus particolare su soluzioni tecnologiche avanzate.
                     </p>
                 </div>
             </section>
@@ -414,7 +439,7 @@
     <!-- DEBUG PRE-SCRIPT -->
     <script>
         console.log('🔵 PRE-SCRIPT DEBUG');
-        console.log('About to load script.js');
+        console.log('About to load modular JavaScript architecture');
         console.log('Current scripts in document:', document.scripts.length);
         
         // Lista tutti gli script presenti
@@ -428,8 +453,6 @@
             });
         });
     </script>
-
-    <script src="script-simple.js"></script>
     
     <!-- Auto-track outbound links -->
     <script type="text/javascript">
@@ -452,5 +475,21 @@
         console.log(`✅ Outbound link tracking setup complete: ${outboundCount} links configured`);
       })();
     </script>
+    
+    <!-- Modular JavaScript Architecture -->
+    <!-- Carica i moduli nell'ordine corretto: config → utils → css → components → feature modules → main -->
+    <!-- MODULAR SYSTEM - SIMPLIFIED (NO PARALLAX) -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/css-manager.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/language.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/effects.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- Simple system backup -->
+    <!-- <script src="backup_script.js"></script> -->
 </body>
 </html>

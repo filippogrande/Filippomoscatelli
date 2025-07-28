@@ -1,0 +1,18 @@
+/* Modular CSS Architecture */
+/* Import all CSS modules in the correct order */
+
+/* Base styles first */
+@import url('base.css');
+
+/* Layout components */
+@import url('language-selector.css');
+@import url('header.css');
+@import url('sections.css');
+@import url('timeline.css');
+@import url('components.css');
+@import url('footer.css');
+
+/* Effects and responsive last */
+@import url('animations.css');
+@import url('responsive.css');
+/* Cache buster: 1753697354 */

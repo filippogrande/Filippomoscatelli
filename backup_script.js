@@ -172,21 +172,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Funzione per cambiare lingua
 function changeLanguage(lang) {
+    console.log('🌐 changeLanguage called with:', lang);
+    console.log('🌐 Current language before change:', currentLanguage);
+    
+    const previousLanguage = currentLanguage; // Salva la lingua precedente PRIMA di cambiare
+    
+    // Aggiorna la lingua corrente
     currentLanguage = lang;
+    console.log('🌐 Updated currentLanguage to:', currentLanguage);
     
     // Aggiorna l'attributo lang del documento
     document.documentElement.lang = lang;
+    console.log('🌐 Updated document.documentElement.lang to:', document.documentElement.lang);
     
     // Aggiorna lo stato attivo dei pulsanti
-    document.querySelectorAll('.lang-btn').forEach(btn => {
+    const langButtons = document.querySelectorAll('.lang-btn');
+    console.log('🌐 Found', langButtons.length, 'language buttons');
+    
+    langButtons.forEach(btn => {
         btn.classList.remove('active');
         if (btn.getAttribute('data-lang') === lang) {
             btn.classList.add('active');
+            console.log('🌐 Activated button for language:', lang);
         }
     });
     
     // Aggiorna tutti gli elementi con data-key
-    document.querySelectorAll('[data-key]').forEach(element => {
+    const elementsToTranslate = document.querySelectorAll('[data-key]');
+    console.log('🌐 Found', elementsToTranslate.length, 'elements to translate');
+    
+    let translatedCount = 0;
+    elementsToTranslate.forEach(element => {
         const key = element.getAttribute('data-key');
         if (translations[lang] && translations[lang][key]) {
             if (element.tagName === 'UL') {
@@ -199,29 +215,38 @@ function changeLanguage(lang) {
                 // Per altri elementi, sostituisci il testo
                 element.textContent = translations[lang][key];
             }
+            translatedCount++;
+        } else {
+            console.log('⚠️ Translation missing for key:', key, 'language:', lang);
         }
     });
     
+    console.log('🌐 Translated', translatedCount, 'elements');
+    
     // Salva la preferenza nel localStorage
     localStorage.setItem('preferred-language', lang);
+    console.log('🌐 Saved language preference to localStorage:', lang);
     
     // Aggiorna il titolo della pagina
-    document.title = `Filippo Moscatelli - ${lang === 'it' ? 'CV' : 'Resume'}`;
+    const newTitle = `Filippo Moscatelli - ${lang === 'it' ? 'CV' : 'Resume'}`;
+    document.title = newTitle;
+    console.log('🌐 Updated page title to:', newTitle);
     
     // Track language change in Umami (solo per cambi effettivi)
-    console.log('Tracking language change to:', lang);
+    console.log('Tracking language change:', previousLanguage, '→', lang);
     if (typeof umami !== 'undefined') {
-        // Solo traccia se è un cambio effettivo, non il caricamento iniziale
-        if (document.readyState === 'complete') {
+        // Solo traccia se è un cambio effettivo
+        if (document.readyState === 'complete' && previousLanguage !== lang) {
             umami.track('lang-change', { 
-                language: lang,
-                previous_language: currentLanguage !== lang ? currentLanguage : null,
-                is_user_action: true
+                from_language: previousLanguage,
+                to_language: lang,
+                is_user_action: true,
+                timestamp: new Date().toISOString()
             });
-            console.log('Umami language change tracking sent');
+            console.log('✅ Umami language change tracking sent:', previousLanguage, '→', lang);
         }
     } else {
-        console.log('Umami not available for language change tracking');
+        console.log('❌ Umami not available for language change tracking');
     }
 }
 
@@ -404,81 +429,11 @@ function setupUmamiTracking() {
             }
         });
     });
-    
-    // Track current language state (separato dal page-load)
-    console.log('Setting up current language state tracking for:', currentLanguage);
-    if (typeof umami !== 'undefined') {
-        setTimeout(() => {
-            umami.track('lang-state', { 
-                language: currentLanguage,
-                is_default: currentLanguage === 'it' ? true : false
-            });
-            console.log('Umami current language state tracking sent');
-        }, 3000); // Dopo il page-load tracking
-    } else {
-        console.log('Umami not available for current language state tracking');
-    }
-    
-    // Track scroll depth con più dettagli
-    let scrollDepthTracked = {
-        10: false,
-        25: false,
-        50: false,
-        75: false,
-        90: false,
-        100: false
-    };
-    
-    let maxScrollReached = 0;
-    let scrollStartTime = Date.now();
-    
-    window.addEventListener('scroll', () => {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const scrollPercent = Math.round((scrollTop / docHeight) * 100);
-        
-        // Traccia la percentuale massima raggiunta
-        if (scrollPercent > maxScrollReached) {
-            maxScrollReached = scrollPercent;
-        }
-        
-        // Track punti di scroll specifici
-        Object.keys(scrollDepthTracked).forEach(depth => {
-            if (scrollPercent >= parseInt(depth) && !scrollDepthTracked[depth]) {
-                scrollDepthTracked[depth] = true;
-                const timeToReach = Math.round((Date.now() - scrollStartTime) / 1000);
-                
-                if (typeof umami !== 'undefined') {
-                    umami.track('scroll-depth', { 
-                        percentage: depth,
-                        time_to_reach: timeToReach,
-                        max_reached: maxScrollReached
-                    });
-                    console.log(`Scroll depth ${depth}% reached in ${timeToReach}s`);
-                }
-            }
-        });
-    });
-    
-    // Track scroll summary quando l'utente lascia la pagina
-    window.addEventListener('beforeunload', () => {
-        if (typeof umami !== 'undefined' && maxScrollReached > 0) {
-            umami.track('scroll-summary', {
-                max_scroll_reached: maxScrollReached,
-                total_time_on_page: Math.round((Date.now() - scrollStartTime) / 1000)
-            });
-        }
-    });
-    
-    // Track time on page intervals
-    let timeOnPage = 0;
-    setInterval(() => {
-        timeOnPage += 10;
-        // Track ogni 30 secondi, 1 minuto, 2 minuti, 5 minuti
-        if ([30, 60, 120, 300].includes(timeOnPage) && typeof umami !== 'undefined') {
-            umami.track('time-milestone', { seconds: timeOnPage });
-        }
-    }, 10000); // Ogni 10 secondi
+}
+
+} catch (error) {
+    console.error('❌ ERRORE NELLA SEZIONE TRANSLATIONS/SETUP:', error);
+    console.error('Stack trace:', error.stack);
 }
 
 // Funzione per gestire il pulsante "Torna all'inizio"
@@ -613,8 +568,10 @@ function testUmamiTracking() {
             console.log('❌ Script endpoint failed:', error);
         });
     
-    // Test API endpoint con diversi tipi di payload
-    console.log('🧪 Testing API endpoint with pageview...');
+    // Test API endpoint con diversi tipi di payload - ENDPOINT CORRETTI UMAMI
+    console.log('🧪 Testing correct Umami API endpoints...');
+    
+    // Test endpoint /api/send (standard Umami)
     fetch('/analytics/api/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -630,16 +587,47 @@ function testUmamiTracking() {
             }
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('✅ /api/send endpoint status:', response.status);
+        return response.text();
+    })
     .then(data => {
-        console.log('✅ Pageview API test result:', data);
+        console.log('✅ /api/send result:', data);
     })
     .catch(error => {
-        console.log('❌ Pageview API failed:', error);
+        console.log('❌ /api/send failed:', error);
     });
     
+    // Test endpoint diretto /send (senza /api)
     setTimeout(() => {
-        console.log('🧪 Testing API endpoint with event...');
+        fetch('/analytics/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type: 'pageview',
+                payload: {
+                    website: 'a912f285-ced0-4c7f-9260-434d0ee8674a',
+                    url: '/test-direct-pageview',
+                    title: 'Direct Test Pageview'
+                }
+            })
+        })
+        .then(response => {
+            console.log('✅ /send endpoint status:', response.status);
+            return response.text();
+        })
+        .then(data => {
+            console.log('✅ /send result:', data);
+        })
+        .catch(error => {
+            console.log('❌ /send failed:', error);
+        });
+    }, 200);
+    
+    setTimeout(() => {
+        console.log('🧪 Testing event endpoints...');
+        
+        // Test con /api/send per eventi
         fetch('/analytics/api/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -657,13 +645,43 @@ function testUmamiTracking() {
                 }
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('✅ Event /api/send status:', response.status);
+            return response.text();
+        })
         .then(data => {
-            console.log('✅ Event API test result:', data);
+            console.log('✅ Event API result:', data);
         })
         .catch(error => {
             console.log('❌ Event API failed:', error);
         });
+        
+        // Test anche endpoint diretto /send per eventi
+        setTimeout(() => {
+            fetch('/analytics/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'event',
+                    payload: {
+                        website: 'a912f285-ced0-4c7f-9260-434d0ee8674a',
+                        url: window.location.pathname,
+                        name: 'test-direct-event',
+                        data: { test: 'direct-send' }
+                    }
+                })
+            })
+            .then(response => {
+                console.log('✅ Event /send status:', response.status);
+                return response.text();
+            })
+            .then(data => {
+                console.log('✅ Event /send result:', data);
+            })
+            .catch(error => {
+                console.log('❌ Event /send failed:', error);
+            });
+        }, 200);
     }, 500);
     
     if (typeof umami !== 'undefined') {
@@ -755,18 +773,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // Aggiungi event listeners per i pulsanti delle lingue
     document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            const lang = btn.getAttribute('data-lang');
-            console.log('Language button clicked:', lang);
+            e.preventDefault(); // Previeni comportamento default
+            const lang = e.target.getAttribute('data-lang') || btn.getAttribute('data-lang');
+            console.log('🔘 Language button clicked:', lang);
+            console.log('🔘 Current language before change:', currentLanguage);
+            console.log('🔘 Button element:', btn);
+            console.log('🔘 Event target:', e.target);
             
-            // Track button click in Umami
-            if (typeof umami !== 'undefined') {
-                umami.track('lang-button', { language: lang, from: currentLanguage });
-                console.log('Umami button click tracking sent');
+            if (lang && lang !== currentLanguage) {
+                // Track button click in Umami
+                if (typeof umami !== 'undefined') {
+                    umami.track('lang-button', { language: lang, from: currentLanguage });
+                    console.log('✅ Umami button click tracking sent');
+                } else {
+                    console.log('❌ Umami not available for button tracking');
+                }
+                
+                changeLanguage(lang);
+                console.log('🔘 Language changed to:', lang);
             } else {
-                console.log('Umami not available for button tracking');
+                console.log('⚠️ Language not changed. lang:', lang, 'currentLanguage:', currentLanguage);
             }
-            
-            changeLanguage(lang);
         });
     });
     
@@ -777,6 +804,41 @@ document.addEventListener('DOMContentLoaded', () => {
     addKeyboardSupport();
     setupBackToTop();
     setupUmamiTracking();
+    
+    // Initialize Advanced Tracking
+    initializeAdvancedTracking();
+    
+    // Test immediato del tracking avanzato
+    setTimeout(() => {
+        console.log('🔍 Testing advanced tracking functions...');
+        
+        // Test scroll tracking manuale
+        if (typeof setupScrollTracking === 'function') {
+            console.log('✅ setupScrollTracking function available');
+        } else {
+            console.log('❌ setupScrollTracking function missing');
+        }
+        
+        // Test time tracking manuale
+        if (typeof setupTimeTracking === 'function') {
+            console.log('✅ setupTimeTracking function available');
+        } else {
+            console.log('❌ setupTimeTracking function missing');
+        }
+        
+        // Forza l'inizializzazione se Umami è disponibile
+        if (typeof umami !== 'undefined') {
+            console.log('🚀 Forcing advanced tracking initialization...');
+            
+            // Test evento avanzato immediato
+            umami.track('advanced-tracking-test', {
+                test: 'manual-force',
+                timestamp: new Date().toISOString(),
+                location: window.location.pathname
+            });
+            console.log('✅ Advanced tracking test event sent');
+        }
+    }, 4000);
     
     // Messaggio di benvenuto nella console (easter egg per sviluppatori)
     console.log(`
@@ -958,70 +1020,46 @@ function switchToManualTracking() {
 
 // Funzione per debug avanzato del proxy e dell'API
 function debugUmamiProxy() {
-    console.log('=== Debug Umami Proxy ===');
+    console.log('=== Debug Umami Proxy - Test tutti gli endpoint ===');
     
-    // Test dell'endpoint collect (alternativo)
-    console.log('🔍 Testing /analytics/api/collect endpoint...');
-    fetch('/analytics/api/collect', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            website: 'a912f285-ced0-4c7f-9260-434d0ee8674a',
-            name: 'test-collect',
-            data: { method: 'collect-endpoint' }
-        })
-    })
-    .then(response => {
-        console.log('Collect endpoint status:', response.status);
-        return response.json();
-    })
-    .then(data => {
-        console.log('✅ Collect endpoint result:', data);
-    })
-    .catch(error => {
-        console.log('❌ Collect endpoint failed:', error);
-    });
+    // Lista di tutti gli endpoint possibili di Umami
+    const endpoints = [
+        '/analytics/api/send',
+        '/analytics/send', 
+        '/analytics/api/collect',
+        '/analytics/collect'
+    ];
     
-    // Verifica headers e risposta completa
-    console.log('🔍 Testing with full headers...');
-    fetch('/analytics/api/send', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'User-Agent': navigator.userAgent,
-            'Accept': 'application/json',
-            'Cache-Control': 'no-cache'
-        },
-        body: JSON.stringify({
-            type: 'event',
-            payload: {
-                website: 'a912f285-ced0-4c7f-9260-434d0ee8674a',
-                url: window.location.pathname,
-                name: 'test-full-headers',
-                data: { 
-                    debug: true,
-                    timestamp: Date.now(),
-                    userAgent: navigator.userAgent.substring(0, 50)
-                }
-            }
-        })
-    })
-    .then(response => {
-        console.log('Full test - Status:', response.status);
-        console.log('Full test - Headers:', Object.fromEntries(response.headers.entries()));
-        return response.text();
-    })
-    .then(text => {
-        console.log('Full test - Raw response:', text);
-        try {
-            const json = JSON.parse(text);
-            console.log('Full test - Parsed JSON:', json);
-        } catch (e) {
-            console.log('Full test - Not JSON response');
-        }
-    })
-    .catch(error => {
-        console.log('❌ Full test failed:', error);
+    endpoints.forEach((endpoint, index) => {
+        setTimeout(() => {
+            console.log(`🔍 Testing endpoint #${index + 1}: ${endpoint}`);
+            fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'event',
+                    payload: {
+                        website: 'a912f285-ced0-4c7f-9260-434d0ee8674a',
+                        url: window.location.pathname,
+                        name: `test-endpoint-${index + 1}`,
+                        data: { 
+                            endpoint: endpoint,
+                            timestamp: Date.now()
+                        }
+                    }
+                })
+            })
+            .then(response => {
+                console.log(`✅ ${endpoint} - Status: ${response.status}`);
+                return response.text();
+            })
+            .then(text => {
+                console.log(`✅ ${endpoint} - Response:`, text);
+            })
+            .catch(error => {
+                console.log(`❌ ${endpoint} - Failed:`, error);
+            });
+        }, index * 300);
     });
     
     console.log('=== End Proxy Debug ===');
@@ -1033,3 +1071,226 @@ window.testAllUmamiMethods = testAllUmamiMethods;
 window.debugUmamiProxy = debugUmamiProxy;
 window.testTrackerConfiguration = testTrackerConfiguration;
 window.switchToManualTracking = switchToManualTracking;
+
+// ===== TRACKING AVANZATO =====
+
+// Setup Scroll Depth Tracking
+function setupScrollTracking() {
+    console.log('🎯 Setting up scroll depth tracking...');
+    
+    let scrollDepthTracked = {
+        25: false,
+        50: false,
+        75: false,
+        90: false
+    };
+    
+    let maxScrollReached = 0;
+    let scrollStartTime = Date.now();
+    
+    function trackScrollDepth() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = Math.round((scrollTop / docHeight) * 100);
+        
+        // Aggiorna massimo raggiunto
+        if (scrollPercent > maxScrollReached) {
+            maxScrollReached = scrollPercent;
+        }
+        
+        // Track milestone specifiche
+        Object.keys(scrollDepthTracked).forEach(depth => {
+            if (scrollPercent >= parseInt(depth) && !scrollDepthTracked[depth]) {
+                scrollDepthTracked[depth] = true;
+                const timeToReach = Math.round((Date.now() - scrollStartTime) / 1000);
+                
+                if (typeof umami !== 'undefined') {
+                    umami.track('scroll-depth', { 
+                        percentage: parseInt(depth),
+                        time_to_reach: timeToReach,
+                        max_reached: maxScrollReached,
+                        language: currentLanguage
+                    });
+                    console.log(`✅ Scroll ${depth}% tracked (${timeToReach}s)`);
+                } else {
+                    console.log(`❌ Umami unavailable for scroll ${depth}%`);
+                }
+            }
+        });
+    }
+    
+    // Throttled scroll listener
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+        if (scrollTimeout) clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(trackScrollDepth, 100);
+    });
+    
+    // Track scroll summary on page leave
+    window.addEventListener('beforeunload', () => {
+        if (typeof umami !== 'undefined' && maxScrollReached > 0) {
+            umami.track('scroll-summary', {
+                max_scroll_reached: maxScrollReached,
+                total_time_on_page: Math.round((Date.now() - scrollStartTime) / 1000),
+                language: currentLanguage
+            });
+        }
+    });
+}
+
+// Setup Time Tracking
+function setupTimeTracking() {
+    console.log('⏱️ Setting up time tracking...');
+    
+    let timeOnPage = 0;
+    const startTime = Date.now();
+    
+    const timeInterval = setInterval(() => {
+        timeOnPage += 15; // Ogni 15 secondi
+        
+        // Track milestone specifiche: 30s, 1min, 2min, 5min
+        if ([30, 60, 120, 300].includes(timeOnPage)) {
+            if (typeof umami !== 'undefined') {
+                umami.track('time-milestone', { 
+                    seconds: timeOnPage,
+                    minutes: Math.round(timeOnPage / 60),
+                    language: currentLanguage,
+                    timestamp: new Date().toISOString()
+                });
+                console.log(`✅ Time milestone: ${timeOnPage}s (${Math.round(timeOnPage/60)}min)`);
+            } else {
+                console.log(`❌ Umami unavailable for time milestone ${timeOnPage}s`);
+            }
+        }
+    }, 15000); // Ogni 15 secondi
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        clearInterval(timeInterval);
+    });
+}
+
+// Enhanced Language Change Tracking
+function enhanceLanguageTracking() {
+    console.log('🌐 Enhancing language change tracking...');
+    
+    const langButtons = document.querySelectorAll('.lang-btn');
+    
+    langButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const newLang = e.target.getAttribute('data-lang');
+            const oldLang = currentLanguage;
+            
+            if (newLang !== oldLang && typeof umami !== 'undefined') {
+                umami.track('lang-change', {
+                    from_language: oldLang,
+                    to_language: newLang,
+                    method: 'button_click',
+                    timestamp: new Date().toISOString()
+                });
+                console.log(`✅ Language change tracked: ${oldLang} → ${newLang}`);
+            }
+        });
+    });
+}
+
+// Initialize Advanced Tracking
+function initializeAdvancedTracking() {
+    console.log('🚀 Initializing advanced tracking...');
+    
+    // Aspetta che Umami sia pronto
+    setTimeout(() => {
+        setupScrollTracking();
+        setupTimeTracking();
+        enhanceLanguageTracking();
+        
+        // Track session start
+        if (typeof umami !== 'undefined') {
+            umami.track('session-start', {
+                language: currentLanguage,
+                user_agent: navigator.userAgent,
+                viewport: `${window.innerWidth}x${window.innerHeight}`,
+                timestamp: new Date().toISOString()
+            });
+            console.log('✅ Session start tracked');
+        }
+        
+        console.log('🎉 Advanced tracking initialized successfully!');
+    }, 2000);
+}
+
+// ===== FUNZIONI DI TEST IMMEDIATE =====
+
+// Test manuale scroll tracking
+function testScrollNow() {
+    console.log('🧪 Testing scroll tracking manually...');
+    if (typeof umami !== 'undefined') {
+        umami.track('scroll-depth', { 
+            percentage: 25,
+            time_to_reach: 5,
+            max_reached: 25,
+            language: currentLanguage,
+            test: 'manual'
+        });
+        console.log('✅ Manual scroll event sent');
+    } else {
+        console.log('❌ Umami not available for manual scroll test');
+    }
+}
+
+// Test manuale time tracking  
+function testTimeNow() {
+    console.log('🧪 Testing time tracking manually...');
+    if (typeof umami !== 'undefined') {
+        umami.track('time-milestone', { 
+            seconds: 30,
+            minutes: 0.5,
+            language: currentLanguage,
+            timestamp: new Date().toISOString(),
+            test: 'manual'
+        });
+        console.log('✅ Manual time event sent');
+    } else {
+        console.log('❌ Umami not available for manual time test');
+    }
+}
+
+// Test manuale language change
+function testLanguageNow() {
+    console.log('🧪 Testing language tracking manually...');
+    if (typeof umami !== 'undefined') {
+        umami.track('lang-change', {
+            from_language: 'it',
+            to_language: 'en', 
+            method: 'manual_test',
+            timestamp: new Date().toISOString(),
+            test: 'manual'
+        });
+        console.log('✅ Manual language event sent');
+    } else {
+        console.log('❌ Umami not available for manual language test');
+    }
+}
+
+// Test manuale session start
+function testSessionNow() {
+    console.log('🧪 Testing session tracking manually...');
+    if (typeof umami !== 'undefined') {
+        umami.track('session-start', {
+            language: currentLanguage,
+            user_agent: navigator.userAgent,
+            viewport: `${window.innerWidth}x${window.innerHeight}`,
+            timestamp: new Date().toISOString(),
+            test: 'manual'
+        });
+        console.log('✅ Manual session event sent');
+    } else {
+        console.log('❌ Umami not available for manual session test');
+    }
+}
+
+// Rendi le funzioni di test disponibili globalmente
+window.testScrollNow = testScrollNow;
+window.testTimeNow = testTimeNow;
+window.testLanguageNow = testLanguageNow;
+window.testSessionNow = testSessionNow;

@@ -1,0 +1,30 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Nasconde eventuali link di accessibilità automatici del browser */
+a[href="#main"]:not([class]),
+a[href="#content"]:not([class]),
+a[title*="skip"]:not([class]),
+a[title*="salta"]:not([class]) {
+    position: absolute !important;
+    left: -9999px !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: #1f2937;
+    background-color: #f9fafb;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
