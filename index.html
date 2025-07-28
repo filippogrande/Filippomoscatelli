@@ -34,6 +34,7 @@
         script.setAttribute('data-do-not-track', 'false');
         script.setAttribute('data-cache', 'true');
         script.setAttribute('data-domains', 'filippomoscatelli.com');
+        script.setAttribute('data-before-send', 'beforeSendHandler');
         
         // Headers per privacy (GDPR)
         if (!isLocalDevelopment) {
@@ -60,10 +61,27 @@
             console.log('✅ beforeSendHandler already defined');
         } else {
             console.log('❌ beforeSendHandler not yet defined');
-            // Definisci una versione temporanea per debug
+            // Definisci beforeSendHandler per preservare IP reale
             window.beforeSendHandler = function(type, payload) {
-                console.log('🚀 TEMP beforeSendHandler called:', { type, payload });
-                return payload;
+                console.log('🚀 beforeSendHandler called:', { type, payload });
+                
+                // Aggiungi informazioni aggiuntive per geolocalizzazione
+                if (payload && typeof payload === 'object') {
+                    // Preserva CF-Connecting-IP se disponibile (Cloudflare)
+                    if (window.navigator && window.navigator.userAgent) {
+                        payload.user_agent_full = window.navigator.userAgent;
+                    }
+                    
+                    // Aggiungi informazioni browser per analisi
+                    payload.screen_resolution = `${window.screen.width}x${window.screen.height}`;
+                    payload.viewport_size = `${window.innerWidth}x${window.innerHeight}`;
+                    payload.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    payload.language_full = navigator.language;
+                    
+                    console.log('📊 Enhanced payload:', payload);
+                }
+                
+                return payload; // Procedi con l'invio
             };
         }
     </script>
