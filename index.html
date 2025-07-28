@@ -472,28 +472,6 @@
         });
     </script>
     
-    <!-- Auto-track outbound links -->
-    <script type="text/javascript">
-      (() => {
-        console.log('🔗 Setting up automatic outbound link tracking...');
-        const name = 'outbound-link-click';
-        const links = document.querySelectorAll('a');
-        let outboundCount = 0;
-        
-        links.forEach(a => {
-          if (a.host !== window.location.host && !a.getAttribute('data-umami-event')) {
-            a.setAttribute('data-umami-event', name);
-            a.setAttribute('data-umami-event-url', a.href);
-            a.setAttribute('data-umami-event-domain', a.host);
-            outboundCount++;
-            console.log('🔗 Added tracking to:', a.href);
-          }
-        });
-        
-        console.log(`✅ Outbound link tracking setup complete: ${outboundCount} links configured`);
-      })();
-    </script>
-    
     <!-- Modular JavaScript Architecture -->
     <!-- Carica i moduli nell'ordine corretto: config → utils → css → components → feature modules → main -->
     <!-- MODULAR SYSTEM - SIMPLIFIED (NO PARALLAX) -->

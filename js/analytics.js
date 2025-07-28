@@ -151,6 +151,16 @@ class AnalyticsManager {
      * @param {string} tag - Tag per categorizzare l'evento
      */
     track(eventName, data = {}, tag = null) {
+        // Log dettagliato pre-tracking
+        console.log(`🎯 TRACK REQUEST:`, {
+            event: eventName,
+            tag: tag,
+            data: data,
+            umamiAvailable: this.umamiAvailable,
+            timestamp: new Date().toISOString(),
+            caller: new Error().stack?.split('\n')[2]?.trim() || 'unknown'
+        });
+
         if (this.umamiAvailable && typeof umami !== 'undefined') {
             try {
                 // Aggiungi tag ai dati se specificato
@@ -158,18 +168,35 @@ class AnalyticsManager {
                     data.event_tag = tag;
                 }
                 
+                // Aggiungi identificatori per debug
+                data.debug_timestamp = new Date().toISOString();
+                data.debug_session = this.trackingConfig.sessionId;
+                
                 if (typeof eventName === 'string') {
                     umami.track(eventName, data);
-                    console.log(`✅ Analytics: Tracked "${eventName}" ${tag ? `[${tag}]` : ''}`, data);
+                    console.log(`✅ TRACKED: "${eventName}" ${tag ? `[${tag}]` : ''}`, {
+                        data: data,
+                        success: true
+                    });
                 } else {
                     umami.track(eventName); // Per pageview semplici
-                    console.log('✅ Analytics: Tracked pageview');
+                    console.log('✅ TRACKED: pageview', { success: true });
                 }
             } catch (error) {
-                console.error('❌ Analytics: Error tracking event:', error);
+                console.error('❌ TRACK ERROR:', {
+                    event: eventName,
+                    tag: tag,
+                    error: error,
+                    stack: error.stack
+                });
             }
         } else {
-            console.log(`❌ Analytics: Umami not available, cannot track "${eventName}"`);
+            console.log(`❌ TRACK FAILED: "${eventName}" - Umami not available`, {
+                umamiAvailable: this.umamiAvailable,
+                umamiType: typeof umami,
+                event: eventName,
+                tag: tag
+            });
         }
     }
 
@@ -177,7 +204,7 @@ class AnalyticsManager {
      * Setup Scroll Depth Tracking
      */
     setupScrollTracking() {
-        console.log('🎯 Setting up scroll depth tracking...');
+        console.log('🎯 SCROLL SETUP: Setting up scroll depth tracking...');
         
         // Flag per tracking lingua a 25%
         let languageTrackedAt25Percent = false;
@@ -186,6 +213,15 @@ class AnalyticsManager {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
             const scrollPercent = Math.round((scrollTop / docHeight) * 100);
+            
+            console.log(`📏 SCROLL DEBUG:`, {
+                scrollTop: scrollTop,
+                docHeight: docHeight,
+                scrollPercent: scrollPercent,
+                maxReached: this.trackingConfig.maxScrollReached,
+                languageChanged: this.trackingConfig.languageChanged,
+                languageTracked25: languageTrackedAt25Percent
+            });
             
             // Aggiorna massimo raggiunto
             if (scrollPercent > this.trackingConfig.maxScrollReached) {
@@ -196,6 +232,13 @@ class AnalyticsManager {
             if (scrollPercent >= 25 && !languageTrackedAt25Percent && !this.trackingConfig.languageChanged) {
                 languageTrackedAt25Percent = true;
                 const currentLang = window.languageManager?.getCurrentLanguage() || 'it';
+                
+                console.log(`🌐 LANG AT 25%: Tracking current language at 25% scroll`, {
+                    language: currentLang,
+                    scrollPercent: scrollPercent,
+                    languageChanged: this.trackingConfig.languageChanged
+                });
+                
                 this.track(`lang-current-${currentLang}`, {
                     language: currentLang,
                     scroll_percentage: scrollPercent,
@@ -203,7 +246,6 @@ class AnalyticsManager {
                     method: 'scroll_25_percent',
                     language_changed: false
                 }, 'language');
-                console.log(`✅ Current language tracked at 25% scroll: ${currentLang} (no language change) [language]`);
             }
             
             // Track milestone specifiche con percentuale
@@ -212,13 +254,19 @@ class AnalyticsManager {
                     this.trackingConfig.scrollDepth[depth] = true;
                     const timeToReach = Math.round((Date.now() - this.trackingConfig.scrollStartTime) / 1000);
                     
+                    console.log(`📊 SCROLL MILESTONE: ${depth}% reached`, {
+                        percentage: depth,
+                        scrollPercent: scrollPercent,
+                        timeToReach: timeToReach,
+                        maxReached: this.trackingConfig.maxScrollReached
+                    });
+                    
                     this.track(`scroll-depth-${depth}`, { 
                         percentage: parseInt(depth),
                         time_to_reach: timeToReach,
                         max_reached: this.trackingConfig.maxScrollReached,
                         language: window.languageManager?.getCurrentLanguage() || 'it'
                     }, 'scroll');
-                    console.log(`✅ Scroll ${depth}% tracked (${timeToReach}s) [scroll]`);
                 }
             });
         };
