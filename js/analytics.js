@@ -349,45 +349,68 @@ class AnalyticsManager {
                 let tracked = false;
                 
                 if (href.includes('linkedin.com')) {
-                    this.track('social-click', { platform: 'linkedin', text: linkText });
+                    this.track('linkedin-click', { 
+                        platform: 'linkedin', 
+                        text: linkText,
+                        url: href 
+                    }, 'social');
                     tracked = true;
                 } else if (href.includes('mailto:filipp28mo@gmail.com')) {
-                    this.track('contact-email', { method: 'email', address: 'filipp28mo@gmail.com' });
+                    this.track('contact-email', { 
+                        method: 'email', 
+                        address: 'filipp28mo@gmail.com',
+                        text: linkText 
+                    }, 'contact');
                     tracked = true;
                 } else if (href.includes('github.com/filippogrande/Software-Inc-Print-Manager')) {
-                    this.track('project-click', { 
-                        project: 'software-inc-print-manager', 
+                    this.track('Software-Inc-click', { 
+                        project: 'Software-Inc-Print-Manager', 
                         url: href,
-                        text: linkText 
-                    });
+                        text: linkText,
+                        repository: 'filippogrande/Software-Inc-Print-Manager'
+                    }, 'project');
                     tracked = true;
                 } else if (href.includes('github.com/filippogrande')) {
-                    this.track('social-click', { 
+                    this.track('github-click', { 
                         platform: 'github-profile', 
                         url: href,
-                        text: linkText 
-                    });
+                        text: linkText,
+                        profile: 'filippogrande'
+                    }, 'social');
                     tracked = true;
                 } else if (href.includes('github.com')) {
-                    this.track('project-click', { 
-                        project: 'github-other', 
-                        url: href,
-                        text: linkText 
-                    });
+                    // Per altri repository GitHub, crea eventi specifici
+                    const repoMatch = href.match(/github\.com\/([^\/]+)\/([^\/\?#]+)/);
+                    if (repoMatch) {
+                        const [, owner, repo] = repoMatch;
+                        const eventName = `${repo}-click`;
+                        this.track(eventName, { 
+                            project: repo,
+                            owner: owner,
+                            url: href,
+                            text: linkText,
+                            repository: `${owner}/${repo}`
+                        }, 'project');
+                    } else {
+                        this.track('github-other-click', { 
+                            url: href,
+                            text: linkText
+                        }, 'project');
+                    }
                     tracked = true;
                 } else if (href.includes('mailto:')) {
                     this.track('contact-email', { 
                         method: 'email', 
                         address: href.replace('mailto:', ''),
                         text: linkText 
-                    });
+                    }, 'contact');
                     tracked = true;
                 } else {
-                    this.track('external-click', { 
+                    this.track('outbound-link-click', { 
                         url: href, 
                         text: linkText,
                         domain: new URL(href).hostname
-                    });
+                    }, 'external');
                     tracked = true;
                 }
                 
