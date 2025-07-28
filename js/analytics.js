@@ -364,24 +364,50 @@ class AnalyticsManager {
         // Flag per tracciare se la lingua è stata cambiata
         this.trackingConfig.languageChanged = false;
         
+        // Set per evitare eventi duplicati
+        this.trackedLanguageEvents = new Set();
+        
         // Ascolta eventi di cambio lingua
         document.addEventListener('languageChanged', (e) => {
-            const { previousLanguage, newLanguage } = e.detail;
+            const { previousLanguage, newLanguage, timestamp } = e.detail;
             
-            if (previousLanguage !== newLanguage) {
-                // Segna che la lingua è stata cambiata
-                this.trackingConfig.languageChanged = true;
-                
-                // Track specifico per lingua di destinazione
-                this.track(`lang-to-${newLanguage}`, {
-                    from_language: previousLanguage,
-                    to_language: newLanguage,
-                    method: 'user_click',
-                    timestamp: new Date().toISOString(),
-                    session_id: this.trackingConfig.sessionId
-                }, 'language');
-                console.log(`✅ Language change tracked: lang-to-${newLanguage}`);
+            // Validazione dati evento
+            if (!newLanguage || newLanguage === previousLanguage) {
+                console.log('⚠️ Invalid language change event:', { previousLanguage, newLanguage });
+                return;
             }
+            
+            // Crea chiave unica per l'evento per evitare duplicati
+            const eventKey = `${previousLanguage || 'unknown'}-to-${newLanguage}-${timestamp}`;
+            
+            // Controlla se già tracciato
+            if (this.trackedLanguageEvents.has(eventKey)) {
+                console.log('⚠️ Duplicate language event ignored:', eventKey);
+                return;
+            }
+            
+            // Aggiungi alla cache eventi tracciati
+            this.trackedLanguageEvents.add(eventKey);
+            
+            // Segna che la lingua è stata cambiata
+            this.trackingConfig.languageChanged = true;
+            
+            // Track specifico per lingua di destinazione
+            this.track(`lang-to-${newLanguage}`, {
+                from_language: previousLanguage || 'unknown',
+                to_language: newLanguage,
+                method: 'user_click',
+                timestamp: timestamp,
+                session_id: this.trackingConfig.sessionId,
+                event_key: eventKey
+            }, 'language');
+            
+            console.log(`✅ Language change tracked: lang-to-${newLanguage} (from: ${previousLanguage || 'unknown'})`);
+            
+            // Pulisci cache eventi dopo 5 secondi per evitare memory leak
+            setTimeout(() => {
+                this.trackedLanguageEvents.delete(eventKey);
+            }, 5000);
         });
     }
 
