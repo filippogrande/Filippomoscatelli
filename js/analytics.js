@@ -364,12 +364,21 @@ class AnalyticsManager {
         // Flag per tracciare se la lingua è stata cambiata
         this.trackingConfig.languageChanged = false;
         
-        // Set per evitare eventi duplicati
-        this.trackedLanguageEvents = new Set();
+        // Debounce per evitare tracking multipli ravvicinati
+        let languageChangeTimeout = null;
+        let lastTrackedLanguage = null;
         
         // Ascolta eventi di cambio lingua
         document.addEventListener('languageChanged', (e) => {
-            const { previousLanguage, newLanguage, timestamp } = e.detail;
+            const { previousLanguage, newLanguage } = e.detail;
+            
+            // Debug: log di ogni evento ricevuto
+            console.log(`🎯 languageChanged event received:`, { 
+                previousLanguage, 
+                newLanguage,
+                timestamp: e.detail.timestamp,
+                stack: new Error().stack.split('\n')[2].trim()
+            });
             
             // Validazione dati evento
             if (!newLanguage || newLanguage === previousLanguage) {
@@ -377,37 +386,45 @@ class AnalyticsManager {
                 return;
             }
             
-            // Crea chiave unica per l'evento per evitare duplicati
-            const eventKey = `${previousLanguage || 'unknown'}-to-${newLanguage}-${timestamp}`;
+            // Crea chiave semplice per confronto
+            const changeKey = `${previousLanguage || 'unknown'}-to-${newLanguage}`;
             
-            // Controlla se già tracciato
-            if (this.trackedLanguageEvents.has(eventKey)) {
-                console.log('⚠️ Duplicate language event ignored:', eventKey);
+            // Controlla se è lo stesso cambio dell'ultimo evento (entro 1 secondo)
+            if (lastTrackedLanguage === changeKey) {
+                console.log('⚠️ Duplicate language event ignored:', changeKey);
                 return;
             }
             
-            // Aggiungi alla cache eventi tracciati
-            this.trackedLanguageEvents.add(eventKey);
+            // Cancella timeout precedente se esiste
+            if (languageChangeTimeout) {
+                clearTimeout(languageChangeTimeout);
+            }
             
-            // Segna che la lingua è stata cambiata
-            this.trackingConfig.languageChanged = true;
-            
-            // Track specifico per lingua di destinazione
-            this.track(`lang-to-${newLanguage}`, {
-                from_language: previousLanguage || 'unknown',
-                to_language: newLanguage,
-                method: 'user_click',
-                timestamp: timestamp,
-                session_id: this.trackingConfig.sessionId,
-                event_key: eventKey
-            }, 'language');
-            
-            console.log(`✅ Language change tracked: lang-to-${newLanguage} (from: ${previousLanguage || 'unknown'})`);
-            
-            // Pulisci cache eventi dopo 5 secondi per evitare memory leak
-            setTimeout(() => {
-                this.trackedLanguageEvents.delete(eventKey);
-            }, 5000);
+            // Debounce: aspetta 500ms prima di trackare per evitare eventi multipli rapidi
+            languageChangeTimeout = setTimeout(() => {
+                // Segna che la lingua è stata cambiata
+                this.trackingConfig.languageChanged = true;
+                
+                // Salva ultimo cambio tracciato
+                lastTrackedLanguage = changeKey;
+                
+                // Track specifico per lingua di destinazione
+                this.track(`lang-to-${newLanguage}`, {
+                    from_language: previousLanguage || 'unknown',
+                    to_language: newLanguage,
+                    method: 'user_click',
+                    timestamp: new Date().toISOString(),
+                    session_id: this.trackingConfig.sessionId
+                }, 'language');
+                
+                console.log(`✅ Language change tracked: lang-to-${newLanguage} (from: ${previousLanguage || 'unknown'})`);
+                
+                // Reset dopo 2 secondi per permettere nuovi cambi
+                setTimeout(() => {
+                    lastTrackedLanguage = null;
+                }, 2000);
+                
+            }, 500); // 500ms di debounce
         });
     }
 
