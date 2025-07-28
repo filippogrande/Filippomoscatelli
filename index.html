@@ -396,6 +396,20 @@
     <script src="js/effects.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/main.js"></script>
+<script>
+// Language auto-detect from URL (/it or /en)
+document.addEventListener('DOMContentLoaded', function() {
+  var path = window.location.pathname;
+  var lang = null;
+  if (path.endsWith('/it')) lang = 'it';
+  else if (path.endsWith('/en')) lang = 'en';
+  if (lang) {
+    // Simula click sul pulsante lingua corrispondente
+    var btn = document.querySelector('.lang-btn[data-lang="' + lang + '"]');
+    if (btn) btn.click();
+  }
+});
+</script>
 </body>
     <script async src="https://filippomoscatelli.com/analytics/script.js" data-website-id="a912f285-ced0-4c7f-9260-434d0ee8674a"></script>
 </html>
