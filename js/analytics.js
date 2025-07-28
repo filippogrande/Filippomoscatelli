@@ -133,7 +133,7 @@ class AnalyticsManager {
      * Wrapper per umami.track con fallback
      * @param {string} eventName - Nome evento
      * @param {object} data - Dati evento
-     * @param {string} tag - Tag per categorizzare l'evento
+     * @param {string} tag - Tag per categorizzare l'evento (usa data-tag di Umami)
      */
     track(eventName, data = {}, tag = null) {
         // Non trackare se Umami non è disponibile - evita log di errore
@@ -142,18 +142,20 @@ class AnalyticsManager {
         }
 
         try {
-            // Aggiungi tag ai dati se specificato
+            // Usa data-tag di Umami per il filtraggio nativo
+            const options = {};
             if (tag) {
-                data.event_tag = tag;
+                options['data-tag'] = tag;
             }
             
-            // Aggiungi identificatori per debug
+            // Aggiungi identificatori per debug nei data
             data.debug_timestamp = new Date().toISOString();
             data.debug_session = this.trackingConfig.sessionId;
             
             if (typeof eventName === 'string') {
-                umami.track(eventName, data);
-                console.log(`✅ TRACKED: "${eventName}" ${tag ? `[${tag}]` : ''}`);
+                // Chiama umami.track con data-tag per filtraggio nativo
+                umami.track(eventName, data, options);
+                console.log(`✅ TRACKED: "${eventName}" data-tag="${tag || 'none'}"`);
             } else {
                 umami.track(eventName); // Per pageview semplici
             }
