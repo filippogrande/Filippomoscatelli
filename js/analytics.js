@@ -93,18 +93,10 @@ class AnalyticsManager {
             checkCount++;
             this.umamiAvailable = typeof umami !== 'undefined';
             
-            console.log(`🔍 Umami check #${checkCount}:`, {
-                available: this.umamiAvailable,
-                windowUmami: !!window.umami,
-                timestamp: new Date().toISOString()
-            });
-            
             if (this.umamiAvailable || checkCount >= 10) {
                 if (this.umamiAvailable) {
-                    console.log('🎉 Umami became available!', umami);
+                    console.log('📊 Umami ready, initializing tracking...');
                     this.onUmamiReady();
-                } else {
-                    console.log('⏰ Stopped checking, Umami not found after 10 seconds');
                 }
                 clearInterval(checker);
             }
@@ -116,13 +108,11 @@ class AnalyticsManager {
      */
     onUmamiReady() {
         if (this.initialized) {
-            console.log('📊 Umami already initialized, skipping duplicate setup');
             return;
         }
         
         // Flag globale per evitare inizializzazioni multiple
         if (window.analyticsInitialized) {
-            console.log('📊 Analytics already initialized globally, skipping');
             return;
         }
         
@@ -151,16 +141,6 @@ class AnalyticsManager {
      * @param {string} tag - Tag per categorizzare l'evento
      */
     track(eventName, data = {}, tag = null) {
-        // Log dettagliato pre-tracking
-        console.log(`🎯 TRACK REQUEST:`, {
-            event: eventName,
-            tag: tag,
-            data: data,
-            umamiAvailable: this.umamiAvailable,
-            timestamp: new Date().toISOString(),
-            caller: new Error().stack?.split('\n')[2]?.trim() || 'unknown'
-        });
-
         if (this.umamiAvailable && typeof umami !== 'undefined') {
             try {
                 // Aggiungi tag ai dati se specificato
@@ -174,29 +154,18 @@ class AnalyticsManager {
                 
                 if (typeof eventName === 'string') {
                     umami.track(eventName, data);
-                    console.log(`✅ TRACKED: "${eventName}" ${tag ? `[${tag}]` : ''}`, {
-                        data: data,
-                        success: true
-                    });
+                    console.log(`✅ TRACKED: "${eventName}" ${tag ? `[${tag}]` : ''}`);
                 } else {
                     umami.track(eventName); // Per pageview semplici
-                    console.log('✅ TRACKED: pageview', { success: true });
                 }
             } catch (error) {
                 console.error('❌ TRACK ERROR:', {
                     event: eventName,
-                    tag: tag,
-                    error: error,
-                    stack: error.stack
+                    error: error.message
                 });
             }
         } else {
-            console.log(`❌ TRACK FAILED: "${eventName}" - Umami not available`, {
-                umamiAvailable: this.umamiAvailable,
-                umamiType: typeof umami,
-                event: eventName,
-                tag: tag
-            });
+            console.log(`❌ TRACK FAILED: "${eventName}" - Umami not available`);
         }
     }
 
@@ -204,8 +173,6 @@ class AnalyticsManager {
      * Setup Scroll Depth Tracking
      */
     setupScrollTracking() {
-        console.log('🎯 SCROLL SETUP: Setting up scroll depth tracking...');
-        
         // Flag per tracking lingua a 25%
         let languageTrackedAt25Percent = false;
         
@@ -213,15 +180,6 @@ class AnalyticsManager {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
             const scrollPercent = Math.round((scrollTop / docHeight) * 100);
-            
-            console.log(`📏 SCROLL DEBUG:`, {
-                scrollTop: scrollTop,
-                docHeight: docHeight,
-                scrollPercent: scrollPercent,
-                maxReached: this.trackingConfig.maxScrollReached,
-                languageChanged: this.trackingConfig.languageChanged,
-                languageTracked25: languageTrackedAt25Percent
-            });
             
             // Aggiorna massimo raggiunto
             if (scrollPercent > this.trackingConfig.maxScrollReached) {
@@ -232,12 +190,6 @@ class AnalyticsManager {
             if (scrollPercent >= 25 && !languageTrackedAt25Percent && !this.trackingConfig.languageChanged) {
                 languageTrackedAt25Percent = true;
                 const currentLang = window.languageManager?.getCurrentLanguage() || 'it';
-                
-                console.log(`🌐 LANG AT 25%: Tracking current language at 25% scroll`, {
-                    language: currentLang,
-                    scrollPercent: scrollPercent,
-                    languageChanged: this.trackingConfig.languageChanged
-                });
                 
                 this.track(`lang-current-${currentLang}`, {
                     language: currentLang,
@@ -253,13 +205,6 @@ class AnalyticsManager {
                 if (scrollPercent >= parseInt(depth) && !this.trackingConfig.scrollDepth[depth]) {
                     this.trackingConfig.scrollDepth[depth] = true;
                     const timeToReach = Math.round((Date.now() - this.trackingConfig.scrollStartTime) / 1000);
-                    
-                    console.log(`📊 SCROLL MILESTONE: ${depth}% reached`, {
-                        percentage: depth,
-                        scrollPercent: scrollPercent,
-                        timeToReach: timeToReach,
-                        maxReached: this.trackingConfig.maxScrollReached
-                    });
                     
                     this.track(`scroll-depth-${depth}`, { 
                         percentage: parseInt(depth),
@@ -294,8 +239,6 @@ class AnalyticsManager {
      * Setup Time Tracking
      */
     setupTimeTracking() {
-        console.log('⏱️ Setting up time tracking...');
-        
         this.trackingConfig.timeInterval = setInterval(() => {
             this.trackingConfig.timeOnPage += 15; // Ogni 15 secondi
             
@@ -314,7 +257,6 @@ class AnalyticsManager {
                     timestamp: new Date().toISOString(),
                     session_id: this.trackingConfig.sessionId
                 }, 'time');
-                console.log(`✅ Time milestone: ${milestoneLabel} (${this.trackingConfig.timeOnPage}s total) [time]`);
             }
         }, 15000); // Ogni 15 secondi
         
@@ -330,13 +272,8 @@ class AnalyticsManager {
      * Setup Link Tracking
      */
     setupLinkTracking() {
-        console.log('🔗 Setting up link tracking...');
-        
         // Trova tutti i link cliccabili
         const allLinks = document.querySelectorAll('a[href^="http"], a[href^="mailto:"]');
-        console.log(`Found ${allLinks.length} trackable links:`, 
-            Array.from(allLinks).map(link => ({ href: link.href, text: link.textContent.trim() }))
-        );
         
         // Track clicks sui link esterni
         allLinks.forEach(link => {
@@ -344,7 +281,7 @@ class AnalyticsManager {
                 const href = e.target.href;
                 const linkText = e.target.textContent.trim();
                 
-                console.log('Link clicked:', { href, linkText, element: e.target });
+                console.log('🔗 Link clicked:', { href, linkText });
                 
                 let tracked = false;
                 
@@ -425,8 +362,6 @@ class AnalyticsManager {
      * Setup Language Change Tracking
      */
     setupLanguageTracking() {
-        console.log('🌐 Setting up language change tracking...');
-        
         // Flag per tracciare se la lingua è stata cambiata
         this.trackingConfig.languageChanged = false;
         
@@ -446,9 +381,7 @@ class AnalyticsManager {
                     timestamp: new Date().toISOString(),
                     session_id: this.trackingConfig.sessionId
                 }, 'language');
-                console.log(`✅ Language change tracked: lang-to-${newLanguage} (from ${previousLanguage}) [language]`);
-            } else {
-                console.log(`⚠️ No language change detected: ${previousLanguage} → ${newLanguage}`);
+                console.log(`✅ Language change tracked: lang-to-${newLanguage}`);
             }
         });
     }
@@ -458,11 +391,8 @@ class AnalyticsManager {
      */
     initializeAdvancedTracking() {
         if (this.trackingInitialized) {
-            console.log('🚀 Advanced tracking already initialized');
             return;
         }
-        
-        console.log('🚀 Initializing advanced tracking...');
         
         // Aspetta che tutto sia pronto
         setTimeout(() => {
@@ -472,7 +402,6 @@ class AnalyticsManager {
             this.setupLanguageTracking();
             
             this.trackingInitialized = true;
-            console.log('🎉 Advanced tracking initialized successfully!');
         }, 1000); // Ridotto da 2000 a 1000ms
     }
 

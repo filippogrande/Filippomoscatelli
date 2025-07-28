@@ -111,8 +111,6 @@ class LanguageManager {
         this.currentLanguage = 'it';
         this.translations = translations;
         this.initialized = false;
-        
-        console.log('🌐 LanguageManager: Initialized');
     }
 
     /**
@@ -123,14 +121,12 @@ class LanguageManager {
         // Controlla se c'è una preferenza salvata
         const savedLang = localStorage.getItem('preferred-language');
         if (savedLang && (savedLang === 'it' || savedLang === 'en')) {
-            console.log('🌐 Language detected from localStorage:', savedLang);
             return savedLang;
         }
         
         // Altrimenti usa la lingua del browser
         const browserLang = navigator.language || navigator.userLanguage;
         const detectedLang = browserLang.startsWith('it') ? 'it' : 'en';
-        console.log('🌐 Language detected from browser:', browserLang, '→', detectedLang);
         return detectedLang;
     }
 
@@ -139,18 +135,13 @@ class LanguageManager {
      * @param {string} lang - Codice lingua ('it' o 'en')
      */
     changeLanguage(lang) {
-        console.log('🌐 changeLanguage called with:', lang);
-        console.log('🌐 Current language before change:', this.currentLanguage);
-        
         const previousLanguage = this.currentLanguage;
         
         // Aggiorna la lingua corrente
         this.currentLanguage = lang;
-        console.log('🌐 Updated currentLanguage to:', this.currentLanguage);
         
         // Aggiorna l'attributo lang del documento
         document.documentElement.lang = lang;
-        console.log('🌐 Updated document.documentElement.lang to:', document.documentElement.lang);
         
         // Aggiorna lo stato attivo dei pulsanti
         this.updateLanguageButtons(lang);
@@ -160,12 +151,10 @@ class LanguageManager {
         
         // Salva la preferenza nel localStorage
         localStorage.setItem('preferred-language', lang);
-        console.log('🌐 Saved language preference to localStorage:', lang);
         
         // Aggiorna il titolo della pagina
         const newTitle = `Filippo Moscatelli - ${lang === 'it' ? 'CV' : 'Resume'}`;
         document.title = newTitle;
-        console.log('🌐 Updated page title to:', newTitle);
         
         // Track language change se Umami è disponibile
         this.trackLanguageChange(previousLanguage, lang);
