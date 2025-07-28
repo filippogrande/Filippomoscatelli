@@ -236,15 +236,12 @@ class AnalyticsManager {
     setupLinkTracking() {
         // Trova tutti i link cliccabili
         const allLinks = document.querySelectorAll('a[href^="http"], a[href^="mailto:"]');
-        
         // Track clicks sui link esterni
         allLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = e.target.href;
                 const linkText = e.target.textContent.trim();
-                
                 let tracked = false;
-                
                 if (href.includes('linkedin.com')) {
                     this.track('linkedin-click', { 
                         platform: 'linkedin', 
@@ -310,8 +307,19 @@ class AnalyticsManager {
                     }, 'external');
                     tracked = true;
                 }
-                
-                // Rimuovi log non necessario in produzione
+                // Tracking download PDF CV
+                if (link.id === 'cv-download') {
+                    // Determina lingua dal link
+                    let lang = 'it';
+                    if (href.includes('_en.pdf')) lang = 'en';
+                    this.track('cv-download', {
+                        file: href,
+                        language: lang,
+                        text: linkText,
+                        timestamp: new Date().toISOString(),
+                        session_id: this.trackingConfig.sessionId
+                    }, 'cv');
+                }
             });
         });
     }

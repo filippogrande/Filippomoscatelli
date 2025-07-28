@@ -158,9 +158,13 @@
                             <a href="https://www.linkedin.com/in/filippo-moscatelli-52b566202/" target="_blank">linkedin.com</a>
                         </div>
                         <div class="contact-item">
-                            <i class="fab fa-github"></i>
-                            <a href="https://github.com/filippogrande" target="_blank">github.com</a>
-                        </div>
+                        <i class="fab fa-github"></i>
+                        <a href="https://github.com/filippogrande" target="_blank">github.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-file-pdf"></i>
+                        <a id="cv-download" href="filippomoscatelli_it.pdf" target="_blank" download>Scarica CV</a>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -396,6 +400,49 @@
     <script src="js/effects.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/main.js"></script>
+<script>
+// CV PDF download link updater + tracking
+function updateCVLink(lang) {
+  var link = document.getElementById('cv-download');
+  if (!link) return;
+  if (lang === 'en') {
+    link.href = 'filippomoscatelli_en.pdf';
+    link.textContent = 'Download CV';
+  } else {
+    link.href = 'filippomoscatelli_it.pdf';
+    link.textContent = 'Scarica CV';
+  }
+}
+
+// Tracking download event (Umami custom event)
+function trackCVDownload(lang) {
+  if (window.umami) {
+    umami.track('cv_download_' + lang);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Imposta link iniziale
+  var activeBtn = document.querySelector('.lang-btn.active');
+  var lang = activeBtn ? activeBtn.getAttribute('data-lang') : 'it';
+  updateCVLink(lang);
+  // Aggiorna link quando si cambia lingua
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      updateCVLink(btn.getAttribute('data-lang'));
+    });
+  });
+  // Tracking click
+  var cvLink = document.getElementById('cv-download');
+  if (cvLink) {
+    cvLink.addEventListener('click', function() {
+      var activeBtn = document.querySelector('.lang-btn.active');
+      var lang = activeBtn ? activeBtn.getAttribute('data-lang') : 'it';
+      trackCVDownload(lang);
+    });
+  }
+});
+</script>
 <script>
 // Language auto-detect from URL (/it or /en)
 document.addEventListener('DOMContentLoaded', function() {
