@@ -138,10 +138,19 @@ class LanguageManager {
         const previousLanguage = this.currentLanguage;
         
         // Debug: traccia chiamate a changeLanguage
+        const getCallStack = () => {
+            try {
+                const stack = new Error().stack;
+                return stack ? stack.split('\n')[2]?.trim() || 'unknown caller' : 'stack unavailable';
+            } catch (e) {
+                return 'stack error';
+            }
+        };
+        
         console.log(`🔄 changeLanguage called: ${previousLanguage} → ${lang}`, {
             from: previousLanguage,
             to: lang,
-            stack: new Error().stack.split('\n')[2].trim() // Mostra da dove viene chiamato
+            caller: getCallStack()
         });
         
         // Se la lingua è già quella corrente, non fare nulla

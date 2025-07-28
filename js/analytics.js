@@ -373,11 +373,20 @@ class AnalyticsManager {
             const { previousLanguage, newLanguage } = e.detail;
             
             // Debug: log di ogni evento ricevuto
+            const getCallStack = () => {
+                try {
+                    const stack = new Error().stack;
+                    return stack ? stack.split('\n')[2]?.trim() || 'unknown caller' : 'stack unavailable';
+                } catch (e) {
+                    return 'stack error';
+                }
+            };
+            
             console.log(`🎯 languageChanged event received:`, { 
                 previousLanguage, 
                 newLanguage,
                 timestamp: e.detail.timestamp,
-                stack: new Error().stack.split('\n')[2].trim()
+                caller: getCallStack()
             });
             
             // Validazione dati evento
