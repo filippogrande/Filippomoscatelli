@@ -18,7 +18,6 @@ class UIManager {
             current: 'desktop'
         };
         
-        console.log('🎨 UIManager: Initialized');
         this.setupResponsiveDetection();
     }
 
@@ -451,7 +450,6 @@ class UIManager {
         // ARIA live regions per annunci screen reader
         this.createLiveRegions();
         
-        console.log('🎨 Accessibility features setup completed');
     }
 
     /**
@@ -581,7 +579,6 @@ class UIManager {
         document.body.classList.add(`breakpoint-${this.responsive.current}`);
         
         this.initialized = true;
-        console.log('🎨 UIManager initialized successfully');
         
         // Track initialization
         if (window.analyticsManager) {
@@ -644,4 +641,3 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = { UIManager, uiManager };
 }
 
-console.log('🎨 UI module loaded successfully');

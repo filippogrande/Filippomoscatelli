@@ -6,7 +6,6 @@
 class Utils {
     constructor() {
         this.initialized = false;
-        console.log('🔧 Utils: Initialized');
     }
 
     // ===== UTILITY GENERALI =====
@@ -517,7 +516,6 @@ class Utils {
         }
         
         this.initialized = true;
-        console.log('🔧 Utils initialized successfully');
     }
 
     /**
@@ -551,4 +549,3 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = { Utils, utils };
 }
 
-console.log('🔧 Utils module loaded successfully');

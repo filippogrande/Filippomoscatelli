@@ -216,7 +216,6 @@ class ConfigManager {
         this.initialized = false;
         this.environment = this.detectEnvironment();
         
-        console.log('⚙️ ConfigManager: Initialized');
         this.applyEnvironmentConfig();
     }
 
@@ -399,7 +398,6 @@ class ConfigManager {
         }
         
         this.initialized = true;
-        console.log('⚙️ ConfigManager initialized successfully');
     }
 }
 
@@ -418,4 +416,3 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = { ConfigManager, configManager, AppConfig };
 }
 
-console.log('⚙️ Configuration module loaded successfully');

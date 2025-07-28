@@ -8,7 +8,6 @@ class ComponentsManager {
         this.components = new Map();
         this.componentInstances = new Map();
         
-        console.log('🧩 ComponentsManager: Initialized');
     }
 
     /**
@@ -106,7 +105,6 @@ class ComponentsManager {
                         component
                     });
                     
-                    console.log(`🧩 Initialized component instance: ${instanceId}`);
                 } catch (error) {
                     console.error(`❌ Failed to initialize component ${instanceId}:`, error);
                 }

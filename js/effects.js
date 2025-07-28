@@ -9,7 +9,6 @@ class EffectsManager {
         this.animationObserver = null;
         this.scrollEffects = new Map();
         
-        console.log('✨ EffectsManager: Initialized');
     }
 
     /**
@@ -40,7 +39,6 @@ class EffectsManager {
             this.animationObserver.observe(section);
         });
         
-        console.log('✨ Smooth animations setup completed');
     }
 
     /**
@@ -64,7 +62,6 @@ class EffectsManager {
         // Effetti hover per le card
         this.setupHoverEffects();
         
-        console.log('✨ Dynamic effects setup completed');
     }
 
     /**
@@ -112,7 +109,6 @@ class EffectsManager {
             });
         });
 
-        console.log('✨ Hover effects setup completed');
     }
 
     /**
@@ -178,7 +174,6 @@ class EffectsManager {
             console.log('✨ Back to top clicked');
         });
         
-        console.log('✨ Back to top button setup completed');
     }
 
     /**
@@ -212,7 +207,6 @@ class EffectsManager {
             });
         });
         
-        console.log('✨ Print handler setup completed');
     }
 
     /**
@@ -245,7 +239,6 @@ class EffectsManager {
             });
         });
         
-        console.log('✨ Hover effects setup completed');
     }
 
     /**
@@ -271,7 +264,6 @@ class EffectsManager {
             });
         });
         
-        console.log('✨ Social icon effects setup completed');
     }
 
     /**
@@ -291,7 +283,6 @@ class EffectsManager {
             }, 100);
         });
         
-        console.log('✨ Loading effects setup completed');
     }
 
     /**
@@ -331,7 +322,6 @@ class EffectsManager {
         }
         
         this.initialized = true;
-        console.log('✨ EffectsManager initialized successfully');
     }
 
     /**
@@ -346,7 +336,6 @@ class EffectsManager {
         this.addHoverEffects();
         this.addSocialIconEffects();
         
-        console.log('✨ All effects setup completed');
     }
 
     /**
@@ -389,4 +378,3 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = { EffectsManager, effectsManager };
 }
 
-console.log('✨ Effects module loaded successfully');

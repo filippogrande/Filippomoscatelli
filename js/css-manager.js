@@ -8,7 +8,6 @@ class CSSManager {
         this.loadedModules = new Set();
         this.baseUrl = './css/';
         
-        console.log('🎨 CSSManager: Initialized');
     }
 
     /**
@@ -80,7 +79,6 @@ class CSSManager {
                 await this.loadCSSModule(module);
             }
             
-            console.log('✅ All CSS modules loaded successfully');
         } catch (error) {
             console.error('❌ Error loading CSS modules:', error);
             // Fallback al CSS legacy

@@ -169,13 +169,11 @@ class LanguageManager {
      */
     updateLanguageButtons(lang) {
         const langButtons = document.querySelectorAll('.lang-btn');
-        console.log('🌐 Found', langButtons.length, 'language buttons');
         
         langButtons.forEach(btn => {
             btn.classList.remove('active');
             if (btn.getAttribute('data-lang') === lang) {
                 btn.classList.add('active');
-                console.log('🌐 Activated button for language:', lang);
             }
         });
     }
@@ -186,7 +184,6 @@ class LanguageManager {
      */
     translateElements(lang) {
         const elementsToTranslate = document.querySelectorAll('[data-key]');
-        console.log('🌐 Found', elementsToTranslate.length, 'elements to translate');
         
         let translatedCount = 0;
         elementsToTranslate.forEach(element => {
@@ -203,12 +200,8 @@ class LanguageManager {
                     element.textContent = this.translations[lang][key];
                 }
                 translatedCount++;
-            } else {
-                console.log('⚠️ Translation missing for key:', key, 'language:', lang);
             }
         });
-        
-        console.log('🌐 Translated', translatedCount, 'elements');
     }
 
     /**
@@ -217,11 +210,8 @@ class LanguageManager {
      * @param {string} newLanguage - Nuova lingua
      */
     trackLanguageChange(previousLanguage, newLanguage) {
-        console.log('🌐 Language change detected:', previousLanguage, '→', newLanguage);
-        
         // Non facciamo più tracking diretto qui - ora gestito da analytics.js
         // Il tracking avviene tramite CustomEvent 'languageChanged'
-        console.log('📊 Language tracking delegated to analytics.js via CustomEvent');
     }
 
     /**
@@ -238,41 +228,27 @@ class LanguageManager {
             }
         });
         document.dispatchEvent(event);
-        console.log('🌐 Language change event emitted:', previousLanguage, '→', newLanguage);
     }
 
     /**
      * Inizializza i listener per i pulsanti lingua
      */
     initializeLanguageButtons() {
-        console.log('🌐 Initializing language buttons...');
-        
         // Aspetta che il DOM sia completamente caricato
         const buttons = document.querySelectorAll('.lang-btn');
-        console.log('🌐 Found language buttons:', buttons.length);
         
         if (buttons.length === 0) {
-            console.warn('⚠️ No language buttons found! Retrying in 500ms...');
             setTimeout(() => this.initializeLanguageButtons(), 500);
             return;
         }
         
         buttons.forEach((btn, index) => {
-            console.log(`🔘 Setting up button ${index}:`, {
-                element: btn,
-                dataLang: btn.getAttribute('data-lang'),
-                textContent: btn.textContent,
-                classList: btn.classList.toString()
-            });
-            
             // Rimuovi eventuali listener esistenti
             btn.removeEventListener('click', this.handleLanguageButtonClick);
             
             // Aggiungi il nuovo listener con bind
             btn.addEventListener('click', (e) => this.handleLanguageButtonClick(e, btn));
         });
-        
-        console.log('🌐 Language buttons initialized successfully');
     }
     
     /**
@@ -283,52 +259,34 @@ class LanguageManager {
         e.stopPropagation();
         
         const lang = e.target.getAttribute('data-lang') || btn.getAttribute('data-lang');
-        console.log('🔘 Language button clicked:', {
-            targetLang: lang,
-            currentLang: this.currentLanguage,
-            button: btn,
-            target: e.target
-        });
         
         if (!lang) {
-            console.error('❌ No language found on button:', btn);
             return;
         }
         
         if (lang === this.currentLanguage) {
-            console.log('⚠️ Same language selected, no change needed');
             return;
         }
         
-        // Il tracking avviene tramite CustomEvent 'languageChanged' in analytics.js
-        console.log('🔄 Language button clicked, delegating tracking to analytics.js');
-        
         this.changeLanguage(lang);
-        console.log('🔘 Language changed successfully to:', lang);
     }
 
     /**
      * Aggiunge supporto per scorciatoie da tastiera
      */
     addKeyboardSupport() {
-        console.log('🌐 Adding keyboard support...');
-        
         document.addEventListener('keydown', (e) => {
             // Alt + I per italiano
             if (e.altKey && e.key.toLowerCase() === 'i') {
                 e.preventDefault();
                 this.changeLanguage('it');
-                console.log('⌨️ Keyboard shortcut: Italian');
             }
             // Alt + E per inglese
             if (e.altKey && e.key.toLowerCase() === 'e') {
                 e.preventDefault();
                 this.changeLanguage('en');
-                console.log('⌨️ Keyboard shortcut: English');
             }
         });
-        
-        console.log('🌐 Keyboard support added');
     }
 
     /**
@@ -336,12 +294,9 @@ class LanguageManager {
      */
     initialize() {
         if (this.initialized) {
-            console.log('🌐 LanguageManager already initialized');
             return;
         }
 
-        console.log('🌐 Initializing LanguageManager...');
-        
         // Rileva e imposta la lingua preferita
         const preferredLang = this.detectPreferredLanguage();
         this.changeLanguage(preferredLang);
@@ -353,7 +308,6 @@ class LanguageManager {
         this.addKeyboardSupport();
         
         this.initialized = true;
-        console.log('🌐 LanguageManager initialized successfully with language:', preferredLang);
     }
 
     /**
@@ -386,7 +340,6 @@ class LanguageManager {
         if (this.hasTranslation(key, targetLang)) {
             return this.translations[targetLang][key];
         }
-        console.warn('🌐 Translation not found:', key, 'for language:', targetLang);
         return null;
     }
 }
@@ -405,4 +358,4 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = { LanguageManager, languageManager, translations };
 }
 
-console.log('🌐 Language module loaded successfully');
+console.log('🌐 Language module loaded');

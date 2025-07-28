@@ -9,7 +9,6 @@ class AppManager {
         this.initialized = false;
         this.debugMode = false;
         
-        console.log('🚀 AppManager: Initialized');
         
         // Bind dei metodi per event listeners
         this.handleError = this.handleError.bind(this);
@@ -24,7 +23,6 @@ class AppManager {
     registerModule(name, module) {
         if (module && typeof module.initialize === 'function') {
             this.modules.set(name, module);
-            console.log(`🔧 Module "${name}" registered`);
         } else {
             console.error(`❌ Module "${name}" is invalid - missing initialize method`);
         }
@@ -34,7 +32,6 @@ class AppManager {
      * Inizializza tutti i moduli registrati
      */
     async initializeModules() {
-        console.log('🚀 Initializing all modules...');
         
         const initPromises = [];
         
@@ -48,7 +45,6 @@ class AppManager {
                     initPromises.push(result);
                 }
                 
-                console.log(`✅ Module "${name}" initialized successfully`);
             } catch (error) {
                 console.error(`❌ Error initializing module "${name}":`, error);
             }
