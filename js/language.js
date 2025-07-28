@@ -4,28 +4,8 @@
  */
 
 // Traduzioni complete
-const translatio    /**
-     * Cambia la lingua dell'interfaccia
-     * @param {string} lang - Codice lingua ('it' o 'en')
-     */
-    changeLanguage(lang) {
-        const previousLanguage = this.currentLanguage;
-        
-        // Debug: traccia chiamate a changeLanguage
-        console.log(`🔄 changeLanguage called: ${previousLanguage} → ${lang}`, {
-            from: previousLanguage,
-            to: lang,
-            stack: new Error().stack.split('\n')[2].trim() // Mostra da dove viene chiamato
-        });
-        
-        // Se la lingua è già quella corrente, non fare nulla
-        if (previousLanguage === lang) {
-            console.log(`⚠️ Language already set to ${lang}, skipping change`);
-            return;
-        }
-        
-        // Aggiorna la lingua corrente
-        this.currentLanguage = lang;  it: {
+const translations = {
+    it: {
         'job-title': 'Studente in Informatica per la Comunicazione Digitale',
         'location': 'Milano, Italia',
         'about-title': 'Chi Sono',
@@ -156,6 +136,19 @@ class LanguageManager {
      */
     changeLanguage(lang) {
         const previousLanguage = this.currentLanguage;
+        
+        // Debug: traccia chiamate a changeLanguage
+        console.log(`🔄 changeLanguage called: ${previousLanguage} → ${lang}`, {
+            from: previousLanguage,
+            to: lang,
+            stack: new Error().stack.split('\n')[2].trim() // Mostra da dove viene chiamato
+        });
+        
+        // Se la lingua è già quella corrente, non fare nulla
+        if (previousLanguage === lang) {
+            console.log(`⚠️ Language already set to ${lang}, skipping change`);
+            return;
+        }
         
         // Aggiorna la lingua corrente
         this.currentLanguage = lang;
