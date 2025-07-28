@@ -137,25 +137,8 @@ class LanguageManager {
     changeLanguage(lang) {
         const previousLanguage = this.currentLanguage;
         
-        // Debug: traccia chiamate a changeLanguage
-        const getCallStack = () => {
-            try {
-                const stack = new Error().stack;
-                return stack ? stack.split('\n')[2]?.trim() || 'unknown caller' : 'stack unavailable';
-            } catch (e) {
-                return 'stack error';
-            }
-        };
-        
-        console.log(`🔄 changeLanguage called: ${previousLanguage} → ${lang}`, {
-            from: previousLanguage,
-            to: lang,
-            caller: getCallStack()
-        });
-        
         // Se la lingua è già quella corrente, non fare nulla
         if (previousLanguage === lang) {
-            console.log(`⚠️ Language already set to ${lang}, skipping change`);
             return;
         }
         
@@ -177,9 +160,6 @@ class LanguageManager {
         // Aggiorna il titolo della pagina
         const newTitle = `Filippo Moscatelli - ${lang === 'it' ? 'CV' : 'Resume'}`;
         document.title = newTitle;
-        
-        // Track language change se Umami è disponibile
-        this.trackLanguageChange(previousLanguage, lang);
         
         // Emetti evento personalizzato per altri moduli
         this.emitLanguageChangeEvent(previousLanguage, lang);
@@ -224,16 +204,6 @@ class LanguageManager {
                 translatedCount++;
             }
         });
-    }
-
-    /**
-     * Traccia il cambio lingua in Umami
-     * @param {string} previousLanguage - Lingua precedente
-     * @param {string} newLanguage - Nuova lingua
-     */
-    trackLanguageChange(previousLanguage, newLanguage) {
-        // Non facciamo più tracking diretto qui - ora gestito da analytics.js
-        // Il tracking avviene tramite CustomEvent 'languageChanged'
     }
 
     /**
@@ -339,31 +309,6 @@ class LanguageManager {
     getCurrentLanguage() {
         return this.currentLanguage;
     }
-
-    /**
-     * Controlla se una traduzione esiste
-     * @param {string} key - Chiave di traduzione
-     * @param {string} lang - Lingua (opzionale, usa quella corrente)
-     * @returns {boolean} True se la traduzione esiste
-     */
-    hasTranslation(key, lang = null) {
-        const targetLang = lang || this.currentLanguage;
-        return this.translations[targetLang] && this.translations[targetLang][key];
-    }
-
-    /**
-     * Ottiene una traduzione specifica
-     * @param {string} key - Chiave di traduzione
-     * @param {string} lang - Lingua (opzionale, usa quella corrente)
-     * @returns {string|null} Traduzione o null se non trovata
-     */
-    getTranslation(key, lang = null) {
-        const targetLang = lang || this.currentLanguage;
-        if (this.hasTranslation(key, targetLang)) {
-            return this.translations[targetLang][key];
-        }
-        return null;
-    }
 }
 
 // Crea istanza globale del gestore lingue
@@ -379,5 +324,3 @@ if (typeof window !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { LanguageManager, languageManager, translations };
 }
-
-//console.log('🌐 Language module loaded');

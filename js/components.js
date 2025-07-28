@@ -14,8 +14,6 @@ class ComponentsManager {
      * Inizializza il component manager
      */
     initialize() {
-        //console.log('🧩 ComponentsManager: Starting initialization...');
-        
         try {
             // Registra i componenti base
             this.registerBaseComponents();
@@ -23,7 +21,6 @@ class ComponentsManager {
             // Inizializza i componenti esistenti nel DOM
             this.initializeExistingComponents();
             
-            //console.log('✅ ComponentsManager: Initialization complete');
             return Promise.resolve();
         } catch (error) {
             console.error('❌ ComponentsManager initialization failed:', error);
@@ -49,20 +46,6 @@ class ComponentsManager {
             events: ['click', 'scroll']
         });
 
-        // Componente Timeline
-        this.registerComponent('timeline', {
-            selector: '.timeline',
-            init: (element) => this.initTimeline(element),
-            events: ['scroll', 'resize']
-        });
-
-        // Componente Project Cards
-        this.registerComponent('project-card', {
-            selector: '.project-card',
-            init: (element) => this.initProjectCard(element),
-            events: ['mouseenter', 'mouseleave']
-        });
-
         // Componente Skill Tags
         this.registerComponent('skill-tag', {
             selector: '.skill-tag',
@@ -83,8 +66,6 @@ class ComponentsManager {
             destroy: config.destroy || (() => {}),
             update: config.update || (() => {})
         });
-        
-        //console.log(`🧩 Registered component: ${name}`);
     }
 
     /**
@@ -120,7 +101,6 @@ class ComponentsManager {
         
         // Non aggiungiamo listener qui - gestiti da language.js
         // Questo evita doppi listener e conflitti
-        console.log(`🌐 Language selector found with ${buttons.length} buttons - managed by LanguageManager`);
 
         // Keyboard navigation per accessibilità
         element.addEventListener('keydown', (e) => {
@@ -168,56 +148,6 @@ class ComponentsManager {
     }
 
     /**
-     * Inizializza Timeline
-     */
-    initTimeline(element) {
-        const items = element.querySelectorAll('.timeline-item');
-        
-        // Intersection Observer per animazioni
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-in');
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        });
-
-        items.forEach(item => {
-            observer.observe(item);
-        });
-    }
-
-    /**
-     * Inizializza Project Card
-     */
-    initProjectCard(element) {
-        let hoverTimeout;
-
-        element.addEventListener('mouseenter', () => {
-            clearTimeout(hoverTimeout);
-            element.classList.add('hover-active');
-        });
-
-        element.addEventListener('mouseleave', () => {
-            hoverTimeout = setTimeout(() => {
-                element.classList.remove('hover-active');
-            }, 150);
-        });
-
-        // Aggiungi focus per accessibilità
-        element.addEventListener('focus', () => {
-            element.classList.add('focus-active');
-        });
-
-        element.addEventListener('blur', () => {
-            element.classList.remove('focus-active');
-        });
-    }
-
-    /**
      * Inizializza Skill Tag
      */
     initSkillTag(element) {
@@ -244,90 +174,6 @@ class ComponentsManager {
     }
 
     /**
-     * Crea un nuovo componente dinamicamente
-     */
-    createComponent(name, container, data = {}) {
-        const component = this.components.get(name);
-        if (!component) {
-            console.error(`❌ Component "${name}" not found`);
-            return null;
-        }
-
-        try {
-            const element = this.generateComponentHTML(name, data);
-            container.appendChild(element);
-            
-            component.init(element);
-            
-            const instanceId = `${name}-dynamic-${Date.now()}`;
-            this.componentInstances.set(instanceId, {
-                name,
-                element,
-                component
-            });
-            
-            //console.log(`🧩 Created dynamic component: ${instanceId}`);
-            return element;
-        } catch (error) {
-            console.error(`❌ Failed to create component "${name}":`, error);
-            return null;
-        }
-    }
-
-    /**
-     * Genera HTML per un componente
-     */
-    generateComponentHTML(name, data) {
-        switch (name) {
-            case 'skill-tag':
-                const tag = document.createElement('span');
-                tag.className = 'skill-tag';
-                tag.textContent = data.text || 'Skill';
-                return tag;
-                
-            case 'project-card':
-                const card = document.createElement('div');
-                card.className = 'project-card';
-                card.innerHTML = `
-                    <h3>${data.title || 'Project Title'}</h3>
-                    <p>${data.description || 'Project description'}</p>
-                    <div class="project-tech">
-                        ${(data.technologies || []).map(tech => 
-                            `<span class="tech-tag">${tech}</span>`
-                        ).join('')}
-                    </div>
-                `;
-                return card;
-                
-            default:
-                const div = document.createElement('div');
-                div.className = name;
-                return div;
-        }
-    }
-
-    /**
-     * Distrugge un'istanza di componente
-     */
-    destroyComponent(instanceId) {
-        const instance = this.componentInstances.get(instanceId);
-        if (!instance) {
-            console.error(`❌ Component instance "${instanceId}" not found`);
-            return;
-        }
-
-        try {
-            instance.component.destroy(instance.element);
-            instance.element.remove();
-            this.componentInstances.delete(instanceId);
-            
-            //console.log(`🗑️ Destroyed component: ${instanceId}`);
-        } catch (error) {
-            console.error(`❌ Failed to destroy component "${instanceId}":`, error);
-        }
-    }
-
-    /**
      * Utility throttle function
      */
     throttle(func, limit) {
@@ -341,30 +187,6 @@ class ComponentsManager {
                 setTimeout(() => inThrottle = false, limit);
             }
         };
-    }
-
-    /**
-     * Ottieni tutte le istanze di componenti
-     */
-    getComponentInstances() {
-        return Array.from(this.componentInstances.entries()).map(([id, instance]) => ({
-            id,
-            name: instance.name,
-            element: instance.element
-        }));
-    }
-
-    /**
-     * Aggiorna tutti i componenti
-     */
-    updateAllComponents() {
-        for (const [instanceId, instance] of this.componentInstances) {
-            try {
-                instance.component.update(instance.element);
-            } catch (error) {
-                console.error(`❌ Failed to update component "${instanceId}":`, error);
-            }
-        }
     }
 }
 

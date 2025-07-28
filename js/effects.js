@@ -15,7 +15,6 @@ class EffectsManager {
      * Aggiunge animazioni smooth di apparizione
      */
     addSmoothAnimations() {
-        //console.log('✨ Setting up smooth animations...');
         
         // Osservatore per le animazioni di apparizione
         const observerOptions = {
@@ -27,7 +26,6 @@ class EffectsManager {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
-                    //console.log('✨ Animation triggered for:', entry.target.className);
                 }
             });
         }, observerOptions);
@@ -45,7 +43,6 @@ class EffectsManager {
      * Aggiunge effetti dinamici
      */
     addDynamicEffects() {
-        //console.log('✨ Setting up dynamic effects...');
         
         // Effetto parallax leggero per l'header (IDENTICO AL BACKUP)
         window.addEventListener('scroll', () => {
@@ -68,7 +65,6 @@ class EffectsManager {
      * Setup effetti hover per elementi interattivi
      */
     setupHoverEffects() {
-        //console.log('✨ Setting up hover effects...');
         
         // Effetti per le sezioni
         document.querySelectorAll('.section').forEach(section => {
@@ -109,6 +105,30 @@ class EffectsManager {
             });
         });
 
+        // Effetti per le skill cards e project items
+        document.querySelectorAll('.skill-item, .project-item').forEach(item => {
+            item.addEventListener('mouseenter', (e) => {
+                e.target.style.transform = 'translateY(-5px)';
+                e.target.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+            });
+            
+            item.addEventListener('mouseleave', (e) => {
+                e.target.style.transform = '';
+                e.target.style.boxShadow = '';
+            });
+        });
+        
+        // Effetti per i pulsanti
+        document.querySelectorAll('button, .btn').forEach(btn => {
+            btn.addEventListener('mouseenter', (e) => {
+                e.target.style.transform = 'scale(1.05)';
+            });
+            
+            btn.addEventListener('mouseleave', (e) => {
+                e.target.style.transform = '';
+            });
+        });
+
     }
 
     /**
@@ -131,7 +151,6 @@ class EffectsManager {
             
             // Avvia l'animazione dopo un breve ritardo
             setTimeout(typeWriter, 500);
-            //console.log('✨ Typewriter effect started for title');
         }
     }
 
@@ -139,12 +158,10 @@ class EffectsManager {
      * Setup per il pulsante "Torna all'inizio"
      */
     setupBackToTop() {
-        //console.log('✨ Setting up back to top button...');
         
         const backToTopBtn = document.getElementById('backToTop');
         
         if (!backToTopBtn) {
-            //console.log('⚠️ Back to top button not found');
             return;
         }
         
@@ -171,7 +188,6 @@ class EffectsManager {
                 window.analyticsManager.track('back-to-top');
             }
             
-            //console.log('✨ Back to top clicked');
         });
         
     }
@@ -180,10 +196,8 @@ class EffectsManager {
      * Setup per la stampa
      */
     setupPrintHandler() {
-        //console.log('✨ Setting up print handler...');
         
         window.addEventListener('beforeprint', () => {
-            //console.log('✨ Preparing page for print...');
             
             // Rimuovi eventuali animazioni per la stampa
             document.querySelectorAll('.section').forEach(section => {
@@ -199,7 +213,6 @@ class EffectsManager {
         });
         
         window.addEventListener('afterprint', () => {
-            //console.log('✨ Restoring page after print...');
             
             // Ripristina la visualizzazione normale
             document.querySelectorAll('.language-selector, .back-to-top').forEach(element => {
@@ -210,42 +223,9 @@ class EffectsManager {
     }
 
     /**
-     * Aggiunge effetti hover per cards e elementi interattivi
-     */
-    addHoverEffects() {
-        //console.log('✨ Setting up hover effects...');
-        
-        // Effetti per le skill cards
-        document.querySelectorAll('.skill-item, .project-item').forEach(item => {
-            item.addEventListener('mouseenter', (e) => {
-                e.target.style.transform = 'translateY(-5px)';
-                e.target.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
-            });
-            
-            item.addEventListener('mouseleave', (e) => {
-                e.target.style.transform = '';
-                e.target.style.boxShadow = '';
-            });
-        });
-        
-        // Effetti per i pulsanti
-        document.querySelectorAll('button, .btn').forEach(btn => {
-            btn.addEventListener('mouseenter', (e) => {
-                e.target.style.transform = 'scale(1.05)';
-            });
-            
-            btn.addEventListener('mouseleave', (e) => {
-                e.target.style.transform = '';
-            });
-        });
-        
-    }
-
-    /**
      * Aggiunge animazioni per le icone social
      */
     addSocialIconEffects() {
-        //console.log('✨ Setting up social icon effects...');
         
         document.querySelectorAll('.social-links a').forEach(link => {
             link.addEventListener('mouseenter', (e) => {
@@ -270,7 +250,6 @@ class EffectsManager {
      * Aggiunge effetti di caricamento
      */
     addLoadingEffects() {
-        //console.log('✨ Setting up loading effects...');
         
         // Fade in graduale per il body
         document.body.style.opacity = '0';
@@ -279,7 +258,6 @@ class EffectsManager {
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.body.style.opacity = '1';
-                //console.log('✨ Page fade-in completed');
             }, 100);
         });
         
@@ -289,7 +267,6 @@ class EffectsManager {
      * Cleanup delle animazioni e observers
      */
     cleanup() {
-        //console.log('✨ Cleaning up effects...');
         
         if (this.animationObserver) {
             this.animationObserver.disconnect();
@@ -298,7 +275,6 @@ class EffectsManager {
         // Clear any remaining timeouts/intervals
         this.scrollEffects.clear();
         
-        //console.log('✨ Effects cleanup completed');
     }
 
     /**
@@ -306,11 +282,9 @@ class EffectsManager {
      */
     initialize() {
         if (this.initialized) {
-            //console.log('✨ EffectsManager already initialized');
             return;
         }
 
-        //console.log('✨ Initializing EffectsManager...');
         
         // Aspetta che il DOM sia pronto
         if (document.readyState === 'loading') {
@@ -333,34 +307,9 @@ class EffectsManager {
         this.addDynamicEffects();
         this.setupBackToTop();
         this.setupPrintHandler();
-        this.addHoverEffects();
+        this.setupHoverEffects();
         this.addSocialIconEffects();
         
-    }
-
-    /**
-     * Aggiunge un nuovo effetto personalizzato
-     * @param {string} name - Nome dell'effetto
-     * @param {Function} effect - Funzione dell'effetto
-     */
-    addCustomEffect(name, effect) {
-        if (typeof effect === 'function') {
-            this.scrollEffects.set(name, effect);
-            //console.log(`✨ Custom effect "${name}" added`);
-        } else {
-            console.error('✨ Custom effect must be a function');
-        }
-    }
-
-    /**
-     * Rimuove un effetto personalizzato
-     * @param {string} name - Nome dell'effetto da rimuovere
-     */
-    removeCustomEffect(name) {
-        if (this.scrollEffects.has(name)) {
-            this.scrollEffects.delete(name);
-            //console.log(`✨ Custom effect "${name}" removed`);
-        }
     }
 }
 

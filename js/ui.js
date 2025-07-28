@@ -6,7 +6,6 @@
 class UIManager {
     constructor() {
         this.initialized = false;
-        this.components = new Map();
         this.themes = new Map();
         this.currentTheme = 'modern';
         this.responsive = {
@@ -60,7 +59,6 @@ class UIManager {
      * @param {string} newBreakpoint - Nuovo breakpoint
      */
     onBreakpointChange(oldBreakpoint, newBreakpoint) {
-        //console.log(`🎨 Breakpoint changed: ${oldBreakpoint} → ${newBreakpoint}`);
         
         // Emetti evento personalizzato
         const event = new CustomEvent('breakpointChanged', {
@@ -92,7 +90,6 @@ class UIManager {
      */
     registerTheme(name, config) {
         this.themes.set(name, config);
-        //console.log(`🎨 Theme registered: ${name}`);
     }
 
     /**
@@ -119,7 +116,6 @@ class UIManager {
             window.utils.setStorage('preferred-theme', themeName);
         }
         
-        //console.log(`🎨 Theme changed: ${oldTheme} → ${themeName}`);
         
         // Emetti evento
         const event = new CustomEvent('themeChanged', {
@@ -148,7 +144,6 @@ class UIManager {
             }
         }
         
-        //console.log(`🎨 Dark mode ${isDark ? 'disabled' : 'enabled'}`);
         
         // Track in analytics
         if (window.analyticsManager) {
@@ -160,278 +155,13 @@ class UIManager {
         return !isDark;
     }
 
-    // ===== GESTIONE COMPONENTI =====
 
-    /**
-     * Registra un componente UI
-     * @param {string} name - Nome del componente
-     * @param {object} component - Istanza del componente
-     */
-    registerComponent(name, component) {
-        this.components.set(name, component);
-        //console.log(`🎨 Component registered: ${name}`);
-    }
 
-    /**
-     * Ottiene un componente registrato
-     * @param {string} name - Nome del componente
-     * @returns {object|null} Componente o null
-     */
-    getComponent(name) {
-        return this.components.get(name) || null;
-    }
 
-    /**
-     * Inizializza tutti i componenti registrati
-     */
-    initializeComponents() {
-        //console.log('🎨 Initializing UI components...');
-        
-        for (const [name, component] of this.components) {
-            try {
-                if (typeof component.initialize === 'function') {
-                    component.initialize();
-                    //console.log(`🎨 Component "${name}" initialized`);
-                }
-            } catch (error) {
-                console.error(`🎨 Error initializing component "${name}":`, error);
-            }
-        }
-    }
 
-    // ===== GESTIONE MODALI E OVERLAY =====
 
-    /**
-     * Mostra un modale
-     * @param {string|Element} content - Contenuto del modale
-     * @param {object} options - Opzioni del modale
-     * @returns {Element} Elemento modale creato
-     */
-    showModal(content, options = {}) {
-        const defaultOptions = {
-            closeOnOverlay: true,
-            closeOnEscape: true,
-            showCloseButton: true,
-            className: 'modal',
-            backdrop: true
-        };
-        
-        const opts = { ...defaultOptions, ...options };
-        
-        // Crea backdrop
-        const backdrop = window.utils?.createElement('div', {
-            className: 'modal-backdrop'
-        });
-        
-        // Crea modale
-        const modal = window.utils?.createElement('div', {
-            className: opts.className,
-            'aria-modal': 'true',
-            role: 'dialog'
-        });
-        
-        // Aggiungi contenuto
-        if (typeof content === 'string') {
-            modal.innerHTML = content;
-        } else if (content instanceof Element) {
-            modal.appendChild(content);
-        }
-        
-        // Aggiungi pulsante chiusura se richiesto
-        if (opts.showCloseButton) {
-            const closeBtn = window.utils?.createElement('button', {
-                className: 'modal-close',
-                'aria-label': 'Chiudi modale'
-            }, '×');
-            
-            closeBtn.addEventListener('click', () => this.closeModal(modal));
-            modal.appendChild(closeBtn);
-        }
-        
-        // Event listeners
-        if (opts.closeOnOverlay) {
-            backdrop.addEventListener('click', (e) => {
-                if (e.target === backdrop) {
-                    this.closeModal(modal);
-                }
-            });
-        }
-        
-        if (opts.closeOnEscape) {
-            const escapeHandler = (e) => {
-                if (e.key === 'Escape') {
-                    this.closeModal(modal);
-                    document.removeEventListener('keydown', escapeHandler);
-                }
-            };
-            document.addEventListener('keydown', escapeHandler);
-        }
-        
-        // Aggiungi al DOM
-        if (opts.backdrop) {
-            document.body.appendChild(backdrop);
-        }
-        document.body.appendChild(modal);
-        
-        // Previeni scroll del body
-        document.body.style.overflow = 'hidden';
-        
-        // Animazione di entrata
-        requestAnimationFrame(() => {
-            if (backdrop) backdrop.classList.add('show');
-            modal.classList.add('show');
-        });
-        
-        //console.log('🎨 Modal shown');
-        return modal;
-    }
 
-    /**
-     * Chiude un modale
-     * @param {Element} modal - Elemento modale da chiudere
-     */
-    closeModal(modal) {
-        if (!modal) return;
-        
-        const backdrop = document.querySelector('.modal-backdrop');
-        
-        // Animazione di uscita
-        modal.classList.remove('show');
-        if (backdrop) backdrop.classList.remove('show');
-        
-        // Rimuovi dopo animazione
-        setTimeout(() => {
-            modal.remove();
-            if (backdrop) backdrop.remove();
-            
-            // Ripristina scroll del body
-            document.body.style.overflow = '';
-            
-            //console.log('🎨 Modal closed');
-        }, 300);
-    }
 
-    // ===== GESTIONE NOTIFICHE =====
-
-    /**
-     * Mostra una notifica toast
-     * @param {string} message - Messaggio della notifica
-     * @param {string} type - Tipo di notifica ('info', 'success', 'warning', 'error')
-     * @param {number} duration - Durata in ms (0 per permanente)
-     * @returns {Element} Elemento notifica
-     */
-    showNotification(message, type = 'info', duration = 5000) {
-        // Crea container se non esiste
-        let container = document.querySelector('.notifications-container');
-        if (!container) {
-            container = window.utils?.createElement('div', {
-                className: 'notifications-container'
-            });
-            document.body.appendChild(container);
-        }
-        
-        // Crea notifica
-        const notification = window.utils?.createElement('div', {
-            className: `notification notification-${type}`,
-            role: 'alert'
-        });
-        
-        // Aggiungi icona in base al tipo
-        const icons = {
-            info: 'ℹ️',
-            success: '✅',
-            warning: '⚠️',
-            error: '❌'
-        };
-        
-        notification.innerHTML = `
-            <span class="notification-icon">${icons[type]}</span>
-            <span class="notification-message">${message}</span>
-            <button class="notification-close" aria-label="Chiudi notifica">×</button>
-        `;
-        
-        // Event listener per chiusura
-        const closeBtn = notification.querySelector('.notification-close');
-        closeBtn.addEventListener('click', () => this.closeNotification(notification));
-        
-        // Aggiungi al container
-        container.appendChild(notification);
-        
-        // Animazione di entrata
-        requestAnimationFrame(() => {
-            notification.classList.add('show');
-        });
-        
-        // Auto-chiusura se richiesta
-        if (duration > 0) {
-            setTimeout(() => {
-                this.closeNotification(notification);
-            }, duration);
-        }
-        
-        //console.log(`🎨 Notification shown: ${type} - ${message}`);
-        return notification;
-    }
-
-    /**
-     * Chiude una notifica
-     * @param {Element} notification - Elemento notifica da chiudere
-     */
-    closeNotification(notification) {
-        if (!notification) return;
-        
-        notification.classList.remove('show');
-        
-        setTimeout(() => {
-            notification.remove();
-        }, 300);
-    }
-
-    // ===== GESTIONE LOADING =====
-
-    /**
-     * Mostra indicatore di caricamento
-     * @param {string} message - Messaggio di caricamento
-     * @param {Element} target - Elemento target (default: body)
-     * @returns {Element} Elemento loader
-     */
-    showLoader(message = 'Caricamento...', target = document.body) {
-        const loader = window.utils?.createElement('div', {
-            className: 'loader-overlay'
-        });
-        
-        loader.innerHTML = `
-            <div class="loader">
-                <div class="loader-spinner"></div>
-                <div class="loader-message">${message}</div>
-            </div>
-        `;
-        
-        target.appendChild(loader);
-        
-        requestAnimationFrame(() => {
-            loader.classList.add('show');
-        });
-        
-        //console.log(`🎨 Loader shown: ${message}`);
-        return loader;
-    }
-
-    /**
-     * Nasconde indicatore di caricamento
-     * @param {Element} loader - Elemento loader da nascondere
-     */
-    hideLoader(loader) {
-        if (!loader) return;
-        
-        loader.classList.remove('show');
-        
-        setTimeout(() => {
-            loader.remove();
-        }, 300);
-        
-        //console.log('🎨 Loader hidden');
-    }
 
     // ===== GESTIONE FOCUS E ACCESSIBILITÀ =====
 
@@ -439,7 +169,6 @@ class UIManager {
      * Gestione del focus per accessibilità
      */
     setupAccessibility() {
-        //console.log('🎨 Setting up accessibility features...');
         
         // Skip link per navigazione da tastiera (DISABILITATO)
         // this.createSkipLink();
@@ -452,18 +181,7 @@ class UIManager {
         
     }
 
-    /**
-     * Crea skip link per navigazione da tastiera
-     */
-    createSkipLink() {
-        const skipLink = window.utils?.createElement('a', {
-            href: '#main-content',
-            className: 'skip-link',
-            'data-skip-link': 'true'
-        }, 'Salta al contenuto principale');
-        
-        document.body.insertBefore(skipLink, document.body.firstChild);
-    }
+
 
     /**
      * Setup focus visible per navigazione da tastiera
@@ -527,20 +245,7 @@ class UIManager {
         };
     }
 
-    /**
-     * Annuncia un messaggio agli screen reader
-     * @param {string} message - Messaggio da annunciare
-     * @param {boolean} assertive - Se true, usa regione assertiva
-     */
-    announce(message, assertive = false) {
-        const region = assertive ? this.liveRegions.assertive : this.liveRegions.polite;
-        if (region) {
-            region.textContent = message;
-            setTimeout(() => {
-                region.textContent = '';
-            }, 1000);
-        }
-    }
+
 
     // ===== INIZIALIZZAZIONE =====
 
@@ -549,11 +254,9 @@ class UIManager {
      */
     initialize() {
         if (this.initialized) {
-            //console.log('🎨 UIManager already initialized');
             return;
         }
 
-        //console.log('🎨 Initializing UIManager...');
         
         // Carica configurazione
         const config = window.configManager?.getModuleConfig('ui') || {};
@@ -571,9 +274,6 @@ class UIManager {
         
         // Setup accessibilità
         this.setupAccessibility();
-        
-        // Inizializza componenti
-        this.initializeComponents();
         
         // Aggiungi classe breakpoint iniziale
         document.body.classList.add(`breakpoint-${this.responsive.current}`);
@@ -594,37 +294,10 @@ class UIManager {
      * Cleanup del gestore UI
      */
     cleanup() {
-        //console.log('🎨 Cleaning up UIManager...');
-        
-        // Cleanup componenti
-        for (const [name, component] of this.components) {
-            if (typeof component.cleanup === 'function') {
-                try {
-                    component.cleanup();
-                    //console.log(`🎨 Component "${name}" cleaned up`);
-                } catch (error) {
-                    console.error(`🎨 Error cleaning up component "${name}":`, error);
-                }
-            }
-        }
-        
-        this.components.clear();
-        //console.log('🎨 UIManager cleanup completed');
+        // Cleanup base - al momento nessuna operazione richiesta
     }
 
-    /**
-     * Ottieni stato corrente dell'UI
-     * @returns {object} Stato UI
-     */
-    getState() {
-        return {
-            theme: this.currentTheme,
-            darkMode: document.body.classList.contains('dark-mode'),
-            breakpoint: this.responsive.current,
-            components: Array.from(this.components.keys()),
-            initialized: this.initialized
-        };
-    }
+
 }
 
 // Crea istanza globale del gestore UI

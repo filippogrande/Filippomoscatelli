@@ -73,5 +73,9 @@
 }
 
 .contact-item a:hover {
-    opacity: 0.8;
+    opacity: 1;
+    color: #d1d5db;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s ease, opacity 0.2s ease, text-decoration 0.2s ease;
 }

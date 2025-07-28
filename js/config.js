@@ -239,7 +239,6 @@ class ConfigManager {
      * Applica configurazioni specifiche per ambiente
      */
     applyEnvironmentConfig() {
-        //console.log(`⚙️ Environment detected: ${this.environment}`);
         
         // Configurazioni per sviluppo
         if (this.environment === 'development') {
@@ -248,14 +247,12 @@ class ConfigManager {
             this.config.debug.console.level = 'debug';
             this.config.debug.performance.monitoring = true;
             this.config.analytics.tracking.tag = 'cv-dev';
-            //console.log('⚙️ Development mode enabled');
         }
         
         // Configurazioni per test
         if (this.environment === 'test') {
             this.config.analytics.enabled = false;
             this.config.debug.console.level = 'warn';
-            //console.log('⚙️ Test mode enabled');
         }
         
         // Configurazioni per produzione
@@ -264,7 +261,6 @@ class ConfigManager {
             this.config.debug.console.level = 'error';
             this.config.debug.performance.monitoring = false;
             this.config.analytics.tracking.tag = 'cv-prod';
-            //console.log('⚙️ Production mode enabled');
         }
     }
 
@@ -291,37 +287,6 @@ class ConfigManager {
     }
 
     /**
-     * Imposta un valore di configurazione
-     * @param {string} path - Percorso della configurazione
-     * @param {*} value - Nuovo valore
-     */
-    set(path, value) {
-        const keys = path.split('.');
-        const lastKey = keys.pop();
-        let target = this.config;
-        
-        for (const key of keys) {
-            if (!(key in target) || typeof target[key] !== 'object') {
-                target[key] = {};
-            }
-            target = target[key];
-        }
-        
-        target[lastKey] = value;
-        //console.log(`⚙️ Configuration updated: ${path} = ${value}`);
-    }
-
-    /**
-     * Verifica se una feature è abilitata
-     * @param {string} feature - Nome della feature
-     * @returns {boolean} True se abilitata
-     */
-    isEnabled(feature) {
-        const value = this.get(feature);
-        return Boolean(value);
-    }
-
-    /**
      * Ottiene la configurazione per un modulo specifico
      * @param {string} module - Nome del modulo
      * @returns {object} Configurazione del modulo
@@ -331,70 +296,11 @@ class ConfigManager {
     }
 
     /**
-     * Ottiene informazioni sull'ambiente
-     * @returns {object} Informazioni ambiente
-     */
-    getEnvironmentInfo() {
-        return {
-            environment: this.environment,
-            debug: this.config.app.debug,
-            version: this.config.app.version,
-            hostname: window.location.hostname,
-            protocol: window.location.protocol,
-            userAgent: navigator.userAgent
-        };
-    }
-
-    /**
-     * Esporta la configurazione corrente
-     * @returns {object} Configurazione completa
-     */
-    export() {
-        return JSON.parse(JSON.stringify(this.config));
-    }
-
-    /**
-     * Importa una configurazione
-     * @param {object} newConfig - Nuova configurazione
-     */
-    import(newConfig) {
-        if (typeof newConfig === 'object' && newConfig !== null) {
-            this.config = { ...this.config, ...newConfig };
-            //console.log('⚙️ Configuration imported');
-        } else {
-            console.error('⚙️ Invalid configuration object');
-        }
-    }
-
-    /**
-     * Reset della configurazione ai valori di default
-     */
-    reset() {
-        this.config = JSON.parse(JSON.stringify(AppConfig));
-        this.applyEnvironmentConfig();
-        //console.log('⚙️ Configuration reset to defaults');
-    }
-
-    /**
      * Inizializza il gestore configurazione
      */
     initialize() {
         if (this.initialized) {
-            //console.log('⚙️ ConfigManager already initialized');
             return;
-        }
-
-        //console.log('⚙️ Initializing ConfigManager...');
-        
-        // Log delle configurazioni principali
-        if (this.config.app.debug) {
-            /*console.log('⚙️ Configuration loaded:', {
-                app: this.config.app,
-                environment: this.environment,
-                analytics: this.config.analytics.enabled,
-                language: this.config.language.default,
-                ui: this.config.ui.theme.name
-            });*/
         }
         
         this.initialized = true;

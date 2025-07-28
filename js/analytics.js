@@ -14,7 +14,6 @@ class AnalyticsManager {
         this.websiteId = 'a912f285-ced0-4c7f-9260-434d0ee8674a';
         this.initialized = false;
         this.trackingInitialized = false;
-        this.environment = this.detectEnvironment();
         this.trackingConfig = {
             scrollDepth: {
                 25: false,
@@ -24,6 +23,7 @@ class AnalyticsManager {
             },
             maxScrollReached: 0,
             scrollStartTime: Date.now(),
+            pageLoadTime: Date.now(), // Timestamp apertura sito
             timeOnPage: 0,
             timeInterval: null,
             sessionId: this.generateSessionId(),
@@ -34,25 +34,10 @@ class AnalyticsManager {
             languageChanged: false // Flag per tracciare cambio lingua
         };
         
-        console.log(`📊 AnalyticsManager: Initialized for ${this.environment}`);
         this.checkUmamiAvailability();
-        this.setupPrivacyCompliance();
         
         // Salva istanza per evitare duplicati
         window.analyticsManagerInstance = this;
-    }
-
-    /**
-     * Rileva l'ambiente (sviluppo/produzione)
-     */
-    detectEnvironment() {
-        const hostname = window.location.hostname;
-        if (hostname === 'localhost' || 
-            hostname === '127.0.0.1' || 
-            hostname.includes('192.168.')) {
-            return 'development';
-        }
-        return 'production';
     }
 
     /**
@@ -60,21 +45,6 @@ class AnalyticsManager {
      */
     generateSessionId() {
         return 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    }
-
-    /**
-     * Setup per conformità GDPR/Privacy
-     */
-    setupPrivacyCompliance() {
-        // Controlla Do Not Track
-        if (navigator.doNotTrack === '1' || 
-            window.doNotTrack === '1' || 
-            navigator.msDoNotTrack === '1') {
-            console.log('🔒 Analytics: Do Not Track detected, limited tracking');
-            this.trackingConfig.respectDNT = true;
-        }
-
-        // Umami non richiede cookie consent - è privacy-friendly by design
     }
 
     /**
@@ -88,7 +58,6 @@ class AnalyticsManager {
             
             if (this.umamiAvailable || checkCount >= 10) {
                 if (this.umamiAvailable) {
-                    //console.log('📊 Umami ready, initializing tracking...');
                     this.onUmamiReady();
                 }
                 clearInterval(checker);
@@ -109,8 +78,6 @@ class AnalyticsManager {
             return;
         }
         
-        console.log('📊 Umami is ready, initializing advanced tracking...');
-        
         // Track session start (una sola volta)
         this.track('session-start', {
             language: document.documentElement.getAttribute('lang') || 
@@ -118,7 +85,6 @@ class AnalyticsManager {
             user_agent: navigator.userAgent,
             viewport: `${window.innerWidth}x${window.innerHeight}`,
             timestamp: new Date().toISOString(),
-            environment: this.environment,
             session_id: this.trackingConfig.sessionId,
             detected_from: 'html_lang_attribute'
         });
@@ -148,22 +114,14 @@ class AnalyticsManager {
                 options['data-tag'] = tag;
             }
             
-            // Aggiungi identificatori per debug nei data
-            data.debug_timestamp = new Date().toISOString();
-            data.debug_session = this.trackingConfig.sessionId;
-            
             if (typeof eventName === 'string') {
                 // Chiama umami.track con data-tag per filtraggio nativo
                 umami.track(eventName, data, options);
-                console.log(`✅ TRACKED: "${eventName}" data-tag="${tag || 'none'}"`);
             } else {
                 umami.track(eventName); // Per pageview semplici
             }
         } catch (error) {
-            console.error('❌ TRACK ERROR:', {
-                event: eventName,
-                error: error.message
-            });
+            // Silently fail in production
         }
     }
 
@@ -196,20 +154,23 @@ class AnalyticsManager {
                     scroll_percentage: scrollPercent,
                     timestamp: new Date().toISOString(),
                     method: 'scroll_25_percent',
+                    time_from_page_load: Math.round((Date.now() - this.trackingConfig.pageLoadTime) / 1000),
                     language_changed: false,
                     detected_from: 'html_lang_attribute'
                 }, 'language');
             }
             
-            // Track milestone specifiche con percentuale
+                        // Track milestone specifiche con percentuale
             Object.keys(this.trackingConfig.scrollDepth).forEach(depth => {
                 if (scrollPercent >= parseInt(depth) && !this.trackingConfig.scrollDepth[depth]) {
                     this.trackingConfig.scrollDepth[depth] = true;
                     const timeToReach = Math.round((Date.now() - this.trackingConfig.scrollStartTime) / 1000);
+                    const timeFromPageLoad = Math.round((Date.now() - this.trackingConfig.pageLoadTime) / 1000);
                     
                     this.track(`scroll-depth-${depth}`, { 
                         percentage: parseInt(depth),
                         time_to_reach: timeToReach,
+                        time_from_page_load: timeFromPageLoad,
                         max_reached: this.trackingConfig.maxScrollReached,
                         language: window.languageManager?.getCurrentLanguage() || 'it'
                     }, 'scroll');
@@ -229,7 +190,7 @@ class AnalyticsManager {
             if (this.umamiAvailable && this.trackingConfig.maxScrollReached > 0) {
                 this.track('scroll-summary', {
                     max_scroll_reached: this.trackingConfig.maxScrollReached,
-                    total_time_on_page: Math.round((Date.now() - this.trackingConfig.scrollStartTime) / 1000),
+                    total_time_on_page: Math.round((Date.now() - this.trackingConfig.pageLoadTime) / 1000),
                     language: window.languageManager?.getCurrentLanguage() || 'it'
                 }, 'scroll');
             }
@@ -281,8 +242,6 @@ class AnalyticsManager {
             link.addEventListener('click', (e) => {
                 const href = e.target.href;
                 const linkText = e.target.textContent.trim();
-                
-                console.log('🔗 Link clicked:', { href, linkText });
                 
                 let tracked = false;
                 
@@ -352,9 +311,7 @@ class AnalyticsManager {
                     tracked = true;
                 }
                 
-                if (!tracked) {
-                    console.log('⚠️ Link not tracked:', { href, linkText });
-                }
+                // Rimuovi log non necessario in produzione
             });
         });
     }
@@ -374,26 +331,8 @@ class AnalyticsManager {
         document.addEventListener('languageChanged', (e) => {
             const { previousLanguage, newLanguage } = e.detail;
             
-            // Debug: log di ogni evento ricevuto
-            const getCallStack = () => {
-                try {
-                    const stack = new Error().stack;
-                    return stack ? stack.split('\n')[2]?.trim() || 'unknown caller' : 'stack unavailable';
-                } catch (e) {
-                    return 'stack error';
-                }
-            };
-            
-            console.log(`🎯 languageChanged event received:`, { 
-                previousLanguage, 
-                newLanguage,
-                timestamp: e.detail.timestamp,
-                caller: getCallStack()
-            });
-            
             // Validazione dati evento
             if (!newLanguage || newLanguage === previousLanguage) {
-                console.log('⚠️ Invalid language change event:', { previousLanguage, newLanguage });
                 return;
             }
             
@@ -402,7 +341,6 @@ class AnalyticsManager {
             
             // Controlla se è lo stesso cambio dell'ultimo evento (entro 1 secondo)
             if (lastTrackedLanguage === changeKey) {
-                console.log('⚠️ Duplicate language event ignored:', changeKey);
                 return;
             }
             
@@ -427,8 +365,6 @@ class AnalyticsManager {
                     timestamp: new Date().toISOString(),
                     session_id: this.trackingConfig.sessionId
                 }, 'language');
-                
-                console.log(`✅ Language change tracked: lang-to-${newLanguage} (from: ${previousLanguage || 'unknown'})`);
                 
                 // Reset dopo 2 secondi per permettere nuovi cambi
                 setTimeout(() => {
@@ -462,8 +398,6 @@ class AnalyticsManager {
      * Funzioni di test per debug
      */
     testTracking() {
-        console.log('🧪 Testing analytics tracking...');
-        
         this.track('test-analytics', {
             test: 'manual',
             timestamp: new Date().toISOString(),
@@ -489,13 +423,9 @@ class AnalyticsManager {
      */
     initialize() {
         if (this.initialized) {
-            console.log('📊 AnalyticsManager already initialized');
             return;
         }
-
-        console.log('📊 Initializing AnalyticsManager...');
         // L'inizializzazione avanzata ora avviene in onUmamiReady()
-        console.log('📊 AnalyticsManager basic setup completed');
     }
 }
 
@@ -517,5 +447,3 @@ if (typeof window !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { AnalyticsManager, analyticsManager };
 }
-
-console.log('📊 Analytics module loaded successfully');
