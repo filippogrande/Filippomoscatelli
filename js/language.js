@@ -228,22 +228,11 @@ class LanguageManager {
      * @param {string} newLanguage - Nuova lingua
      */
     trackLanguageChange(previousLanguage, newLanguage) {
-        console.log('🌐 Tracking language change:', previousLanguage, '→', newLanguage);
+        console.log('🌐 Language change detected:', previousLanguage, '→', newLanguage);
         
-        if (typeof umami !== 'undefined') {
-            // Solo traccia se è un cambio effettivo e la pagina è completamente caricata
-            if (document.readyState === 'complete' && previousLanguage !== newLanguage) {
-                umami.track('lang-change', { 
-                    from_language: previousLanguage,
-                    to_language: newLanguage,
-                    is_user_action: true,
-                    timestamp: new Date().toISOString()
-                });
-                console.log('✅ Umami language change tracking sent:', previousLanguage, '→', newLanguage);
-            }
-        } else {
-            console.log('❌ Umami not available for language change tracking');
-        }
+        // Non facciamo più tracking diretto qui - ora gestito da analytics.js
+        // Il tracking avviene tramite CustomEvent 'languageChanged'
+        console.log('📊 Language tracking delegated to analytics.js via CustomEvent');
     }
 
     /**
@@ -322,11 +311,8 @@ class LanguageManager {
             return;
         }
         
-        // Track button click in Umami
-        if (typeof umami !== 'undefined') {
-            umami.track('lang-button', { language: lang, from: this.currentLanguage });
-            console.log('✅ Umami button click tracking sent');
-        }
+        // Il tracking avviene tramite CustomEvent 'languageChanged' in analytics.js
+        console.log('🔄 Language button clicked, delegating tracking to analytics.js');
         
         this.changeLanguage(lang);
         console.log('🔘 Language changed successfully to:', lang);

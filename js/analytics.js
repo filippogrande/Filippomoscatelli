@@ -120,6 +120,12 @@ class AnalyticsManager {
             return;
         }
         
+        // Flag globale per evitare inizializzazioni multiple
+        if (window.analyticsInitialized) {
+            console.log('📊 Analytics already initialized globally, skipping');
+            return;
+        }
+        
         console.log('📊 Umami is ready, initializing advanced tracking...');
         
         // Track session start (una sola volta)
@@ -135,6 +141,7 @@ class AnalyticsManager {
         // Inizializza tracking avanzato
         this.initializeAdvancedTracking();
         this.initialized = true;
+        window.analyticsInitialized = true; // Flag globale
     }
 
     /**
