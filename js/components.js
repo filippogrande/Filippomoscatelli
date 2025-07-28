@@ -118,16 +118,11 @@ class ComponentsManager {
     initLanguageSelector(element) {
         const buttons = element.querySelectorAll('.lang-btn');
         
-        buttons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const lang = e.target.dataset.lang;
-                if (window.languageManager) {
-                    window.languageManager.changeLanguage(lang);
-                }
-            });
-        });
+        // Non aggiungiamo listener qui - gestiti da language.js
+        // Questo evita doppi listener e conflitti
+        console.log(`🌐 Language selector found with ${buttons.length} buttons - managed by LanguageManager`);
 
-        // Keyboard navigation
+        // Keyboard navigation per accessibilità
         element.addEventListener('keydown', (e) => {
             if (e.key === 'Tab') {
                 // Migliora la navigazione con tab
