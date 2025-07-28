@@ -5,7 +5,7 @@
 
 // Auto-detect environment e configurazione Umami
 (function() {
-    console.log('🟢 Inline scripts module loaded');
+    //console.log('🟢 Inline scripts module loaded');
     
     // Auto-detect se siamo in sviluppo o produzione
     const isLocalDevelopment = window.location.hostname === 'localhost' || 
@@ -40,23 +40,23 @@
     }
     
     document.head.appendChild(script);
-    console.log('📊 Umami script configured:', umamiConfig);
+    //console.log('📊 Umami script configured:', umamiConfig);
 })();
 
 // Debug immediato HTML
 (function() {
-    console.log('🟢 HTML DEBUG SCRIPT EXECUTED');
-    console.log('Time:', new Date().toISOString());
-    console.log('Location:', window.location.href);
+    //console.log('🟢 HTML DEBUG SCRIPT EXECUTED');
+    //console.log('Time:', new Date().toISOString());
+    //console.log('Location:', window.location.href);
     
     // Controlla se beforeSendHandler è già definito
     if (typeof beforeSendHandler !== 'undefined') {
-        console.log('✅ beforeSendHandler already defined');
+        //console.log('✅ beforeSendHandler already defined');
     } else {
-        console.log('❌ beforeSendHandler not yet defined');
+        //console.log('❌ beforeSendHandler not yet defined');
         // Definisci beforeSendHandler per preservare IP reale
         window.beforeSendHandler = function(type, payload) {
-            console.log('🚀 beforeSendHandler called:', { type, payload });
+            //console.log('🚀 beforeSendHandler called:', { type, payload });
             
             // Aggiungi informazioni aggiuntive per geolocalizzazione
             if (payload && typeof payload === 'object') {
@@ -71,7 +71,7 @@
                 payload.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
                 payload.language_full = navigator.language;
                 
-                console.log('📊 Enhanced payload:', payload);
+                //console.log('📊 Enhanced payload:', payload);
             }
             
             return payload; // Procedi con l'invio
@@ -81,20 +81,20 @@
 
 // Debug pre-script
 (function() {
-    console.log('🔵 PRE-SCRIPT DEBUG');
-    console.log('About to load modular JavaScript architecture');
-    console.log('Current scripts in document:', document.scripts.length);
+    //console.log('🔵 PRE-SCRIPT DEBUG');
+    //console.log('About to load modular JavaScript architecture');
+    //console.log('Current scripts in document:', document.scripts.length);
     
     // Lista tutti gli script presenti
     Array.from(document.scripts).forEach((script, index) => {
-        console.log(`Script ${index}:`, {
+        /*console.log(`Script ${index}:`, {
             src: script.src,
             id: script.id,
             async: script.async,
             defer: script.defer,
             readyState: script.readyState
-        });
+        });*/
     });
 })();
 
-console.log('📜 Inline scripts module fully loaded');
+//console.log('📜 Inline scripts module fully loaded');

@@ -66,22 +66,7 @@ class AnalyticsManager {
             this.trackingConfig.respectDNT = true;
         }
 
-        // Controlla consent cookies (per produzione)
-        if (this.environment === 'production') {
-            this.checkCookieConsent();
-        }
-    }
-
-    /**
-     * Controlla il consenso ai cookies
-     */
-    checkCookieConsent() {
-        const consent = localStorage.getItem('cookie-consent');
-        if (!consent) {
-            console.log('🍪 Analytics: Waiting for cookie consent');
-            return false;
-        }
-        return consent === 'accepted';
+        // Umami non richiede cookie consent - è privacy-friendly by design
     }
 
     /**
@@ -95,7 +80,7 @@ class AnalyticsManager {
             
             if (this.umamiAvailable || checkCount >= 10) {
                 if (this.umamiAvailable) {
-                    console.log('📊 Umami ready, initializing tracking...');
+                    //console.log('📊 Umami ready, initializing tracking...');
                     this.onUmamiReady();
                 }
                 clearInterval(checker);

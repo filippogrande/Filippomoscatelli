@@ -358,4 +358,4 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = { LanguageManager, languageManager, translations };
 }
 
-console.log('🌐 Language module loaded');
+//console.log('🌐 Language module loaded');

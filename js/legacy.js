@@ -6,7 +6,7 @@
 
 // Funzioni di test legacy per compatibilità
 window.testUmamiTracking = function() {
-    console.log('🔄 Legacy function: testUmamiTracking() -> redirecting to analyticsManager.testTracking()');
+    //console.log('🔄 Legacy function: testUmamiTracking() -> redirecting to analyticsManager.testTracking()');
     if (window.analyticsManager) {
         window.analyticsManager.testTracking();
     } else {
@@ -15,17 +15,17 @@ window.testUmamiTracking = function() {
 };
 
 window.testAllUmamiMethods = function() {
-    console.log('🔄 Legacy function: testAllUmamiMethods() -> using new analytics system');
+    //console.log('🔄 Legacy function: testAllUmamiMethods() -> using new analytics system');
     if (window.analyticsManager) {
         window.analyticsManager.testTracking();
-        console.log('📊 Analytics tracking stats:', window.analyticsManager.getTrackingStats());
+        //console.log('📊 Analytics tracking stats:', window.analyticsManager.getTrackingStats());
     } else {
         console.error('❌ Analytics manager not available');
     }
 };
 
 window.changeLanguage = function(lang) {
-    console.log('🔄 Legacy function: changeLanguage() -> redirecting to languageManager.changeLanguage()');
+    //console.log('🔄 Legacy function: changeLanguage() -> redirecting to languageManager.changeLanguage()');
     if (window.languageManager) {
         window.languageManager.changeLanguage(lang);
     } else {
@@ -34,7 +34,7 @@ window.changeLanguage = function(lang) {
 };
 
 window.detectPreferredLanguage = function() {
-    console.log('🔄 Legacy function: detectPreferredLanguage() -> redirecting to languageManager.detectPreferredLanguage()');
+    //console.log('🔄 Legacy function: detectPreferredLanguage() -> redirecting to languageManager.detectPreferredLanguage()');
     if (window.languageManager) {
         return window.languageManager.detectPreferredLanguage();
     } else {
@@ -61,4 +61,4 @@ Object.defineProperty(window, 'translations', {
     }
 });
 
-console.log('🔄 Legacy compatibility layer loaded');
+//console.log('🔄 Legacy compatibility layer loaded');

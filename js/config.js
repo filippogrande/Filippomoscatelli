@@ -239,7 +239,7 @@ class ConfigManager {
      * Applica configurazioni specifiche per ambiente
      */
     applyEnvironmentConfig() {
-        console.log(`⚙️ Environment detected: ${this.environment}`);
+        //console.log(`⚙️ Environment detected: ${this.environment}`);
         
         // Configurazioni per sviluppo
         if (this.environment === 'development') {
@@ -248,14 +248,14 @@ class ConfigManager {
             this.config.debug.console.level = 'debug';
             this.config.debug.performance.monitoring = true;
             this.config.analytics.tracking.tag = 'cv-dev';
-            console.log('⚙️ Development mode enabled');
+            //console.log('⚙️ Development mode enabled');
         }
         
         // Configurazioni per test
         if (this.environment === 'test') {
             this.config.analytics.enabled = false;
             this.config.debug.console.level = 'warn';
-            console.log('⚙️ Test mode enabled');
+            //console.log('⚙️ Test mode enabled');
         }
         
         // Configurazioni per produzione
@@ -264,7 +264,7 @@ class ConfigManager {
             this.config.debug.console.level = 'error';
             this.config.debug.performance.monitoring = false;
             this.config.analytics.tracking.tag = 'cv-prod';
-            console.log('⚙️ Production mode enabled');
+            //console.log('⚙️ Production mode enabled');
         }
     }
 
@@ -308,7 +308,7 @@ class ConfigManager {
         }
         
         target[lastKey] = value;
-        console.log(`⚙️ Configuration updated: ${path} = ${value}`);
+        //console.log(`⚙️ Configuration updated: ${path} = ${value}`);
     }
 
     /**
@@ -360,7 +360,7 @@ class ConfigManager {
     import(newConfig) {
         if (typeof newConfig === 'object' && newConfig !== null) {
             this.config = { ...this.config, ...newConfig };
-            console.log('⚙️ Configuration imported');
+            //console.log('⚙️ Configuration imported');
         } else {
             console.error('⚙️ Invalid configuration object');
         }
@@ -372,7 +372,7 @@ class ConfigManager {
     reset() {
         this.config = JSON.parse(JSON.stringify(AppConfig));
         this.applyEnvironmentConfig();
-        console.log('⚙️ Configuration reset to defaults');
+        //console.log('⚙️ Configuration reset to defaults');
     }
 
     /**
@@ -380,21 +380,21 @@ class ConfigManager {
      */
     initialize() {
         if (this.initialized) {
-            console.log('⚙️ ConfigManager already initialized');
+            //console.log('⚙️ ConfigManager already initialized');
             return;
         }
 
-        console.log('⚙️ Initializing ConfigManager...');
+        //console.log('⚙️ Initializing ConfigManager...');
         
         // Log delle configurazioni principali
         if (this.config.app.debug) {
-            console.log('⚙️ Configuration loaded:', {
+            /*console.log('⚙️ Configuration loaded:', {
                 app: this.config.app,
                 environment: this.environment,
                 analytics: this.config.analytics.enabled,
                 language: this.config.language.default,
                 ui: this.config.ui.theme.name
-            });
+            });*/
         }
         
         this.initialized = true;

@@ -37,7 +37,7 @@ class AppManager {
         
         for (const [name, module] of this.modules) {
             try {
-                console.log(`🔧 Initializing module: ${name}`);
+                //console.log(`🔧 Initializing module: ${name}`);
                 const result = module.initialize();
                 
                 // Se il modulo restituisce una Promise, la aggiungiamo all'array
@@ -54,20 +54,20 @@ class AppManager {
         if (initPromises.length > 0) {
             try {
                 await Promise.all(initPromises);
-                console.log('✅ All async module initializations completed');
+                //console.log('✅ All async module initializations completed');
             } catch (error) {
                 console.error('❌ Error in async module initialization:', error);
             }
         }
         
-        console.log('🎉 All modules initialized successfully!');
+        //console.log('🎉 All modules initialized successfully!');
     }
 
     /**
      * Setup dei gestori di errore globali
      */
     setupErrorHandlers() {
-        console.log('🛡️ Setting up global error handlers...');
+        //console.log('🛡️ Setting up global error handlers...');
         
         // Gestione degli errori JavaScript
         window.addEventListener('error', this.handleError);
@@ -75,7 +75,7 @@ class AppManager {
         // Gestione delle promesse non catturate
         window.addEventListener('unhandledrejection', this.handleUnhandledRejection);
         
-        console.log('🛡️ Error handlers setup completed');
+        //console.log('🛡️ Error handlers setup completed');
     }
 
     /**
@@ -131,7 +131,7 @@ class AppManager {
      * Setup delle funzioni di debug globali
      */
     setupDebugFunctions() {
-        console.log('🔍 Setting up debug functions...');
+        //console.log('🔍 Setting up debug functions...');
         
         // Funzioni di test globali
         window.testLanguage = () => {
@@ -139,14 +139,14 @@ class AppManager {
                 const currentLang = window.languageManager.getCurrentLanguage();
                 const newLang = currentLang === 'it' ? 'en' : 'it';
                 window.languageManager.changeLanguage(newLang);
-                console.log(`🧪 Test: Changed language from ${currentLang} to ${newLang}`);
+                //console.log(`🧪 Test: Changed language from ${currentLang} to ${newLang}`);
             }
         };
         
         window.testAnalytics = () => {
             if (window.analyticsManager) {
                 window.analyticsManager.testTracking();
-                console.log('🧪 Test: Analytics tracking test executed');
+                //console.log('🧪 Test: Analytics tracking test executed');
             }
         };
         
@@ -158,21 +158,21 @@ class AppManager {
                 analytics: window.analyticsManager?.getTrackingStats(),
                 timestamp: new Date().toISOString()
             };
-            console.log('📊 App Status:', status);
+            //console.log('📊 App Status:', status);
             return status;
         };
         
         window.enableDebugMode = () => {
             this.debugMode = true;
-            console.log('🔍 Debug mode enabled');
+            //console.log('🔍 Debug mode enabled');
         };
         
         window.disableDebugMode = () => {
             this.debugMode = false;
-            console.log('🔍 Debug mode disabled');
+            //console.log('🔍 Debug mode disabled');
         };
         
-        console.log('🔍 Debug functions setup completed');
+        //console.log('🔍 Debug functions setup completed');
     }
 
     /**
@@ -206,15 +206,15 @@ class AppManager {
      */
     async initialize() {
         if (this.initialized) {
-            console.log('🚀 AppManager already initialized');
+            //console.log('🚀 AppManager already initialized');
             return;
         }
 
-        console.log('🚀 Starting application initialization...');
-        console.log('🕒 Timestamp:', new Date().toISOString());
-        console.log('🌐 URL:', window.location.href);
-        console.log('📱 User Agent:', navigator.userAgent);
-        console.log('📄 Document State:', document.readyState);
+        //console.log('🚀 Starting application initialization...');
+        //console.log('🕒 Timestamp:', new Date().toISOString());
+        //console.log('🌐 URL:', window.location.href);
+        //console.log('📱 User Agent:', navigator.userAgent);
+        //console.log('📄 Document State:', document.readyState);
         
         // Setup gestori di errore prima di tutto
         this.setupErrorHandlers();
@@ -232,7 +232,7 @@ class AppManager {
         this.showWelcomeMessage();
         
         this.initialized = true;
-        console.log('🎉 Application initialization completed successfully!');
+        //console.log('🎉 Application initialization completed successfully!');
         
         // Track application start
         if (window.analyticsManager) {
@@ -248,7 +248,7 @@ class AppManager {
      * Registra tutti i moduli disponibili
      */
     registerAvailableModules() {
-        console.log('� Registering available modules...');
+        //console.log('� Registering available modules...');
         
         // Registra i moduli in ordine di dipendenza
         if (window.ConfigManager) {
@@ -283,7 +283,7 @@ class AppManager {
             this.registerModule('ui', new window.UIManager());
         }
         
-        console.log(`✅ Registered ${this.modules.size} modules`);
+        //console.log(`✅ Registered ${this.modules.size} modules`);
     }
 
     /**
@@ -306,14 +306,14 @@ class AppManager {
      * Cleanup dell'applicazione
      */
     cleanup() {
-        console.log('🧹 Cleaning up application...');
+        //console.log('🧹 Cleaning up application...');
         
         // Cleanup dei moduli
         for (const [name, module] of this.modules) {
             if (typeof module.cleanup === 'function') {
                 try {
                     module.cleanup();
-                    console.log(`🧹 Module "${name}" cleaned up`);
+                    //console.log(`🧹 Module "${name}" cleaned up`);
                 } catch (error) {
                     console.error(`❌ Error cleaning up module "${name}":`, error);
                 }
@@ -324,7 +324,7 @@ class AppManager {
         window.removeEventListener('error', this.handleError);
         window.removeEventListener('unhandledrejection', this.handleUnhandledRejection);
         
-        console.log('🧹 Application cleanup completed');
+        //console.log('🧹 Application cleanup completed');
     }
 }
 
@@ -356,4 +356,4 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = { AppManager, appManager };
 }
 
-console.log('🚀 Main application module loaded successfully');
+//console.log('🚀 Main application module loaded successfully');

@@ -14,7 +14,7 @@ class ComponentsManager {
      * Inizializza il component manager
      */
     initialize() {
-        console.log('🧩 ComponentsManager: Starting initialization...');
+        //console.log('🧩 ComponentsManager: Starting initialization...');
         
         try {
             // Registra i componenti base
@@ -23,7 +23,7 @@ class ComponentsManager {
             // Inizializza i componenti esistenti nel DOM
             this.initializeExistingComponents();
             
-            console.log('✅ ComponentsManager: Initialization complete');
+            //console.log('✅ ComponentsManager: Initialization complete');
             return Promise.resolve();
         } catch (error) {
             console.error('❌ ComponentsManager initialization failed:', error);
@@ -84,7 +84,7 @@ class ComponentsManager {
             update: config.update || (() => {})
         });
         
-        console.log(`🧩 Registered component: ${name}`);
+        //console.log(`🧩 Registered component: ${name}`);
     }
 
     /**
@@ -271,7 +271,7 @@ class ComponentsManager {
                 component
             });
             
-            console.log(`🧩 Created dynamic component: ${instanceId}`);
+            //console.log(`🧩 Created dynamic component: ${instanceId}`);
             return element;
         } catch (error) {
             console.error(`❌ Failed to create component "${name}":`, error);
@@ -326,7 +326,7 @@ class ComponentsManager {
             instance.element.remove();
             this.componentInstances.delete(instanceId);
             
-            console.log(`🗑️ Destroyed component: ${instanceId}`);
+            //console.log(`🗑️ Destroyed component: ${instanceId}`);
         } catch (error) {
             console.error(`❌ Failed to destroy component "${instanceId}":`, error);
         }

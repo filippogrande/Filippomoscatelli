@@ -60,7 +60,7 @@ class UIManager {
      * @param {string} newBreakpoint - Nuovo breakpoint
      */
     onBreakpointChange(oldBreakpoint, newBreakpoint) {
-        console.log(`🎨 Breakpoint changed: ${oldBreakpoint} → ${newBreakpoint}`);
+        //console.log(`🎨 Breakpoint changed: ${oldBreakpoint} → ${newBreakpoint}`);
         
         // Emetti evento personalizzato
         const event = new CustomEvent('breakpointChanged', {
@@ -92,7 +92,7 @@ class UIManager {
      */
     registerTheme(name, config) {
         this.themes.set(name, config);
-        console.log(`🎨 Theme registered: ${name}`);
+        //console.log(`🎨 Theme registered: ${name}`);
     }
 
     /**
@@ -119,7 +119,7 @@ class UIManager {
             window.utils.setStorage('preferred-theme', themeName);
         }
         
-        console.log(`🎨 Theme changed: ${oldTheme} → ${themeName}`);
+        //console.log(`🎨 Theme changed: ${oldTheme} → ${themeName}`);
         
         // Emetti evento
         const event = new CustomEvent('themeChanged', {
@@ -148,7 +148,7 @@ class UIManager {
             }
         }
         
-        console.log(`🎨 Dark mode ${isDark ? 'disabled' : 'enabled'}`);
+        //console.log(`🎨 Dark mode ${isDark ? 'disabled' : 'enabled'}`);
         
         // Track in analytics
         if (window.analyticsManager) {
@@ -169,7 +169,7 @@ class UIManager {
      */
     registerComponent(name, component) {
         this.components.set(name, component);
-        console.log(`🎨 Component registered: ${name}`);
+        //console.log(`🎨 Component registered: ${name}`);
     }
 
     /**
@@ -185,13 +185,13 @@ class UIManager {
      * Inizializza tutti i componenti registrati
      */
     initializeComponents() {
-        console.log('🎨 Initializing UI components...');
+        //console.log('🎨 Initializing UI components...');
         
         for (const [name, component] of this.components) {
             try {
                 if (typeof component.initialize === 'function') {
                     component.initialize();
-                    console.log(`🎨 Component "${name}" initialized`);
+                    //console.log(`🎨 Component "${name}" initialized`);
                 }
             } catch (error) {
                 console.error(`🎨 Error initializing component "${name}":`, error);
@@ -282,7 +282,7 @@ class UIManager {
             modal.classList.add('show');
         });
         
-        console.log('🎨 Modal shown');
+        //console.log('🎨 Modal shown');
         return modal;
     }
 
@@ -307,7 +307,7 @@ class UIManager {
             // Ripristina scroll del body
             document.body.style.overflow = '';
             
-            console.log('🎨 Modal closed');
+            //console.log('🎨 Modal closed');
         }, 300);
     }
 
@@ -369,7 +369,7 @@ class UIManager {
             }, duration);
         }
         
-        console.log(`🎨 Notification shown: ${type} - ${message}`);
+        //console.log(`🎨 Notification shown: ${type} - ${message}`);
         return notification;
     }
 
@@ -413,7 +413,7 @@ class UIManager {
             loader.classList.add('show');
         });
         
-        console.log(`🎨 Loader shown: ${message}`);
+        //console.log(`🎨 Loader shown: ${message}`);
         return loader;
     }
 
@@ -430,7 +430,7 @@ class UIManager {
             loader.remove();
         }, 300);
         
-        console.log('🎨 Loader hidden');
+        //console.log('🎨 Loader hidden');
     }
 
     // ===== GESTIONE FOCUS E ACCESSIBILITÀ =====
@@ -439,7 +439,7 @@ class UIManager {
      * Gestione del focus per accessibilità
      */
     setupAccessibility() {
-        console.log('🎨 Setting up accessibility features...');
+        //console.log('🎨 Setting up accessibility features...');
         
         // Skip link per navigazione da tastiera (DISABILITATO)
         // this.createSkipLink();
@@ -549,11 +549,11 @@ class UIManager {
      */
     initialize() {
         if (this.initialized) {
-            console.log('🎨 UIManager already initialized');
+            //console.log('🎨 UIManager already initialized');
             return;
         }
 
-        console.log('🎨 Initializing UIManager...');
+        //console.log('🎨 Initializing UIManager...');
         
         // Carica configurazione
         const config = window.configManager?.getModuleConfig('ui') || {};
@@ -594,14 +594,14 @@ class UIManager {
      * Cleanup del gestore UI
      */
     cleanup() {
-        console.log('🎨 Cleaning up UIManager...');
+        //console.log('🎨 Cleaning up UIManager...');
         
         // Cleanup componenti
         for (const [name, component] of this.components) {
             if (typeof component.cleanup === 'function') {
                 try {
                     component.cleanup();
-                    console.log(`🎨 Component "${name}" cleaned up`);
+                    //console.log(`🎨 Component "${name}" cleaned up`);
                 } catch (error) {
                     console.error(`🎨 Error cleaning up component "${name}":`, error);
                 }
@@ -609,7 +609,7 @@ class UIManager {
         }
         
         this.components.clear();
-        console.log('🎨 UIManager cleanup completed');
+        //console.log('🎨 UIManager cleanup completed');
     }
 
     /**

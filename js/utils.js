@@ -452,7 +452,7 @@ class Utils {
         const start = performance.now();
         const result = await func();
         const end = performance.now();
-        console.log(`🔧 ${label} executed in ${(end - start).toFixed(2)}ms`);
+        //console.log(`🔧 ${label} executed in ${(end - start).toFixed(2)}ms`);
         return result;
     }
 
@@ -504,11 +504,11 @@ class Utils {
      */
     initialize() {
         if (this.initialized) {
-            console.log('🔧 Utils already initialized');
+            //console.log('🔧 Utils already initialized');
             return;
         }
 
-        console.log('🔧 Initializing Utils...');
+        //console.log('🔧 Initializing Utils...');
         
         // Setup di utility globali se in debug mode
         if (window.configManager?.get('app.debug')) {
@@ -531,7 +531,7 @@ class Utils {
             measure: this.measurePerformance.bind(this)
         };
         
-        console.log('🔧 Debug utilities available in window.utils');
+        //console.log('🔧 Debug utilities available in window.utils');
     }
 }
 

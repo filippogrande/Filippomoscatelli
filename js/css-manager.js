@@ -14,21 +14,21 @@ class CSSManager {
      * Inizializza il CSS manager
      */
     initialize() {
-        console.log('🎨 CSSManager: Starting initialization...');
+        //console.log('🎨 CSSManager: Starting initialization...');
         
         try {
             // Se esiste il CSS modulare, usa quello
             if (this.checkModularCSSAvailable()) {
                 this.loadModularCSS();
             } else {
-                console.log('📝 Using legacy CSS structure');
+                //console.log('📝 Using legacy CSS structure');
             }
             
             // Setup di funzionalità dinamiche
             this.setupThemeSupport();
             this.setupPrintOptimization();
             
-            console.log('✅ CSSManager: Initialization complete');
+            //console.log('✅ CSSManager: Initialization complete');
             return Promise.resolve();
         } catch (error) {
             console.error('❌ CSSManager initialization failed:', error);
@@ -56,7 +56,7 @@ class CSSManager {
      * Carica i moduli CSS in ordine
      */
     async loadModularCSS() {
-        console.log('🎨 Loading modular CSS...');
+        //console.log('🎨 Loading modular CSS...');
         
         const modules = [
             'base.css',
@@ -103,7 +103,7 @@ class CSSManager {
 
             link.onload = () => {
                 this.loadedModules.add(moduleName);
-                console.log(`✅ Loaded CSS module: ${moduleName}`);
+                //console.log(`✅ Loaded CSS module: ${moduleName}`);
                 resolve();
             };
 
@@ -123,7 +123,7 @@ class CSSManager {
         const legacyLink = document.querySelector('link[href*="styles.css"]');
         if (legacyLink) {
             legacyLink.remove();
-            console.log('🗑️ Removed legacy CSS');
+            //console.log('🗑️ Removed legacy CSS');
         }
     }
 
@@ -131,7 +131,7 @@ class CSSManager {
      * Carica il CSS legacy come fallback
      */
     loadLegacyCSS() {
-        console.log('📝 Loading legacy CSS as fallback...');
+        //console.log('📝 Loading legacy CSS as fallback...');
         
         const link = document.createElement('link');
         link.rel = 'stylesheet';
@@ -174,7 +174,7 @@ class CSSManager {
         try {
             await this.loadCSSModule(`themes/${themeName}.css`);
             document.documentElement.setAttribute('data-theme', themeName);
-            console.log(`🎨 Theme "${themeName}" loaded`);
+            //console.log(`🎨 Theme "${themeName}" loaded`);
         } catch (error) {
             console.error(`❌ Failed to load theme "${themeName}":`, error);
         }
@@ -191,7 +191,7 @@ class CSSManager {
      * Ricarica tutti i moduli CSS
      */
     async reloadCSS() {
-        console.log('🔄 Reloading CSS modules...');
+        //console.log('🔄 Reloading CSS modules...');
         
         // Rimuovi tutti i moduli CSS
         const cssLinks = document.querySelectorAll('link[data-module]');
