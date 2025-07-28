@@ -5,6 +5,11 @@
 
 class AnalyticsManager {
     constructor() {
+        // Evita doppia inizializzazione
+        if (window.analyticsManagerInstance) {
+            return window.analyticsManagerInstance;
+        }
+        
         this.umamiAvailable = false;
         this.websiteId = 'a912f285-ced0-4c7f-9260-434d0ee8674a';
         this.initialized = false;
@@ -32,6 +37,9 @@ class AnalyticsManager {
         console.log(`📊 AnalyticsManager: Initialized for ${this.environment}`);
         this.checkUmamiAvailability();
         this.setupPrivacyCompliance();
+        
+        // Salva istanza per evitare duplicati
+        window.analyticsManagerInstance = this;
     }
 
     /**
@@ -105,12 +113,14 @@ class AnalyticsManager {
         
         // Track session start (una sola volta)
         this.track('session-start', {
-            language: window.languageManager?.getCurrentLanguage() || 'it',
+            language: document.documentElement.getAttribute('lang') || 
+                     window.languageManager?.getCurrentLanguage() || 'it',
             user_agent: navigator.userAgent,
             viewport: `${window.innerWidth}x${window.innerHeight}`,
             timestamp: new Date().toISOString(),
             environment: this.environment,
-            session_id: this.trackingConfig.sessionId
+            session_id: this.trackingConfig.sessionId,
+            detected_from: 'html_lang_attribute'
         });
         
         // Inizializza tracking avanzato
@@ -126,31 +136,32 @@ class AnalyticsManager {
      * @param {string} tag - Tag per categorizzare l'evento
      */
     track(eventName, data = {}, tag = null) {
-        if (this.umamiAvailable && typeof umami !== 'undefined') {
-            try {
-                // Aggiungi tag ai dati se specificato
-                if (tag) {
-                    data.event_tag = tag;
-                }
-                
-                // Aggiungi identificatori per debug
-                data.debug_timestamp = new Date().toISOString();
-                data.debug_session = this.trackingConfig.sessionId;
-                
-                if (typeof eventName === 'string') {
-                    umami.track(eventName, data);
-                    console.log(`✅ TRACKED: "${eventName}" ${tag ? `[${tag}]` : ''}`);
-                } else {
-                    umami.track(eventName); // Per pageview semplici
-                }
-            } catch (error) {
-                console.error('❌ TRACK ERROR:', {
-                    event: eventName,
-                    error: error.message
-                });
+        // Non trackare se Umami non è disponibile - evita log di errore
+        if (!this.umamiAvailable || typeof umami === 'undefined') {
+            return; // Silently fail se Umami non è pronto
+        }
+
+        try {
+            // Aggiungi tag ai dati se specificato
+            if (tag) {
+                data.event_tag = tag;
             }
-        } else {
-            console.log(`❌ TRACK FAILED: "${eventName}" - Umami not available`);
+            
+            // Aggiungi identificatori per debug
+            data.debug_timestamp = new Date().toISOString();
+            data.debug_session = this.trackingConfig.sessionId;
+            
+            if (typeof eventName === 'string') {
+                umami.track(eventName, data);
+                console.log(`✅ TRACKED: "${eventName}" ${tag ? `[${tag}]` : ''}`);
+            } else {
+                umami.track(eventName); // Per pageview semplici
+            }
+        } catch (error) {
+            console.error('❌ TRACK ERROR:', {
+                event: eventName,
+                error: error.message
+            });
         }
     }
 
@@ -174,14 +185,17 @@ class AnalyticsManager {
             // Track lingua corrente a 25% scroll (se non già fatto e lingua non cambiata)
             if (scrollPercent >= 25 && !languageTrackedAt25Percent && !this.trackingConfig.languageChanged) {
                 languageTrackedAt25Percent = true;
-                const currentLang = window.languageManager?.getCurrentLanguage() || 'it';
+                // Ottieni la lingua corrente effettiva dalla pagina
+                const currentLang = document.documentElement.getAttribute('lang') || 
+                                  window.languageManager?.getCurrentLanguage() || 'it';
                 
                 this.track(`lang-current-${currentLang}`, {
                     language: currentLang,
                     scroll_percentage: scrollPercent,
                     timestamp: new Date().toISOString(),
                     method: 'scroll_25_percent',
-                    language_changed: false
+                    language_changed: false,
+                    detected_from: 'html_lang_attribute'
                 }, 'language');
             }
             
@@ -431,8 +445,13 @@ class AnalyticsManager {
     }
 }
 
-// Crea istanza globale del gestore analytics
-const analyticsManager = new AnalyticsManager();
+// Crea istanza globale del gestore analytics (solo se non esiste già)
+let analyticsManager;
+if (!window.analyticsManagerInstance) {
+    analyticsManager = new AnalyticsManager();
+} else {
+    analyticsManager = window.analyticsManagerInstance;
+}
 
 // Esporta per uso in altri moduli
 if (typeof window !== 'undefined') {
