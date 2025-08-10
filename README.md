@@ -13,13 +13,6 @@ Un sito web moderno e responsive per il curriculum vitae con supporto multilingu
 - **Performance**: Caricamento veloce e ottimizzato
 - **Analytics**: Integrazione con Umami Analytics per tracking privacy-friendly
 
-## 🚀 Come Utilizzare
-
-1. **Clona o scarica** i file del progetto
-2. **Personalizza** i contenuti nel file `index.html` con le tue informazioni
-3. **Modifica** le traduzioni nel file `script.js` se necessario
-4. **Apri** `index.html` in un browser web
-
 ## 📁 Struttura del Progetto
 
 ```
@@ -107,7 +100,7 @@ Il sito integra Umami Analytics per tracciare:
 
 Il sito è ottimizzato per:
 
-- **Desktop**: Layout a due colonne con sidebar
+- **Desktop**: Layout standard, è il sistema su cui è specificatamente pensato
 - **Tablet**: Layout adattivo con elementi ridimensionati
 - **Mobile**: Layout a colonna singola con navigazione mobile-friendly
 
@@ -115,7 +108,7 @@ Il sito è ottimizzato per:
 
 - Meta tag ottimizzati
 - Immagini ottimizzate
-- CSS e JavaScript minificati (in produzione)
+- CSS e JavaScript minificati
 - Struttura semantica HTML5
 - Schema markup (può essere aggiunto)
 
@@ -128,14 +121,15 @@ Il sito è ottimizzato per:
 
 ### 📄 Funzionalità CV
 
-- [ ] **Versione PDF scaricabile**: Pulsante per generare e scaricare automaticamente il CV in formato PDF (implementato con html2pdf.js)
+- [x] **Versione PDF scaricabile**: Pulsante per generare e scaricare automaticamente il CV in formato PDF (è stato implementato con un file statico pdf ottenuto da un sito)
 - [x] **Schema markup**: Codice strutturato (JSON-LD) per aiutare i motori di ricerca a riconoscere il CV
-- [ ] **Galleria progetti estesa**: Pagina dedicata con screenshot, descrizioni dettagliate e demo live
+- [ ] **Miglioramento delle competenze**: le competenze on mouse over fanno vedere dove sono state acquisite
+- [ ] **Galleria progetti estesa**: Pagina dedicata con screenshot, descrizioni dettagliate e demo live 
 
 ### 📊 Monitoring e Analytics _(richiede backend)_
 
 - [x] **Statistiche di visita**: Analytics per monitorare visualizzazioni e interazioni (Umami integrato)
-- [ ] **Performance monitoring**: Monitoraggio velocità di caricamento e ottimizzazioni
+- [ ] **Performance monitoring**: Monitoraggio velocità di caricamento e ottimizzazioni 
 
 ### 📝 Contenuti Futuri
 
@@ -146,14 +140,10 @@ Il sito è ottimizzato per:
 
 Per domande o suggerimenti, contatta:
 
-- **Email**: filipp28mo@gmail.com
+- **Email**: filippo.moscatelli@proton.me
 - **LinkedIn**: [linkedin.com](https://www.linkedin.com/in/filippo-moscatelli-52b566202/)
 - **GitHub**: [github.com](https://github.com/filippogrande)
 
 ## 📄 Licenza
 
 Questo progetto è rilasciato sotto licenza MIT. Sei libero di utilizzarlo e modificarlo per i tuoi scopi personali e commerciali.
-
----
-
-_Creato con ❤️ da Filippo Moscatelli_
