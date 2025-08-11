@@ -22,6 +22,17 @@ body {
     color: #1f2937;
     background-color: #f9fafb;
 }
+/* Sticky footer layout */
+html, body {
+    height: 100%;
+}
+body {
+    display: flex;
+    flex-direction: column;
+}
+main {
+    flex: 1;
+}
 
 .container {
     max-width: 1200px;
