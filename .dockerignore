@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+
+# macOS
+.DS_Store
+
+# Node modules (se mai dovessi usarli)
+node_modules
+npm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Logs
+logs
+*.log
+
+# IDE
+.vscode
+.idea
+
+# Build artifacts
+dist
+build
+
+# Documentation
+README.md
+
+# Kubernetes manifests
+k8s/
+kubernetes/
+*.yaml
+*.yml
+
+# Docker
+Dockerfile
+.dockerignore

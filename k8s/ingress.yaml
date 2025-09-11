@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: filippomoscatelli-cv-ingress
+  namespace: default
+  labels:
+    app: filippomoscatelli-cv
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - filippomoscatelli.com # Sostituisci con il tuo dominio
+      secretName: filippomoscatelli-cv-tls
+  rules:
+    - host: filippomoscatelli.com # Sostituisci con il tuo dominio
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: filippomoscatelli-cv-service
+                port:
+                  number: 80

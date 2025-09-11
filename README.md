@@ -1,6 +1,6 @@
 # CV di Filippo Moscatelli
 
-Un sito web moderno e responsive per il curriculum vitae con supporto multilingue (Italiano/Inglese).
+Un sito web moderno e responsive per il curriculum vitae con supporto multilingue (Italiano/Inglese), containerizzato con Docker e deployabile su Kubernetes.
 
 ## 🌟 Caratteristiche
 
@@ -12,14 +12,202 @@ Un sito web moderno e responsive per il curriculum vitae con supporto multilingu
 - **Print-Friendly**: Ottimizzato per la stampa
 - **Performance**: Caricamento veloce e ottimizzato
 - **Analytics**: Integrazione con Umami Analytics per tracking privacy-friendly
+- **Containerizzato**: Docker container pronto per production
+- **Cloud-Ready**: Deployment automatizzato su Kubernetes
+- **Scalabilità**: Auto-scaling con HPA (Horizontal Pod Autoscaler)
 
 ## 📁 Struttura del Progetto
 
 ```
-├── index.html          # Pagina principale
-├── styles.css          # Stili CSS
-├── script.js           # Logica JavaScript e traduzioni
+├── index.html              # Pagina principale
+├── css/                    # File CSS modulari
+│   ├── main.css           # Stili principali
+│   ├── base.css           # Stili di base
+│   ├── components.css     # Componenti riutilizzabili
+│   ├── responsive.css     # Media queries responsive
+│   └── ...               # Altri file CSS specializzati
+├── js/                    # JavaScript modulare
+│   ├── main.js           # Script principale
+│   ├── language.js       # Gestione multilingue
+│   ├── analytics.js      # Integrazione analytics
+│   └── ...              # Altri moduli JavaScript
+├── k8s/                  # Manifest Kubernetes
+│   ├── deployment.yaml   # Deployment configuration
+│   ├── service.yaml      # Service configuration
+│   ├── ingress.yaml      # Ingress configuration
+│   └── ...              # Altri manifest K8s
+├── Dockerfile            # Container configuration
+├── docker-compose.yml    # Compose per testing locale
+├── nginx.conf           # Configurazione Nginx
+├── deploy.sh            # Script di deployment
+├── Makefile            # Comandi automatizzati
 └── README.md           # Documentazione
+```
+
+## 🚀 Quick Start
+
+### Deployment da Repository GitHub
+
+Il sistema è configurato per fare build direttamente dal repository GitHub, permettendo deployment senza dover clonare localmente:
+
+```bash
+# Build diretto da GitHub (metodo più semplice)
+./build-from-github.sh
+
+# Oppure con make
+make build-github
+
+# Test del container
+docker run -d -p 8080:80 --name cv-test filippomoscatelli/cv-website:latest
+curl http://localhost:8080/health
+```
+
+### Sviluppo Locale
+
+```bash
+# Clone del repository (solo per sviluppo locale)
+git clone https://github.com/filippogrande/Filippomoscatelli.git
+cd Filippomoscatelli
+
+# Avvia in locale con Docker
+make dev
+# oppure
+docker-compose up -d
+
+# Il sito sarà disponibile su http://localhost:8080
+```
+
+### Build e Test
+
+```bash
+# Build locale dell'immagine Docker
+make build
+
+# Build da GitHub (raccomandato per production)
+make build-github
+
+# Test del container
+make test
+
+# Visualizza logs
+make logs
+
+# Ferma il container
+make stop
+```
+
+### Deploy su Kubernetes
+
+```bash
+# Deploy completo (build + push + deploy)
+make prod
+
+# Solo deploy (se l'immagine è già buildutta)
+make deploy
+
+# Verifica stato deployment
+make status
+
+# Rollback se necessario
+make rollback
+```
+
+## 🐳 Docker
+
+### Build Manuale
+
+```bash
+# Build dell'immagine
+docker build -t filippomoscatelli/cv-website:latest .
+
+# Run del container
+docker run -d -p 8080:80 --name cv-website filippomoscatelli/cv-website:latest
+```
+
+### Configurazione
+
+Il container usa Nginx Alpine per servire i file statici con:
+
+- Compressione Gzip abilitata
+- Cache headers ottimizzati
+- Security headers configurati
+- Health check endpoint su `/health`
+- Supporto per routing multilingue
+
+## ☸️ Kubernetes
+
+### Prerequisiti
+
+- Cluster Kubernetes funzionante
+- kubectl configurato
+- Nginx Ingress Controller (opzionale, per l'ingress)
+- Cert-Manager (opzionale, per SSL/TLS)
+
+### Deployment
+
+```bash
+# Usando lo script di deployment
+./deploy.sh all
+
+# Oppure manualmente
+kubectl apply -f k8s/
+```
+
+## 🤖 CI/CD con GitHub Actions
+
+Il repository include un workflow automatizzato che:
+
+1. **Build automatico** su ogni push al branch `main`
+2. **Test di sicurezza** con Trivy scanner
+3. **Deploy automatico** su Kubernetes (se configurato)
+4. **Multi-platform builds** (AMD64, ARM64)
+
+### Configurazione GitHub Actions
+
+Per abilitare il deployment automatico, configura questi secrets nel repository GitHub:
+
+```bash
+# Docker Hub credentials
+DOCKER_USERNAME=your-docker-username
+DOCKER_PASSWORD=your-docker-password
+
+# Kubernetes config (base64 encoded)
+KUBECONFIG=your-kubernetes-config-base64
+```
+
+### Trigger manuale
+
+Puoi anche triggerare manualmente il deployment:
+
+1. Vai su **Actions** nel repository GitHub
+2. Seleziona **Build and Deploy CV Website**
+3. Clicca **Run workflow**
+4. Abilita **Deploy to Kubernetes** se necessario
+
+### Configurazione
+
+I manifest Kubernetes includono:
+
+- **Deployment**: 2 repliche con rolling update
+- **Service**: ClusterIP per comunicazione interna
+- **Ingress**: Esposizione esterna con SSL/TLS
+- **HPA**: Auto-scaling basato su CPU/memoria
+- **ConfigMap**: Configurazioni environment-specific
+
+### Monitoring
+
+```bash
+# Stato dei pod
+kubectl get pods -l app=filippomoscatelli-cv
+
+# Logs dei pod
+kubectl logs -l app=filippomoscatelli-cv -f
+
+# Metriche HPA
+kubectl get hpa filippomoscatelli-cv-hpa
+
+# Eventi del deployment
+kubectl describe deployment filippomoscatelli-cv
 ```
 
 ## 🎨 Personalizzazione
@@ -124,12 +312,12 @@ Il sito è ottimizzato per:
 - [x] **Versione PDF scaricabile**: Pulsante per generare e scaricare automaticamente il CV in formato PDF (è stato implementato con un file statico pdf ottenuto da un sito)
 - [x] **Schema markup**: Codice strutturato (JSON-LD) per aiutare i motori di ricerca a riconoscere il CV
 - [ ] **Miglioramento delle competenze**: le competenze on mouse over fanno vedere dove sono state acquisite
-- [ ] **Galleria progetti estesa**: Pagina dedicata con screenshot, descrizioni dettagliate e demo live 
+- [ ] **Galleria progetti estesa**: Pagina dedicata con screenshot, descrizioni dettagliate e demo live
 
 ### 📊 Monitoring e Analytics _(richiede backend)_
 
 - [x] **Statistiche di visita**: Analytics per monitorare visualizzazioni e interazioni (Umami integrato)
-- [ ] **Performance monitoring**: Monitoraggio velocità di caricamento e ottimizzazioni 
+- [ ] **Performance monitoring**: Monitoraggio velocità di caricamento e ottimizzazioni
 
 ### 📝 Contenuti Futuri
 

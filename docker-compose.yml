@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  cv-website:
+    build: 
+      context: https://github.com/filippogrande/Filippomoscatelli.git
+      dockerfile: Dockerfile
+    image: filippomoscatelli/cv-website:latest
+    container_name: filippomoscatelli-cv-local
+    ports:
+      - "8080:80"
+    environment:
+      - NGINX_WORKER_PROCESSES=1
+      - NGINX_WORKER_CONNECTIONS=1024
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cv.rule=Host(`localhost`)"
+      - "traefik.http.services.cv.loadbalancer.server.port=80"
+
+networks:
+  default:
+    name: cv-network

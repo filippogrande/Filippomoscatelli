@@ -48,6 +48,21 @@ web_modules/
 .rpt2_cache/
 .rts2_cache_cjs/
 .rts2_cache_es/
+
+# Docker
+.env
+.env.local
+.env.production
+docker-compose.override.yml
+
+# Kubernetes secrets (se usi file locali)
+k8s/secrets/
+k8s/local/
+*.secret.yaml
+
+# Build artifacts
+dist/
+build/
 .rts2_cache_umd/
 
 # Optional REPL history
