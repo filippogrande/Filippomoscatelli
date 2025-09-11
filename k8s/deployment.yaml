@@ -1,5 +1,8 @@
 apiVersion: apps/v1
-kind: Deployment
+kind      containers:
+      - name: cv-website
+        image: filippogrande/cv-website:latest
+        imagePullPolicy: Alwaysployment
 metadata:
   name: filippomoscatelli-cv
   namespace: default

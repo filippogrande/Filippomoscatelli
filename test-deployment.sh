@@ -6,7 +6,7 @@
 set -e
 
 # Configurazioni
-IMAGE_NAME="filippomoscatelli/cv-website"
+IMAGE_NAME="filippogrande/cv-website"
 CONTAINER_NAME="cv-test-$(date +%s)"
 TEST_PORT="8081"
 

@@ -5,7 +5,7 @@ services:
     build: 
       context: https://github.com/filippogrande/Filippomoscatelli.git
       dockerfile: Dockerfile
-    image: filippomoscatelli/cv-website:latest
+    image: filippogrande/cv-website:latest
     container_name: filippomoscatelli-cv-local
     ports:
       - "8080:80"

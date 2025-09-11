@@ -6,7 +6,7 @@
 set -e
 
 # Configurazioni
-IMAGE_NAME="filippomoscatelli/cv-website"
+IMAGE_NAME="filippogrande/cv-website"
 IMAGE_TAG="latest"
 NAMESPACE="default"
 CONTEXT="default"  # Modifica con il tuo context Kubernetes

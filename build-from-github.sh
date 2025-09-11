@@ -7,7 +7,7 @@ set -e
 
 # Configurazioni
 GITHUB_REPO="https://github.com/filippogrande/Filippomoscatelli.git"
-IMAGE_NAME="filippomoscatelli/cv-website"
+IMAGE_NAME="filippogrande/cv-website"
 IMAGE_TAG="${1:-latest}"
 REPO_NAME="Filippomoscatelli"
 

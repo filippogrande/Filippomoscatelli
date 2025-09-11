@@ -3,7 +3,7 @@
 .PHONY: help build run stop clean deploy status rollback test
 
 # Variabili
-IMAGE_NAME = filippomoscatelli/cv-website
+IMAGE_NAME = filippogrande/cv-website
 IMAGE_TAG = latest
 CONTAINER_NAME = filippomoscatelli-cv-local
 

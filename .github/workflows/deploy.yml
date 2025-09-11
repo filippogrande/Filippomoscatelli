@@ -18,7 +18,7 @@ on:
         type: boolean
 
 env:
-  IMAGE_NAME: filippomoscatelli/cv-website
+  IMAGE_NAME: filippogrande/cv-website
   REGISTRY: docker.io
 
 jobs:
