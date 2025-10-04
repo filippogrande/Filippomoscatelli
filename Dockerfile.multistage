@@ -6,7 +6,7 @@ WORKDIR /tmp
 RUN git clone https://github.com/filippogrande/Filippomoscatelli.git
 
 # Stage 2: Build finale con nginx
-FROM nginx:alpine
+FROM nginx:1.29.1-alpine-slim
 
 # Install curl for health checks
 RUN apk add --no-cache curl

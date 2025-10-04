@@ -1,5 +1,5 @@
-# Use nginx alpine as base image for serving static content
-FROM nginx:alpine
+# Use nginx alpine slim as base image for serving static content
+FROM nginx:1.29.1-alpine-slim
 
 # Install git and curl for cloning repository
 RUN apk add --no-cache git curl
@@ -28,9 +28,9 @@ RUN cp -r /tmp/Filippomoscatelli/index.html . && \
 # Copy custom nginx configuration from repository (if exists), otherwise use local copy
 COPY nginx.conf /tmp/local-nginx.conf
 RUN if [ -f /tmp/Filippomoscatelli/nginx.conf ]; then \
-        cp /tmp/Filippomoscatelli/nginx.conf /etc/nginx/nginx.conf; \
+    cp /tmp/Filippomoscatelli/nginx.conf /etc/nginx/nginx.conf; \
     else \
-        cp /tmp/local-nginx.conf /etc/nginx/nginx.conf; \
+    cp /tmp/local-nginx.conf /etc/nginx/nginx.conf; \
     fi
 
 # Clean up temporary files
