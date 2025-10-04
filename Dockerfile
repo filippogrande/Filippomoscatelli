@@ -20,6 +20,8 @@ RUN rm -rf /usr/share/nginx/html/*
 RUN cp -r /tmp/Filippomoscatelli/index.html . && \
     cp -r /tmp/Filippomoscatelli/css/ ./css/ && \
     cp -r /tmp/Filippomoscatelli/js/ ./js/ && \
+    cp -r /tmp/Filippomoscatelli/data/ ./data/ && \
+    cp -r /tmp/Filippomoscatelli/FoodDelivery/ ./FoodDelivery/ && \
     cp -r /tmp/Filippomoscatelli/*.pdf . 2>/dev/null || true && \
     cp -r /tmp/Filippomoscatelli/*.png . 2>/dev/null || true && \
     cp -r /tmp/Filippomoscatelli/*.svg . 2>/dev/null || true && \

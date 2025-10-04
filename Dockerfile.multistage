@@ -21,6 +21,8 @@ RUN rm -rf /usr/share/nginx/html/*
 COPY --from=cloner /tmp/Filippomoscatelli/index.html ./
 COPY --from=cloner /tmp/Filippomoscatelli/css/ ./css/
 COPY --from=cloner /tmp/Filippomoscatelli/js/ ./js/
+COPY --from=cloner /tmp/Filippomoscatelli/data/ ./data/
+COPY --from=cloner /tmp/Filippomoscatelli/FoodDelivery/ ./FoodDelivery/
 
 # Copy optional files (use shell to handle wildcards)
 RUN --mount=from=cloner,source=/tmp/Filippomoscatelli,target=/source \
