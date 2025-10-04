@@ -22,10 +22,11 @@ RUN cp -r /tmp/Filippomoscatelli/index.html . && \
     cp -r /tmp/Filippomoscatelli/js/ ./js/ && \
     cp -r /tmp/Filippomoscatelli/data/ ./data/ && \
     cp -r /tmp/Filippomoscatelli/FoodDelivery/ ./FoodDelivery/ && \
+    cp -r /tmp/Filippomoscatelli/k8s/ ./k8s/ 2>/dev/null || true && \
     cp -r /tmp/Filippomoscatelli/*.pdf . 2>/dev/null || true && \
     cp -r /tmp/Filippomoscatelli/*.png . 2>/dev/null || true && \
     cp -r /tmp/Filippomoscatelli/*.svg . 2>/dev/null || true && \
-    cp -r /tmp/Filippomoscatelli/README.md . 2>/dev/null || true
+    cp -r /tmp/Filippomoscatelli/*.md . 2>/dev/null || true
 
 # Copy custom nginx configuration from repository (if exists), otherwise use local copy
 COPY nginx.conf /tmp/local-nginx.conf
