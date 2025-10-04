@@ -11,7 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="food-delivery-page">
     <!-- Language Selector -->
     <div class="language-selector">
         <button class="lang-btn active" data-lang="it">
@@ -77,13 +77,28 @@
         <div class="container">
             <section class="section">
                 <h2 data-lang-it="Panoramica del Progetto" data-lang-en="Project Overview">Panoramica del Progetto</h2>
-                <p data-lang-it="Progetto completo realizzato per l'esame di Mobile Computing presso l'Università Statale di Milano. L'applicazione è stata implementata in due codebase separate con funzionalità identiche: una versione nativa per Android sviluppata in Kotlin e una versione cross-platform realizzata in React Native per iOS e Android. La versione React Native risulta più rifinita e completa dal punto di vista dell'interfaccia utente e dell'esperienza d'uso, ed è stata anche testata con successo su dispositivi iOS per garantire la compatibilità cross-platform." data-lang-en="Complete project developed for the Mobile Computing exam at the State University of Milan. The application was implemented in two separate codebases with identical functionality: a native version for Android developed in Kotlin and a cross-platform version created in React Native for iOS and Android. The React Native version is more refined and complete from a user interface and user experience perspective, and was also successfully tested on iOS devices to ensure cross-platform compatibility.">Progetto completo realizzato per l'esame di Mobile Computing presso l'Università Statale di Milano. L'applicazione è stata implementata in due codebase separate con funzionalità identiche: una versione nativa per Android sviluppata in Kotlin e una versione cross-platform realizzata in React Native per iOS e Android. La versione React Native risulta più rifinita e completa dal punto di vista dell'interfaccia utente e dell'esperienza d'uso, ed è stata anche testata con successo su dispositivi iOS per garantire la compatibilità cross-platform.</p>
                 
-                <p data-lang-it="L'obiettivo del progetto era sviluppare un'applicazione di food delivery simile a servizi come Deliveroo, Uber Eats e Just Eat, con una semplificazione architettonica significativa: ogni ristorante gestisce un unico menù completo anziché prodotti individuali. Questa scelta ha permesso di concentrarsi sugli aspetti core dello sviluppo mobile mantenendo la complessità gestibile." data-lang-en="The project's goal was to develop a food delivery application similar to services like Deliveroo, Uber Eats and Just Eat, with a significant architectural simplification: each restaurant manages a single complete menu rather than individual products. This choice allowed focusing on the core aspects of mobile development while keeping complexity manageable.">L'obiettivo del progetto era sviluppare un'applicazione di food delivery simile a servizi come Deliveroo, Uber Eats e Just Eat, con una semplificazione architettonica significativa: ogni ristorante gestisce un unico menù completo anziché prodotti individuali. Questa scelta ha permesso di concentrarsi sugli aspetti core dello sviluppo mobile mantenendo la complessità gestibile.</p>
+                <div class="project-overview">
+                    <div class="overview-section">
+                        <h3 data-lang-it="🎯 Obiettivo del Progetto" data-lang-en="🎯 Project Goal">🎯 Obiettivo del Progetto</h3>
+                        <p data-lang-it="Progetto completo realizzato per l'esame di Mobile Computing presso l'Università Statale di Milano. L'obiettivo era sviluppare un'applicazione di food delivery simile a servizi come Deliveroo, Uber Eats e Just Eat, con una semplificazione architettonica significativa: ogni ristorante gestisce un unico menù completo anziché prodotti individuali." data-lang-en="Complete project developed for the Mobile Computing exam at the State University of Milan. The goal was to develop a food delivery application similar to services like Deliveroo, Uber Eats and Just Eat, with a significant architectural simplification: each restaurant manages a single complete menu rather than individual products.">Progetto completo realizzato per l'esame di Mobile Computing presso l'Università Statale di Milano. L'obiettivo era sviluppare un'applicazione di food delivery simile a servizi come Deliveroo, Uber Eats e Just Eat, con una semplificazione architettonica significativa: ogni ristorante gestisce un unico menù completo anziché prodotti individuali.</p>
+                    </div>
 
-                <p data-lang-it="Il docente ha fornito un server backend completo con API REST dedicate, liberando gli studenti dalla necessità di sviluppare l'infrastruttura server e permettendo di focalizzarsi esclusivamente sullo sviluppo delle applicazioni mobile. Le API fornite gestivano registrazione utenti, autenticazione, gestione menù, elaborazione ordini e tracking delle consegne." data-lang-en="The instructor provided a complete backend server with dedicated REST APIs, freeing students from the need to develop server infrastructure and allowing them to focus exclusively on mobile application development. The provided APIs handled user registration, authentication, menu management, order processing and delivery tracking.">Il docente ha fornito un server backend completo con API REST dedicate, liberando gli studenti dalla necessità di sviluppare l'infrastruttura server e permettendo di focalizzarsi esclusivamente sullo sviluppo delle applicazioni mobile. Le API fornite gestivano registrazione utenti, autenticazione, gestione menù, elaborazione ordini e tracking delle consegne.</p>
+                    <div class="overview-section">
+                        <h3 data-lang-it="📱 Implementazione Dual-Platform" data-lang-en="📱 Dual-Platform Implementation">📱 Implementazione Dual-Platform</h3>
+                        <p data-lang-it="L'applicazione è stata implementata in due codebase separate con funzionalità identiche: una versione nativa per Android sviluppata in Kotlin e una versione cross-platform realizzata in React Native per iOS e Android. La versione React Native risulta più rifinita e completa dal punto di vista dell'interfaccia utente e dell'esperienza d'uso, ed è stata anche testata con successo su dispositivi iOS per garantire la compatibilità cross-platform." data-lang-en="The application was implemented in two separate codebases with identical functionality: a native version for Android developed in Kotlin and a cross-platform version created in React Native for iOS and Android. The React Native version is more refined and complete from a user interface and user experience perspective, and was also successfully tested on iOS devices to ensure cross-platform compatibility.">L'applicazione è stata implementata in due codebase separate con funzionalità identiche: una versione nativa per Android sviluppata in Kotlin e una versione cross-platform realizzata in React Native per iOS e Android. La versione React Native risulta più rifinita e completa dal punto di vista dell'interfaccia utente e dell'esperienza d'uso, ed è stata anche testata con successo su dispositivi iOS per garantire la compatibilità cross-platform.</p>
+                    </div>
 
-                <p data-lang-it="Una caratteristica distintiva del progetto rispetto ai tradizionali sistemi di delivery è l'utilizzo simulato di droni per le consegne. Il movimento del drone viene rappresentato come un percorso rettilineo diretto tra il ristorante e la posizione dell'utente, semplificando notevolmente la logica di navigazione. Questa scelta progettuale ha permesso di evitare l'implementazione complessa del sistema di mappe e pathfinding di Google, concentrando lo sviluppo sulle funzionalità core dell'applicazione mobile." data-lang-en="A distinctive feature of the project compared to traditional delivery systems is the simulated use of drones for deliveries. The drone's movement is represented as a direct straight-line path between the restaurant and the user's location, greatly simplifying navigation logic. This design choice allowed avoiding the complex implementation of Google's mapping and pathfinding system, focusing development on the core functionalities of the mobile application.">Una caratteristica distintiva del progetto rispetto ai tradizionali sistemi di delivery è l'utilizzo simulato di droni per le consegne. Il movimento del drone viene rappresentato come un percorso rettilineo diretto tra il ristorante e la posizione dell'utente, semplificando notevolmente la logica di navigazione. Questa scelta progettuale ha permesso di evitare l'implementazione complessa del sistema di mappe e pathfinding di Google, concentrando lo sviluppo sulle funzionalità core dell'applicazione mobile.</p>
+                    <div class="overview-section">
+                        <h3 data-lang-it="🛠️ Architettura Backend" data-lang-en="🛠️ Backend Architecture">🛠️ Architettura Backend</h3>
+                        <p data-lang-it="Il docente ha fornito un server backend completo con API REST dedicate, liberando gli studenti dalla necessità di sviluppare l'infrastruttura server e permettendo di focalizzarsi esclusivamente sullo sviluppo delle applicazioni mobile. Le API fornite gestivano registrazione utenti, autenticazione, gestione menù, elaborazione ordini e tracking delle consegne." data-lang-en="The instructor provided a complete backend server with dedicated REST APIs, freeing students from the need to develop server infrastructure and allowing them to focus exclusively on mobile application development. The provided APIs handled user registration, authentication, menu management, order processing and delivery tracking.">Il docente ha fornito un server backend completo con API REST dedicate, liberando gli studenti dalla necessità di sviluppare l'infrastruttura server e permettendo di focalizzarsi esclusivamente sullo sviluppo delle applicazioni mobile. Le API fornite gestivano registrazione utenti, autenticazione, gestione menù, elaborazione ordini e tracking delle consegne.</p>
+                    </div>
+
+                    <div class="overview-section">
+                        <h3 data-lang-it="🚁 Sistema di Consegna con Droni" data-lang-en="🚁 Drone Delivery System">🚁 Sistema di Consegna con Droni</h3>
+                        <p data-lang-it="Una caratteristica distintiva del progetto rispetto ai tradizionali sistemi di delivery è l'utilizzo simulato di droni per le consegne. Il movimento del drone viene rappresentato come un percorso rettilineo diretto tra il ristorante e la posizione dell'utente, semplificando notevolmente la logica di navigazione. Questa scelta progettuale ha permesso di evitare l'implementazione complessa del sistema di mappe e pathfinding di Google, concentrando lo sviluppo sulle funzionalità core dell'applicazione mobile." data-lang-en="A distinctive feature of the project compared to traditional delivery systems is the simulated use of drones for deliveries. The drone's movement is represented as a direct straight-line path between the restaurant and the user's location, greatly simplifying navigation logic. This design choice allowed avoiding the complex implementation of Google's mapping and pathfinding system, focusing development on the core functionalities of the mobile application.">Una caratteristica distintiva del progetto rispetto ai tradizionali sistemi di delivery è l'utilizzo simulato di droni per le consegne. Il movimento del drone viene rappresentato come un percorso rettilineo diretto tra il ristorante e la posizione dell'utente, semplificando notevolmente la logica di navigazione. Questa scelta progettuale ha permesso di evitare l'implementazione complessa del sistema di mappe e pathfinding di Google, concentrando lo sviluppo sulle funzionalità core dell'applicazione mobile.</p>
+                    </div>
+                </div>
 
                 <div class="code-repositories">
                     <h3 data-lang-it="📂 Codice Sorgente" data-lang-en="📂 Source Code">📂 Codice Sorgente</h3>
@@ -322,37 +337,122 @@
                 <p data-lang-it="Documentazione completa delle API REST fornite dal docente per l'integrazione backend dell'applicazione:" data-lang-en="Complete documentation of the REST APIs provided by the instructor for the application's backend integration:">Documentazione completa delle API REST fornite dal docente per l'integrazione backend dell'applicazione:</p>
                 
                 <div class="api-list">
-                    <div class="api-endpoint">
-                        <code>POST /user</code>
-                        <span data-lang-it="Registrazione nuovo utente (restituisce SID e UID)" data-lang-en="New user registration (returns SID and UID)">Registrazione nuovo utente (restituisce SID e UID)</span>
+                    <div class="api-card api-post">
+                        <div class="api-endpoint-header">
+                            <span class="api-path">/user</span>
+                        </div>
+                        <div class="api-details">
+                            <div class="api-method">
+                                <span class="method-badge post">POST</span>
+                            </div>
+                            <div class="api-description">
+                                <p data-lang-it="Serve per registrare un nuovo utente, viene usata solo alla prima accensione dell'app, restituisce un SID e UID." data-lang-en="Used to register a new user, only used on first app startup, returns an SID and UID.">Serve per registrare un nuovo utente, viene usata solo alla prima accensione dell'app, restituisce un SID e UID.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="api-endpoint">
-                        <code>GET /user/febbraio2/{uid}/completedOrders</code>
-                        <span data-lang-it="Recupero storico ordini completati" data-lang-en="Retrieve completed orders history">Recupero storico ordini completati</span>
+                    <div class="api-card api-get">
+                        <div class="api-endpoint-header">
+                            <span class="api-path">/user/febbraio2/{uid}/completedOrders</span>
+                        </div>
+                        <div class="api-details">
+                            <div class="api-method">
+                                <span class="method-badge get">GET</span>
+                            </div>
+                            <div class="api-description">
+                                <p data-lang-it="Serve per recuperare lo storico degli ordini, risponde con un array con le informazioni basilari degli ordini passati, viene usata nella pagina ordini e non contiene informazioni su un eventuale ordine attivo." data-lang-en="Used to retrieve order history, responds with an array containing basic information of past orders, used in the orders page and does not contain information about any active orders.">Serve per recuperare lo storico degli ordini, risponde con un array con le informazioni basilari degli ordini passati, viene usata nella pagina ordini e non contiene informazioni su un eventuale ordine attivo.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="api-endpoint">
-                        <code>GET/PUT /user/{uid}</code>
-                        <span data-lang-it="Gestione informazioni profilo utente" data-lang-en="User profile information management">Gestione informazioni profilo utente</span>
+                    <div class="api-card api-get">
+                        <div class="api-endpoint-header">
+                            <span class="api-path">/user/{uid}</span>
+                        </div>
+                        <div class="api-details">
+                            <div class="api-method">
+                                <span class="method-badge get">GET</span>
+                            </div>
+                            <div class="api-description">
+                                <p data-lang-it="Serve per richiedere le informazioni dell'utente, viene usata nella schermata profilo per popolarla quando l'utente apre quella schermata." data-lang-en="Used to request user information, used in the profile screen to populate it when the user opens that screen.">Serve per richiedere le informazioni dell'utente, viene usata nella schermata profilo per popolarla quando l'utente apre quella schermata.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="api-endpoint">
-                        <code>GET /order/{oid}</code>
-                        <span data-lang-it="Stato e dettagli ordine (tracking drone)" data-lang-en="Order status and details (drone tracking)">Stato e dettagli ordine (tracking drone)</span>
+                    <div class="api-card api-put">
+                        <div class="api-endpoint-header">
+                            <span class="api-path">/user/{uid}</span>
+                        </div>
+                        <div class="api-details">
+                            <div class="api-method">
+                                <span class="method-badge put">PUT</span>
+                            </div>
+                            <div class="api-description">
+                                <p data-lang-it="Serve per inserire i dati dell'utente senza i quali non può fare un ordine, viene usata quando l'utente aggiorna i propri dati nella schermata utente." data-lang-en="Used to insert user data without which they cannot place an order, used when the user updates their data in the user screen.">Serve per inserire i dati dell'utente senza i quali non può fare un ordine, viene usata quando l'utente aggiorna i propri dati nella schermata utente.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="api-endpoint">
-                        <code>POST /menu/{mid}/buy</code>
-                        <span data-lang-it="Acquisto menù selezionato" data-lang-en="Purchase selected menu">Acquisto menù selezionato</span>
+                    <div class="api-card api-get">
+                        <div class="api-endpoint-header">
+                            <span class="api-path">/order/{oid}</span>
+                        </div>
+                        <div class="api-details">
+                            <div class="api-method">
+                                <span class="method-badge get">GET</span>
+                            </div>
+                            <div class="api-description">
+                                <p data-lang-it="Chiede i dettagli precisi di un determinato ordine, quando è stato consegnato o quando è prevista la consegna, dove verrà consegnato o dove è stato consegnato e eventualmente la posizione del drone, viene usata in tutte le pagine dedicate ad un singolo ordine sia quelle dedicate ad un ordine in corso sia la pagina dedicata ad un singolo ordine completato." data-lang-en="Requests precise details of a specific order, when it was delivered or when delivery is expected, where it will be delivered or where it was delivered and possibly the drone position, used in all pages dedicated to a single order both those dedicated to an ongoing order and the page dedicated to a single completed order.">Chiede i dettagli precisi di un determinato ordine, quando è stato consegnato o quando è prevista la consegna, dove verrà consegnato o dove è stato consegnato e eventualmente la posizione del drone, viene usata in tutte le pagine dedicate ad un singolo ordine sia quelle dedicate ad un ordine in corso sia la pagina dedicata ad un singolo ordine completato.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="api-endpoint">
-                        <code>GET /menu</code>
-                        <span data-lang-it="Lista menù ordinati per vicinanza" data-lang-en="Menu list sorted by proximity">Lista menù ordinati per vicinanza</span>
+                    <div class="api-card api-post">
+                        <div class="api-endpoint-header">
+                            <span class="api-path">/menu/{mid}/buy</span>
+                        </div>
+                        <div class="api-details">
+                            <div class="api-method">
+                                <span class="method-badge post">POST</span>
+                            </div>
+                            <div class="api-description">
+                                <p data-lang-it="Manda le info al server della richiesta di acquisto di un menù da parte dell'utente, risponde con il numero d'ordine." data-lang-en="Sends user's menu purchase request information to the server, responds with the order number.">Manda le info al server della richiesta di acquisto di un menù da parte dell'utente, risponde con il numero d'ordine.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="api-endpoint">
-                        <code>GET /menu/{mid}</code>
-                        <span data-lang-it="Dettagli specifici menù" data-lang-en="Specific menu details">Dettagli specifici menù</span>
+                    <div class="api-card api-get">
+                        <div class="api-endpoint-header">
+                            <span class="api-path">/menu/{mid}</span>
+                        </div>
+                        <div class="api-details">
+                            <div class="api-method">
+                                <span class="method-badge get">GET</span>
+                            </div>
+                            <div class="api-description">
+                                <p data-lang-it="Chiede dei dettagli specifici di un menù, viene usata sia nelle schermate menù che in quelle degli ordini per avere ulteriori informazioni interessanti all'utente sui menù." data-lang-en="Requests specific details of a menu, used both in menu screens and in order screens to have additional interesting information for the user about the menus.">Chiede dei dettagli specifici di un menù, viene usata sia nelle schermate menù che in quelle degli ordini per avere ulteriori informazioni interessanti all'utente sui menù.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="api-endpoint">
-                        <code>GET /menu/{mid}/image</code>
-                        <span data-lang-it="Immagine menù (base64)" data-lang-en="Menu image (base64)">Immagine menù (base64)</span>
+                    <div class="api-card api-get">
+                        <div class="api-endpoint-header">
+                            <span class="api-path">/menu</span>
+                        </div>
+                        <div class="api-details">
+                            <div class="api-method">
+                                <span class="method-badge get">GET</span>
+                            </div>
+                            <div class="api-description">
+                                <p data-lang-it="Riceve i 20 menù più vicini, viene usata nella schermata dei menù e nella homepage per mostrare i menù." data-lang-en="Receives the 20 closest menus, used in the menu screen and on the homepage to show the menus.">Riceve i 20 menù più vicini, viene usata nella schermata dei menù e nella homepage per mostrare i menù.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="api-card api-get">
+                        <div class="api-endpoint-header">
+                            <span class="api-path">/menu/{mid}/image</span>
+                        </div>
+                        <div class="api-details">
+                            <div class="api-method">
+                                <span class="method-badge get">GET</span>
+                            </div>
+                            <div class="api-description">
+                                <p data-lang-it="Richiede l'immagine di un determinato menù, viene usata in tutte le pagine con immagini di menù. Risponde con l'immagine in base64 e non viene sempre chiamata perché il sistema salva le immagini in locale dopo la prima richiesta per migliorare le performance." data-lang-en="Requests the image of a specific menu, used in all pages with menu images. Responds with the image in base64 and is not always called because the system saves images locally after the first request to improve performance.">Richiede l'immagine di un determinato menù, viene usata in tutte le pagine con immagini di menù. Risponde con l'immagine in base64 e non viene sempre chiamata perché il sistema salva le immagini in locale dopo la prima richiesta per migliorare le performance.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

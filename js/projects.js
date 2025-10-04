@@ -2,7 +2,10 @@
 class ProjectsManager {
     constructor(containerSelector = '.projects-grid') {
         this.container = document.querySelector(containerSelector);
+        this.mobileContainer = null;
         this.dataUrl = '/data/projects.json';
+        this.mobileVisibleCount = 4;
+        this.showingAllMobile = false;
     }
 
     async initialize() {
@@ -10,14 +13,28 @@ class ProjectsManager {
 
         console.debug('ProjectsManager: initializing, container found:', !!this.container);
 
+        // Crea container mobile
+        this.createMobileContainer();
+
         try {
             const projects = await this.fetchProjects();
             console.debug('ProjectsManager: fetched projects count=', Array.isArray(projects)?projects.length:'?', projects);
             const sorted = this.sortByDateDesc(projects);
             this.render(sorted);
+            this.renderMobile(sorted);
         } catch (err) {
             console.error('Errore caricamento progetti:', err);
         }
+    }
+
+    createMobileContainer() {
+        const section = this.container.closest('.section');
+        if (!section) return;
+
+        this.mobileContainer = document.createElement('div');
+        this.mobileContainer.className = 'projects-mobile-accordion';
+        this.mobileContainer.style.display = 'none'; // Nascosto di default
+        section.appendChild(this.mobileContainer);
     }
 
     async fetchProjects() {
@@ -117,6 +134,144 @@ class ProjectsManager {
         if (!month) return year;
         const months = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
         return `${months[month-1]} ${year}`;
+    }
+
+    renderMobile(items) {
+        if (!this.mobileContainer) return;
+
+        this.mobileContainer.innerHTML = '';
+        
+        const visibleItems = this.showingAllMobile ? items : items.slice(0, this.mobileVisibleCount);
+        
+        visibleItems.forEach((project, index) => {
+            const accordionItem = this.createAccordionItem(project, index);
+            this.mobileContainer.appendChild(accordionItem);
+        });
+
+        // Aggiungi pulsante "Mostra altri" se ci sono più progetti
+        if (!this.showingAllMobile && items.length > this.mobileVisibleCount) {
+            const showMoreDiv = document.createElement('div');
+            showMoreDiv.className = 'projects-show-more';
+            
+            const showMoreBtn = document.createElement('button');
+            showMoreBtn.className = 'projects-show-more-btn';
+            showMoreBtn.textContent = `Mostra altri ${items.length - this.mobileVisibleCount} progetti`;
+            
+            showMoreBtn.addEventListener('click', () => {
+                this.showingAllMobile = true;
+                this.renderMobile(items);
+            });
+            
+            showMoreDiv.appendChild(showMoreBtn);
+            this.mobileContainer.appendChild(showMoreDiv);
+        }
+    }
+
+    createAccordionItem(project, index) {
+        const item = document.createElement('div');
+        item.className = 'project-accordion-item';
+
+        // Header
+        const header = document.createElement('div');
+        header.className = 'project-accordion-header';
+        
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'project-accordion-title';
+        
+        const title = document.createElement('h3');
+        title.textContent = project.title;
+        
+        const date = document.createElement('p');
+        date.className = 'project-accordion-date';
+        date.textContent = this.formatPeriod(project.startDate, project.endDate);
+        
+        titleDiv.appendChild(title);
+        titleDiv.appendChild(date);
+        
+        const icon = document.createElement('i');
+        icon.className = 'fas fa-chevron-down project-accordion-icon';
+        
+        header.appendChild(titleDiv);
+        header.appendChild(icon);
+
+        // Content
+        const content = document.createElement('div');
+        content.className = 'project-accordion-content';
+        
+        const description = document.createElement('p');
+        description.textContent = project.description;
+        content.appendChild(description);
+
+        // Tech tags
+        if (project.tech && project.tech.length > 0) {
+            const techDiv = document.createElement('div');
+            techDiv.className = 'project-accordion-tech';
+            
+            project.tech.forEach(tech => {
+                const tag = document.createElement('span');
+                tag.className = 'tech-tag';
+                tag.textContent = tech;
+                techDiv.appendChild(tag);
+            });
+            
+            content.appendChild(techDiv);
+        }
+
+        // Links
+        const linksDiv = document.createElement('div');
+        linksDiv.className = 'project-accordion-links';
+        
+        if (project.links && project.links.length > 0) {
+            project.links.forEach(link => {
+                const a = document.createElement('a');
+                a.className = 'project-accordion-link';
+                a.href = link.url;
+                a.textContent = link.label;
+                if (link.url && !link.url.startsWith('/') && !link.url.startsWith('#') && link.url.includes('://')) {
+                    a.target = '_blank';
+                }
+                linksDiv.appendChild(a);
+            });
+        } else if (project.link) {
+            const a = document.createElement('a');
+            a.className = 'project-accordion-link';
+            a.href = project.link;
+            a.textContent = 'Visualizza progetto';
+            if (project.link && !project.link.startsWith('/') && !project.link.startsWith('#') && project.link.includes('://')) {
+                a.target = '_blank';
+            }
+            linksDiv.appendChild(a);
+        }
+        
+        content.appendChild(linksDiv);
+
+        // Event listener per toggle
+        header.addEventListener('click', () => {
+            const isExpanded = content.classList.contains('expanded');
+            
+            // Chiudi tutti gli altri accordion
+            this.mobileContainer.querySelectorAll('.project-accordion-content').forEach(c => {
+                c.classList.remove('expanded');
+            });
+            this.mobileContainer.querySelectorAll('.project-accordion-header').forEach(h => {
+                h.classList.remove('active');
+            });
+            this.mobileContainer.querySelectorAll('.project-accordion-icon').forEach(i => {
+                i.classList.remove('rotated');
+            });
+            
+            // Toggle corrente
+            if (!isExpanded) {
+                content.classList.add('expanded');
+                header.classList.add('active');
+                icon.classList.add('rotated');
+            }
+        });
+
+        item.appendChild(header);
+        item.appendChild(content);
+
+        return item;
     }
 }
 

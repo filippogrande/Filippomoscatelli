@@ -316,7 +316,87 @@
     }
 }
 
-/* API Documentation Styles */
+/* New API Cards Styles */
+.api-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border-left: 4px solid #e2e8f0;
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.api-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.api-card.api-post {
+    border-left-color: #10b981; /* Verde per POST */
+}
+
+.api-card.api-get {
+    border-left-color: #3b82f6; /* Blu per GET */
+}
+
+.api-card.api-put {
+    border-left-color: #f59e0b; /* Arancione per PUT */
+}
+
+.api-endpoint-header {
+    background: #f8fafc;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.api-path {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.api-details {
+    padding: 1.5rem;
+}
+
+.api-method {
+    margin-bottom: 1rem;
+}
+
+.method-badge {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.method-badge.post {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.method-badge.get {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.method-badge.put {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.api-description p {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+/* Old API Documentation Styles */
 .api-list {
     margin-top: 1rem;
 }
@@ -525,6 +605,45 @@
     .back-to-cv-btn i {
         font-size: 0.875rem;
     }
+}
+
+/* Project overview sections */
+.project-overview {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.overview-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+    border-radius: 12px;
+    padding: 2rem;
+    border-left: 4px solid var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.overview-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.overview-section h3 {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.overview-section p {
+    line-height: 1.7;
+    color: var(--text-color);
+    margin: 0;
+    font-size: 1rem;
 }
 
 /* Code Repositories Section */
