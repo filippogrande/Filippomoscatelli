@@ -186,6 +186,11 @@ class AppManager {
             this.registerModule('ui', new window.UIManager());
         }
         
+        // Projects manager: carica dinamicamente la lista progetti da JSON
+        if (window.ProjectsManager) {
+            this.registerModule('projects', new window.ProjectsManager());
+        }
+        
     }
 
 

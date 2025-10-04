@@ -17,10 +17,15 @@ build: ## Build dell'immagine Docker dal repository locale
 	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) .
 	@echo "✅ Build completata!"
 
-build-github: ## Build dell'immagine Docker da GitHub
-	@echo "🏗️  Building Docker image from GitHub..."
+build-github: ## Build dell'immagine Docker da GitHub (multi-platform)
+	@echo "🏗️  Building Docker image from GitHub (AMD64 + ARM64 + x86)..."
 	./build-from-github.sh $(IMAGE_TAG)
 	@echo "✅ Build da GitHub completata!"
+
+push: ## Push dell'immagine su Docker Hub (multi-platform)
+	@echo "📤 Pushing multi-platform image to Docker Hub..."
+	docker buildx build --platform linux/amd64,linux/arm64,linux/386 -t $(IMAGE_NAME):$(IMAGE_TAG) --push .
+	@echo "✅ Push completato!"
 
 run: ## Avvia il container in locale
 	@echo "🚀 Starting container..."

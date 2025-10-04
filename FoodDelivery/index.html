@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <!-- Favicon per browser -->
+    <link rel="icon" type="image/svg+xml" href="../cv.svg">
+    <link rel="icon" type="image/png" sizes="48x48" href="../cv.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-it="Applicazione Food Delivery - Filippo Moscatelli" data-lang-en="Food Delivery App - Filippo Moscatelli">Applicazione Food Delivery - Filippo Moscatelli</title>
+    <link rel="stylesheet" href="../css/main.css?v=20241004-6">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <button class="lang-btn active" data-lang="it">
+            <img src="https://flagcdn.com/24x18/it.png" alt="Italiano"> IT
+        </button>
+        <button class="lang-btn" data-lang="en">
+            <img src="https://flagcdn.com/24x18/gb.png" alt="English"> EN
+        </button>
+    </div>
+
+    <!-- Back to CV Button -->
+    <div class="back-to-cv">
+        <a href="../" class="back-to-cv-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span data-lang-it="Torna al CV" data-lang-en="Back to CV">Torna al CV</span>
+        </a>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top" aria-label="Torna all'inizio">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="profile-section">
+                <div class="profile-image">
+                    <img src="https://avatars.githubusercontent.com/u/35425860?s=400&u=67f3f62f5d202537c1fed54db800531662db392a&v=4" alt="Filippo Moscatelli">
+                </div>
+                <div class="profile-info">
+                    <h1 class="name">Filippo Moscatelli</h1>
+                    <p class="title" data-lang-it="Applicazione Food Delivery" data-lang-en="Food Delivery Application">Applicazione Food Delivery</p>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <a href="mailto:filippo.moscatelli@proton.me">filippo.moscatelli@proton.me</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span data-lang-it="Milano, Italia" data-lang-en="Milan, Italy">Milano, Italia</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fab fa-linkedin"></i>
+                            <a href="https://www.linkedin.com/in/filippo-moscatelli-52b566202/" target="_blank">linkedin.com</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fab fa-github"></i>
+                            <a href="https://github.com/filippogrande/Food-Delivery-React" target="_blank" data-lang-it="React Native Repository" data-lang-en="React Native Repository">React Native Repository</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fab fa-github"></i>
+                            <a href="https://github.com/filippogrande/Food-delivery-kotlin" target="_blank" data-lang-it="Kotlin Repository" data-lang-en="Kotlin Repository">Kotlin Repository</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <section class="section">
+                <h2 data-lang-it="Panoramica del Progetto" data-lang-en="Project Overview">Panoramica del Progetto</h2>
+                <p data-lang-it="Progetto completo realizzato per l'esame di Mobile Computing presso l'Università Statale di Milano. L'applicazione è stata implementata in due codebase separate con funzionalità identiche: una versione nativa per Android sviluppata in Kotlin e una versione cross-platform realizzata in React Native per iOS e Android. La versione React Native risulta più rifinita e completa dal punto di vista dell'interfaccia utente e dell'esperienza d'uso, ed è stata anche testata con successo su dispositivi iOS per garantire la compatibilità cross-platform." data-lang-en="Complete project developed for the Mobile Computing exam at the State University of Milan. The application was implemented in two separate codebases with identical functionality: a native version for Android developed in Kotlin and a cross-platform version created in React Native for iOS and Android. The React Native version is more refined and complete from a user interface and user experience perspective, and was also successfully tested on iOS devices to ensure cross-platform compatibility.">Progetto completo realizzato per l'esame di Mobile Computing presso l'Università Statale di Milano. L'applicazione è stata implementata in due codebase separate con funzionalità identiche: una versione nativa per Android sviluppata in Kotlin e una versione cross-platform realizzata in React Native per iOS e Android. La versione React Native risulta più rifinita e completa dal punto di vista dell'interfaccia utente e dell'esperienza d'uso, ed è stata anche testata con successo su dispositivi iOS per garantire la compatibilità cross-platform.</p>
+                
+                <p data-lang-it="L'obiettivo del progetto era sviluppare un'applicazione di food delivery simile a servizi come Deliveroo, Uber Eats e Just Eat, con una semplificazione architettonica significativa: ogni ristorante gestisce un unico menù completo anziché prodotti individuali. Questa scelta ha permesso di concentrarsi sugli aspetti core dello sviluppo mobile mantenendo la complessità gestibile." data-lang-en="The project's goal was to develop a food delivery application similar to services like Deliveroo, Uber Eats and Just Eat, with a significant architectural simplification: each restaurant manages a single complete menu rather than individual products. This choice allowed focusing on the core aspects of mobile development while keeping complexity manageable.">L'obiettivo del progetto era sviluppare un'applicazione di food delivery simile a servizi come Deliveroo, Uber Eats e Just Eat, con una semplificazione architettonica significativa: ogni ristorante gestisce un unico menù completo anziché prodotti individuali. Questa scelta ha permesso di concentrarsi sugli aspetti core dello sviluppo mobile mantenendo la complessità gestibile.</p>
+
+                <p data-lang-it="Il docente ha fornito un server backend completo con API REST dedicate, liberando gli studenti dalla necessità di sviluppare l'infrastruttura server e permettendo di focalizzarsi esclusivamente sullo sviluppo delle applicazioni mobile. Le API fornite gestivano registrazione utenti, autenticazione, gestione menù, elaborazione ordini e tracking delle consegne." data-lang-en="The instructor provided a complete backend server with dedicated REST APIs, freeing students from the need to develop server infrastructure and allowing them to focus exclusively on mobile application development. The provided APIs handled user registration, authentication, menu management, order processing and delivery tracking.">Il docente ha fornito un server backend completo con API REST dedicate, liberando gli studenti dalla necessità di sviluppare l'infrastruttura server e permettendo di focalizzarsi esclusivamente sullo sviluppo delle applicazioni mobile. Le API fornite gestivano registrazione utenti, autenticazione, gestione menù, elaborazione ordini e tracking delle consegne.</p>
+
+                <p data-lang-it="Una caratteristica distintiva del progetto rispetto ai tradizionali sistemi di delivery è l'utilizzo simulato di droni per le consegne. Il movimento del drone viene rappresentato come un percorso rettilineo diretto tra il ristorante e la posizione dell'utente, semplificando notevolmente la logica di navigazione. Questa scelta progettuale ha permesso di evitare l'implementazione complessa del sistema di mappe e pathfinding di Google, concentrando lo sviluppo sulle funzionalità core dell'applicazione mobile." data-lang-en="A distinctive feature of the project compared to traditional delivery systems is the simulated use of drones for deliveries. The drone's movement is represented as a direct straight-line path between the restaurant and the user's location, greatly simplifying navigation logic. This design choice allowed avoiding the complex implementation of Google's mapping and pathfinding system, focusing development on the core functionalities of the mobile application.">Una caratteristica distintiva del progetto rispetto ai tradizionali sistemi di delivery è l'utilizzo simulato di droni per le consegne. Il movimento del drone viene rappresentato come un percorso rettilineo diretto tra il ristorante e la posizione dell'utente, semplificando notevolmente la logica di navigazione. Questa scelta progettuale ha permesso di evitare l'implementazione complessa del sistema di mappe e pathfinding di Google, concentrando lo sviluppo sulle funzionalità core dell'applicazione mobile.</p>
+
+                <div class="code-repositories">
+                    <h3 data-lang-it="📂 Codice Sorgente" data-lang-en="📂 Source Code">📂 Codice Sorgente</h3>
+                    <p data-lang-it="Il codice completo di entrambe le implementazioni è disponibile nelle rispettive repository GitHub:" data-lang-en="The complete code for both implementations is available in the respective GitHub repositories:">Il codice completo di entrambe le implementazioni è disponibile nelle rispettive repository GitHub:</p>
+                    <div class="repo-links">
+                        <div class="repo-link">
+                            <i class="fab fa-react"></i>
+                            <div>
+                                <strong data-lang-it="Versione React Native" data-lang-en="React Native Version">Versione React Native</strong>
+                                <a href="https://github.com/filippogrande/Food-Delivery-React" target="_blank">github.com/filippogrande/Food-Delivery-React</a>
+                            </div>
+                        </div>
+                        <div class="repo-link">
+                            <i class="fab fa-android"></i>
+                            <div>
+                                <strong data-lang-it="Versione Kotlin Android" data-lang-en="Kotlin Android Version">Versione Kotlin Android</strong>
+                                <a href="https://github.com/filippogrande/Food-delivery-kotlin" target="_blank">github.com/filippogrande/Food-delivery-kotlin</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exam-highlight">
+                    <h3 data-lang-it="🎓 Modalità d'Esame" data-lang-en="🎓 Exam Format">🎓 Modalità d'Esame</h3>
+                    <p data-lang-it="L'esame consisteva in una prova pratica in aula dove gli studenti dovevano implementare nuove funzionalità o modifiche al codice esistente in tempo reale. Questa modalità valutava la capacità di problem-solving, la conoscenza approfondita del codice sviluppato e l'abilità di adattamento sotto pressione. Le modifiche richieste durante l'esame non sono incluse in questa documentazione, che presenta la versione base del progetto." data-lang-en="The exam consisted of a practical test in the classroom where students had to implement new features or modifications to existing code in real time. This format assessed problem-solving ability, deep knowledge of the developed code, and adaptability under pressure. The modifications required during the exam are not included in this documentation, which presents the base version of the project.">L'esame consisteva in una prova pratica in aula dove gli studenti dovevano implementare nuove funzionalità o modifiche al codice esistente in tempo reale. Questa modalità valutava la capacità di problem-solving, la conoscenza approfondita del codice sviluppato e l'abilità di adattamento sotto pressione. Le modifiche richieste durante l'esame non sono incluse in questa documentazione, che presenta la versione base del progetto.</p>
+                </div>
+            </section>
+
+           
+
+            <section class="section">
+                <h2 data-lang-it="Tecnologie Utilizzate" data-lang-en="Technologies Used">Tecnologie Utilizzate</h2>
+                <div class="tech-stack">
+                    <span class="tech-tag">Kotlin</span>
+                    <span class="tech-tag">React Native</span>
+                    <span class="tech-tag">Mobile Development</span>
+                    <span class="tech-tag">Android</span>
+                    <span class="tech-tag">iOS</span>
+                    <span class="tech-tag">Google Maps API</span>
+                    <span class="tech-tag">Geolocalizzazione</span>
+                    <span class="tech-tag">API REST</span>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 data-lang-it="Aspetti Tecnici e Implementazione" data-lang-en="Technical Aspects and Implementation">Aspetti Tecnici e Implementazione</h2>
+                
+                <div class="tech-details">
+                    <div class="tech-detail-card">
+                        <h3 data-lang-it="🔒 Sistema di Pagamento" data-lang-en="🔒 Payment System">🔒 Sistema di Pagamento</h3>
+                        <p data-lang-it="Il sistema implementa una validazione simulata dei dati di pagamento. Gli utenti inseriscono i dettagli della carta di credito nel profilo (numero carta, scadenza, CVC) con validazione che verifica esclusivamente la correttezza del formato del numero carta (16 cifre). Tutti i dati di pagamento sono sempre modificabili dalla sezione profilo." data-lang-en="The system implements simulated payment data validation. Users enter credit card details in their profile (card number, expiration, CVC) with validation that exclusively checks the correctness of the card number format (16 digits). All payment data is always editable from the profile section.">Il sistema implementa una validazione simulata dei dati di pagamento. Gli utenti inseriscono i dettagli della carta di credito nel profilo (numero carta, scadenza, CVC) con validazione che verifica esclusivamente la correttezza del formato del numero carta (16 cifre). Tutti i dati di pagamento sono sempre modificabili dalla sezione profilo.</p>
+                    </div>
+
+                    <div class="tech-detail-card">
+                        <h3 data-lang-it="📍 Geolocalizzazione Intelligente" data-lang-en="📍 Smart Geolocation">📍 Geolocalizzazione Intelligente</h3>
+                        <p data-lang-it="L'app utilizza un sistema di geolocalizzazione ottimizzato che acquisisce la posizione dell'utente all'avvio, durante l'effettuazione dell'ordine e in altri momenti chiave, evitando richieste eccessive. Importante: l'indirizzo di consegna viene fissato al momento dell'ordine e non si aggiorna se l'utente si sposta successivamente, garantendo la consegna nella location prevista." data-lang-en="The app uses an optimized geolocation system that acquires the user's position at startup, during order placement, and at other key moments, avoiding excessive requests. Important: the delivery address is fixed at the time of order and does not update if the user moves afterwards, ensuring delivery to the intended location.">L'app utilizza un sistema di geolocalizzazione ottimizzato che acquisisce la posizione dell'utente all'avvio, durante l'effettuazione dell'ordine e in altri momenti chiave, evitando richieste eccessive. Importante: l'indirizzo di consegna viene fissato al momento dell'ordine e non si aggiorna se l'utente si sposta successivamente, garantendo la consegna nella location prevista.</p>
+                    </div>
+
+                    <div class="tech-detail-card">
+                        <h3 data-lang-it="👤 Validazione Profilo Completa" data-lang-en="👤 Complete Profile Validation">👤 Validazione Profilo Completa</h3>
+                        <p data-lang-it="Il profilo utente richiede la compilazione obbligatoria di tutti i campi: Nome, Cognome, Nome/Cognome del titolare carta, Numero carta (16 cifre), Mese e Anno di scadenza, CVC. L'applicazione blocca qualsiasi tentativo di ordinazione finché tutti questi dati non sono correttamente inseriti, garantendo informazioni complete per la consegna e il pagamento." data-lang-en="The user profile requires mandatory completion of all fields: Name, Surname, Cardholder Name/Surname, Card Number (16 digits), Expiration Month and Year, CVC. The application blocks any ordering attempts until all this data is correctly entered, ensuring complete information for delivery and payment.">Il profilo utente richiede la compilazione obbligatoria di tutti i campi: Nome, Cognome, Nome/Cognome del titolare carta, Numero carta (16 cifre), Mese e Anno di scadenza, CVC. L'applicazione blocca qualsiasi tentativo di ordinazione finché tutti questi dati non sono correttamente inseriti, garantendo informazioni complete per la consegna e il pagamento.</p>
+                    </div>
+
+                    <div class="tech-detail-card">
+                        <h3 data-lang-it="📦 Gestione Stati Ordine" data-lang-en="📦 Order Status Management">📦 Gestione Stati Ordine</h3>
+                        <p data-lang-it="Il sistema implementa una gestione semplificata degli ordini con solo due stati: 'In Consegna' e 'Consegnato'. Gli ordini non possono essere cancellati o modificati una volta effettuati, simulando un processo di consegna realistico. Il sistema permette un solo ordine attivo alla volta per utente." data-lang-en="The system implements simplified order management with only two states: 'In Delivery' and 'Delivered'. Orders cannot be cancelled or modified once placed, simulating a realistic delivery process. The system allows only one active order at a time per user.">Il sistema implementa una gestione semplificata degli ordini con solo due stati: 'In Consegna' e 'Consegnato'. Gli ordini non possono essere cancellati o modificati una volta effettuati, simulando un processo di consegna realistico. Il sistema permette un solo ordine attivo alla volta per utente.</p>
+                    </div>
+
+                    <div class="tech-detail-card">
+                        <h3 data-lang-it="🗺️ Google Maps e Geocoding" data-lang-en="🗺️ Google Maps and Geocoding">🗺️ Google Maps e Geocoding</h3>
+                        <p data-lang-it="L'applicazione integra Google Maps API per la visualizzazione delle mappe di tracking e Google Geocoding API per convertire le coordinate geografiche (latitudine/longitudine) in indirizzi leggibili per l'utente." data-lang-en="The application integrates Google Maps API for tracking map visualization and Google Geocoding API to convert geographic coordinates (latitude/longitude) into user-readable addresses.">L'applicazione integra Google Maps API per la visualizzazione delle mappe di tracking e Google Geocoding API per convertire le coordinate geografiche (latitudine/longitudine) in indirizzi leggibili per l'utente.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 data-lang-it="Confronto tra le Implementazioni" data-lang-en="Implementation Comparison">Confronto tra le Implementazioni</h2>
+                
+                <div class="comparison-highlight">
+                    <h3 data-lang-it="⚡ React Native vs Kotlin: Differenze nella Qualità" data-lang-en="⚡ React Native vs Kotlin: Quality Differences">⚡ React Native vs Kotlin: Differenze nella Qualità</h3>
+                    <p data-lang-it="Come evidente dal confronto visivo delle interfacce, la versione React Native presenta una qualità superiore in termini di design e fluidità. Un aspetto importante è che la versione React Native non presenta grossi bug visibili, mentre la versione Kotlin aveva ancora alcuni bug più evidenti che non sono stati risolti. Questa differenza è dovuta a diversi fattori:" data-lang-en="As evident from the visual comparison of the interfaces, the React Native version shows superior quality in terms of design and fluidity. An important aspect is that the React Native version doesn't have major visible bugs, while the Kotlin version still had some more noticeable bugs that weren't resolved. This difference is due to several factors:">Come evidente dal confronto visivo delle interfacce, la versione React Native presenta una qualità superiore in termini di design e fluidità. Un aspetto importante è che la versione React Native non presenta grossi bug visibili, mentre la versione Kotlin aveva ancora alcuni bug più evidenti che non sono stati risolti. Questa differenza è dovuta a diversi fattori:</p>
+                    
+                    <div class="tech-comparison">
+                        <div class="tech-detail-card">
+                            <h4 data-lang-it="🚀 Familiarità con JavaScript" data-lang-en="🚀 JavaScript Familiarity">🚀 Familiarità con JavaScript</h4>
+                            <p data-lang-it="React Native, basato su JavaScript, è stato più facile da sviluppare sia per la sintassi più intuitiva sia perché avevo già utilizzato JavaScript in passato. Questo ha permesso di concentrarmi di più sulla logica dell'applicazione piuttosto che sulla comprensione del linguaggio." data-lang-en="React Native, based on JavaScript, was easier to develop both due to its more intuitive syntax and because I had already used JavaScript before. This allowed me to focus more on the application logic rather than understanding the language.">React Native, basato su JavaScript, è stato più facile da sviluppare sia per la sintassi più intuitiva sia perché avevo già utilizzato JavaScript in passato. Questo ha permesso di concentrarmi di più sulla logica dell'applicazione piuttosto che sulla comprensione del linguaggio.</p>
+                        </div>
+                        
+                        <div class="tech-detail-card">
+                            <h4 data-lang-it="⏰ Tempistiche di Sviluppo" data-lang-en="⏰ Development Timeline">⏰ Tempistiche di Sviluppo</h4>
+                            <p data-lang-it="Alla versione React Native è stato dedicato più tempo di sviluppo, influenzato anche dai vincoli di altri esami universitari in corso e dal periodo in cui ho sostenuto l'esame. Inoltre, React Native è stata la prima delle due versioni che ho sviluppato, il che mi ha dato più tempo per rifinirla." data-lang-en="More development time was dedicated to the React Native version, also influenced by constraints from other ongoing university exams and the period when I took the exam. Additionally, React Native was the first of the two versions I developed, which gave me more time to refine it.">Alla versione React Native è stato dedicato più tempo di sviluppo, influenzato anche dai vincoli di altri esami universitari in corso e dal periodo in cui ho sostenuto l'esame. Inoltre, React Native è stata la prima delle due versioni che ho sviluppato, il che mi ha dato più tempo per rifinirla.</p>
+                        </div>
+                        
+                        <div class="tech-detail-card">
+                            <h4 data-lang-it="🎯 Preferenza Personale" data-lang-en="🎯 Personal Preference">🎯 Preferenza Personale</h4>
+                            <p data-lang-it="Personalmente mi è piaciuta di più lavorare con React Native, il che si riflette nella qualità finale del prodotto. Non era mia intenzione iniziale creare una versione migliore dell'altra, ma il maggiore interesse e coinvolgimento hanno naturalmente portato a un risultato più curato." data-lang-en="I personally enjoyed working with React Native more, which is reflected in the final quality of the product. It wasn't my initial intention to create a better version than the other, but greater interest and involvement naturally led to a more polished result.">Personalmente mi è piaciuta di più lavorare con React Native, il che si riflette nella qualità finale del prodotto. Non era mia intenzione iniziale creare una versione migliore dell'altra, ma il maggiore interesse e coinvolgimento hanno naturalmente portato a un risultato più curato.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 data-lang-it="Timeline del Progetto" data-lang-en="Project Timeline">Timeline del Progetto</h2>
+                <div class="timeline-info">
+                    <p><strong data-lang-it="Periodo:" data-lang-en="Period:">Periodo:</strong> <span data-lang-it="Marzo 2025 - Settembre 2025" data-lang-en="March 2025 - September 2025">Marzo 2025 - Settembre 2025</span></p>
+                    <p><strong data-lang-it="Durata:" data-lang-en="Duration:">Durata:</strong> <span data-lang-it="Progetto accademico sviluppato nell'arco di 7 mesi" data-lang-en="Academic project developed over 7 months">Progetto accademico sviluppato nell'arco di 7 mesi</span></p>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 data-lang-it="Interfaccia e Navigazione" data-lang-en="Interface and Navigation">Interfaccia e Navigazione</h2>
+                
+                <div class="app-section">
+                    <h3 data-lang-it="Home Page" data-lang-en="Home Page">Home Page</h3>
+                    <div class="screenshot-comparison">
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="React Native" data-lang-en="React Native">React Native</h4>
+                            <img src="React/Home.png" alt="Home page React Native" class="screenshot">
+                        </div>
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="Kotlin Android" data-lang-en="Kotlin Android">Kotlin Android</h4>
+                            <img src="Kotlin/Home.png" alt="Home page Kotlin" class="screenshot">
+                        </div>
+                    </div>
+                    <p data-lang-it="All'apertura dell'app, l'utente si trova nella home page dove viene mostrato il menù più vicino alla sua posizione. Sono presenti un'immagine del ristorante, informazioni essenziali come prezzo e tempo di consegna, e un pulsante per procedere all'acquisto. La navigazione avviene tramite una navbar in basso con 4 sezioni: Home, Menù, Ordini e Profilo." data-lang-en="When opening the app, the user finds themselves on the home page where the menu closest to their location is displayed. There's a restaurant image, essential information like price and delivery time, and a button to proceed with the purchase. Navigation is done through a bottom navbar with 4 sections: Home, Menu, Orders, and Profile.">All'apertura dell'app, l'utente si trova nella home page dove viene mostrato il menù più vicino alla sua posizione. Sono presenti un'immagine del ristorante, informazioni essenziali come prezzo e tempo di consegna, e un pulsante per procedere all'acquisto. La navigazione avviene tramite una navbar in basso con 4 sezioni: Home, Menù, Ordini e Profilo.</p>
+                </div>
+
+                <div class="app-section">
+                    <h3 data-lang-it="Tracking Consegna" data-lang-en="Delivery Tracking">Tracking Consegna</h3>
+                    <div class="screenshot-comparison">
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="React Native" data-lang-en="React Native">React Native</h4>
+                            <img src="React/Home_delivery.png" alt="Tracking consegna React Native" class="screenshot">
+                        </div>
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="Kotlin Android" data-lang-en="Kotlin Android">Kotlin Android</h4>
+                            <img src="Kotlin/Home_delivery.png" alt="Tracking consegna Kotlin" class="screenshot">
+                        </div>
+                    </div>
+                    <p data-lang-it="Quando è presente un ordine in corso (il sistema permette un solo ordine alla volta), la home si trasforma in una mappa di tracking della consegna. Vengono mostrate informazioni cruciali come il tempo stimato di arrivo, l'indirizzo di consegna e un riepilogo di ciò che è stato ordinato." data-lang-en="When there's an active order (the system allows only one order at a time), the home transforms into a delivery tracking map. Crucial information is displayed such as estimated arrival time, delivery address, and a summary of what was ordered.">Quando è presente un ordine in corso (il sistema permette un solo ordine alla volta), la home si trasforma in una mappa di tracking della consegna. Vengono mostrate informazioni cruciali come il tempo stimato di arrivo, l'indirizzo di consegna e un riepilogo di ciò che è stato ordinato.</p>
+                </div>
+
+                <div class="app-section">
+                    <h3 data-lang-it="Pagina Menù" data-lang-en="Menu Page">Pagina Menù</h3>
+                    <div class="screenshot-comparison">
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="React Native" data-lang-en="React Native">React Native</h4>
+                            <img src="React/Menu.png" alt="Pagina menù React Native" class="screenshot">
+                        </div>
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="Kotlin Android" data-lang-en="Kotlin Android">Kotlin Android</h4>
+                            <img src="Kotlin/Menu.png" alt="Pagina menù Kotlin" class="screenshot">
+                        </div>
+                    </div>
+                    <p data-lang-it="La sezione Menù presenta un elenco completo di tutti i ristoranti disponibili, ordinati per vicinanza alla posizione dell'utente. La versione Kotlin include anche un'anteprima fotografica di ogni menù, mentre React Native mantiene un design più minimalista. Ogni ristorante è presentato con informazioni essenziali per facilitare la scelta." data-lang-en="The Menu section presents a complete list of all available restaurants, sorted by proximity to the user's location. The Kotlin version also includes a photographic preview of each menu, while React Native maintains a more minimalist design. Each restaurant is presented with essential information to facilitate choice.">La sezione Menù presenta un elenco completo di tutti i ristoranti disponibili, ordinati per vicinanza alla posizione dell'utente. La versione Kotlin include anche un'anteprima fotografica di ogni menù, mentre React Native mantiene un design più minimalista. Ogni ristorante è presentato con informazioni essenziali per facilitare la scelta.</p>
+                </div>
+
+                <div class="app-section">
+                    <h3 data-lang-it="Dettaglio Menù e Acquisto" data-lang-en="Menu Details and Purchase">Dettaglio Menù e Acquisto</h3>
+                    <div class="screenshot-comparison">
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="React Native" data-lang-en="React Native">React Native</h4>
+                            <img src="React/menu-detail.png" alt="Dettaglio menù React Native" class="screenshot">
+                        </div>
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="Kotlin Android" data-lang-en="Kotlin Android">Kotlin Android</h4>
+                            <img src="Kotlin/menu-detail.png" alt="Dettaglio menù Kotlin" class="screenshot">
+                        </div>
+                    </div>
+                    <p data-lang-it="Selezionando un ristorante, si accede alla pagina di dettaglio che presenta un'immagine ingrandita del menù, informazioni complete sul ristorante (tempi di consegna, prezzo, descrizione) e un pulsante per procedere all'acquisto. Questa schermata fornisce tutti i dettagli necessari per prendere una decisione informata." data-lang-en="By selecting a restaurant, you access the detail page which presents an enlarged image of the menu, complete restaurant information (delivery times, price, description) and a button to proceed with the purchase. This screen provides all the necessary details to make an informed decision.">Selezionando un ristorante, si accede alla pagina di dettaglio che presenta un'immagine ingrandita del menù, informazioni complete sul ristorante (tempi di consegna, prezzo, descrizione) e un pulsante per procedere all'acquisto. Questa schermata fornisce tutti i dettagli necessari per prendere una decisione informata.</p>
+                </div>
+
+                <div class="app-section">
+                    <h3 data-lang-it="Monitoraggio Consegna Attiva" data-lang-en="Active Delivery Monitoring">Monitoraggio Consegna Attiva</h3>
+                    <div class="screenshot-comparison">
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="React Native" data-lang-en="React Native">React Native</h4>
+                            <img src="React/Delivery_current.png" alt="Consegna in corso React Native" class="screenshot">
+                        </div>
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="Kotlin Android" data-lang-en="Kotlin Android">Kotlin Android</h4>
+                            <img src="Kotlin/Delivery_current.png" alt="Consegna in corso Kotlin" class="screenshot">
+                        </div>
+                    </div>
+                    <p data-lang-it="Dopo aver confermato l'acquisto, l'applicazione reindirizza automaticamente alla schermata di monitoraggio della consegna attiva. La mappa visualizza due punti chiave: la posizione corrente dell'utente e la posizione del drone addetto alla consegna, fornendo un tracking in tempo reale del progresso dell'ordine insieme ai dettagli dell'ordine effettuato." data-lang-en="After confirming the purchase, the application automatically redirects to the active delivery monitoring screen. The map displays two key points: the user's current location and the position of the delivery drone, providing real-time tracking of the order progress along with details of the placed order.">Dopo aver confermato l'acquisto, l'applicazione reindirizza automaticamente alla schermata di monitoraggio della consegna attiva. La mappa visualizza due punti chiave: la posizione corrente dell'utente e la posizione del drone addetto alla consegna, fornendo un tracking in tempo reale del progresso dell'ordine insieme ai dettagli dell'ordine effettuato.</p>
+                </div>
+
+                <div class="app-section">
+                    <h3 data-lang-it="Storico Ordini" data-lang-en="Order History">Storico Ordini</h3>
+                    <div class="screenshot-comparison">
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="React Native" data-lang-en="React Native">React Native</h4>
+                            <img src="React/my-orders.png" alt="I miei ordini React Native" class="screenshot">
+                        </div>
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="Kotlin Android" data-lang-en="Kotlin Android">Kotlin Android</h4>
+                            <img src="Kotlin/my-orders.png" alt="I miei ordini Kotlin" class="screenshot">
+                        </div>
+                    </div>
+                    <p data-lang-it="La sezione Ordini presenta uno storico cronologico completo di tutte le ordinazioni dell'utente. Gli ordini sono contrassegnati con stati chiari ('In Consegna' o 'Completato'), con l'eventuale ordine in corso evidenziato in cima alla lista. Selezionando un ordine specifico, l'utente può accedere alla relativa schermata di tracking o ai dettagli della consegna completata." data-lang-en="The Orders section presents a complete chronological history of all user orders. Orders are marked with clear statuses ('In Delivery' or 'Completed'), with any current order highlighted at the top of the list. By selecting a specific order, the user can access the related tracking screen or completed delivery details.">La sezione Ordini presenta uno storico cronologico completo di tutte le ordinazioni dell'utente. Gli ordini sono contrassegnati con stati chiari ('In Consegna' o 'Completato'), con l'eventuale ordine in corso evidenziato in cima alla lista. Selezionando un ordine specifico, l'utente può accedere alla relativa schermata di tracking o ai dettagli della consegna completata.</p>
+                </div>
+
+                <div class="app-section">
+                    <h3 data-lang-it="Consegna Completata" data-lang-en="Completed Delivery">Consegna Completata</h3>
+                    <div class="screenshot-comparison">
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="React Native" data-lang-en="React Native">React Native</h4>
+                            <img src="React/Delivery-complete.png" alt="Consegna completata React Native" class="screenshot">
+                        </div>
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="Kotlin Android" data-lang-en="Kotlin Android">Kotlin Android</h4>
+                            <img src="Kotlin/Delivery-complete.png" alt="Consegna completata Kotlin" class="screenshot">
+                        </div>
+                    </div>
+                    <p data-lang-it="Per gli ordini completati, la schermata di riepilogo mostra una mappa semplificata con un singolo marcatore che indica il punto di consegna finale. Questa visualizzazione conferma il completamento dell'ordine e fornisce una conferma visiva della location di consegna effettiva." data-lang-en="For completed orders, the summary screen shows a simplified map with a single marker indicating the final delivery point. This visualization confirms order completion and provides visual confirmation of the actual delivery location.">Per gli ordini completati, la schermata di riepilogo mostra una mappa semplificata con un singolo marcatore che indica il punto di consegna finale. Questa visualizzazione conferma il completamento dell'ordine e fornisce una conferma visiva della location di consegna effettiva.</p>
+                </div>
+
+                <div class="app-section">
+                    <h3 data-lang-it="Gestione Profilo Utente" data-lang-en="User Profile Management">Gestione Profilo Utente</h3>
+                    <div class="screenshot-comparison">
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="React Native" data-lang-en="React Native">React Native</h4>
+                            <img src="React/profile.png" alt="Profilo utente React Native" class="screenshot">
+                        </div>
+                        <div class="screenshot-item">
+                            <h4 data-lang-it="Kotlin Android" data-lang-en="Kotlin Android">Kotlin Android</h4>
+                            <img src="Kotlin/profile.png" alt="Profilo utente Kotlin" class="screenshot">
+                        </div>
+                    </div>
+                    <p data-lang-it="La sezione Profilo contiene tutti i dati personali dell'utente necessari per il processo di ordinazione. La compilazione completa del profilo è un requisito obbligatorio: senza informazioni complete, l'applicazione impedisce l'effettuazione di qualsiasi ordine, garantendo così che tutti i dati necessari per la consegna siano disponibili." data-lang-en="The Profile section contains all the user's personal data necessary for the ordering process. Complete profile completion is a mandatory requirement: without complete information, the application prevents placing any orders, thus ensuring that all necessary data for delivery is available.">La sezione Profilo contiene tutti i dati personali dell'utente necessari per il processo di ordinazione. La compilazione completa del profilo è un requisito obbligatorio: senza informazioni complete, l'applicazione impedisce l'effettuazione di qualsiasi ordine, garantendo così che tutti i dati necessari per la consegna siano disponibili.</p>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 data-lang-it="🔌 API Backend Utilizzate" data-lang-en="🔌 Backend APIs Used">🔌 API Backend Utilizzate</h2>
+                <p data-lang-it="Documentazione completa delle API REST fornite dal docente per l'integrazione backend dell'applicazione:" data-lang-en="Complete documentation of the REST APIs provided by the instructor for the application's backend integration:">Documentazione completa delle API REST fornite dal docente per l'integrazione backend dell'applicazione:</p>
+                
+                <div class="api-list">
+                    <div class="api-endpoint">
+                        <code>POST /user</code>
+                        <span data-lang-it="Registrazione nuovo utente (restituisce SID e UID)" data-lang-en="New user registration (returns SID and UID)">Registrazione nuovo utente (restituisce SID e UID)</span>
+                    </div>
+                    <div class="api-endpoint">
+                        <code>GET /user/febbraio2/{uid}/completedOrders</code>
+                        <span data-lang-it="Recupero storico ordini completati" data-lang-en="Retrieve completed orders history">Recupero storico ordini completati</span>
+                    </div>
+                    <div class="api-endpoint">
+                        <code>GET/PUT /user/{uid}</code>
+                        <span data-lang-it="Gestione informazioni profilo utente" data-lang-en="User profile information management">Gestione informazioni profilo utente</span>
+                    </div>
+                    <div class="api-endpoint">
+                        <code>GET /order/{oid}</code>
+                        <span data-lang-it="Stato e dettagli ordine (tracking drone)" data-lang-en="Order status and details (drone tracking)">Stato e dettagli ordine (tracking drone)</span>
+                    </div>
+                    <div class="api-endpoint">
+                        <code>POST /menu/{mid}/buy</code>
+                        <span data-lang-it="Acquisto menù selezionato" data-lang-en="Purchase selected menu">Acquisto menù selezionato</span>
+                    </div>
+                    <div class="api-endpoint">
+                        <code>GET /menu</code>
+                        <span data-lang-it="Lista menù ordinati per vicinanza" data-lang-en="Menu list sorted by proximity">Lista menù ordinati per vicinanza</span>
+                    </div>
+                    <div class="api-endpoint">
+                        <code>GET /menu/{mid}</code>
+                        <span data-lang-it="Dettagli specifici menù" data-lang-en="Specific menu details">Dettagli specifici menù</span>
+                    </div>
+                    <div class="api-endpoint">
+                        <code>GET /menu/{mid}/image</code>
+                        <span data-lang-it="Immagine menù (base64)" data-lang-en="Menu image (base64)">Immagine menù (base64)</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Filippo Moscatelli. <span data-lang-it="Tutti i diritti riservati." data-lang-en="All rights reserved.">Tutti i diritti riservati.</span></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+    <script src="../js/language.js"></script>
+    <script>
+        // Sistema di traduzione specifico per la pagina Food Delivery
+        class FoodDeliveryLanguageManager {
+            constructor() {
+                this.currentLanguage = 'it';
+                this.init();
+            }
+            
+            init() {
+                // Aspetta che il DOM sia caricato
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => this.setupLanguageSystem());
+                } else {
+                    this.setupLanguageSystem();
+                }
+            }
+            
+            setupLanguageSystem() {
+                // Configura i pulsanti lingua
+                const langButtons = document.querySelectorAll('.lang-btn');
+                langButtons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const lang = btn.getAttribute('data-lang');
+                        if (lang && lang !== this.currentLanguage) {
+                            this.changeLanguage(lang);
+                        }
+                    });
+                });
+                
+                // Imposta la lingua iniziale
+                this.changeLanguage(this.currentLanguage);
+            }
+            
+            changeLanguage(lang) {
+                if (!['it', 'en'].includes(lang)) return;
+                
+                this.currentLanguage = lang;
+                
+                // Aggiorna tutti gli elementi con attributi data-lang
+                const elements = document.querySelectorAll('[data-lang-it], [data-lang-en]');
+                elements.forEach(element => {
+                    const translation = element.getAttribute(`data-lang-${lang}`);
+                    if (translation) {
+                        // Gestisce sia testo che attributi HTML come title, alt, ecc.
+                        if (element.tagName === 'TITLE') {
+                            element.textContent = translation;
+                        } else {
+                            element.innerHTML = translation;
+                        }
+                    }
+                });
+                
+                // Aggiorna i pulsanti lingua
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    if (btn.getAttribute('data-lang') === lang) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                
+                // Aggiorna l'attributo lang del documento
+                document.documentElement.lang = lang;
+                
+                console.log(`Lingua cambiata a: ${lang}`);
+            }
+        }
+        
+        // Back to Top functionality
+        function initBackToTop() {
+            const backToTopButton = document.getElementById('backToTop');
+            
+            if (!backToTopButton) {
+                console.log('Back to top button not found');
+                return;
+            }
+            
+            // Mostra/nascondi il pulsante in base allo scroll
+            function toggleBackToTopButton() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('visible');
+                } else {
+                    backToTopButton.classList.remove('visible');
+                }
+            }
+            
+            // Ascolta gli eventi di scroll
+            window.addEventListener('scroll', toggleBackToTopButton);
+            
+            // Gestisce il click sul pulsante
+            backToTopButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Inizializza lo stato del pulsante
+            toggleBackToTopButton();
+        }
+        
+        // Inizializza tutto quando il DOM è caricato
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inizializza il gestore lingue per Food Delivery
+            const foodDeliveryLangManager = new FoodDeliveryLanguageManager();
+            
+            // Inizializza il pulsante back to top
+            initBackToTop();
+        });
+        
+        // Se il DOM è già caricato, inizializza subito
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            const foodDeliveryLangManager = new FoodDeliveryLanguageManager();
+            initBackToTop();
+        }
+    </script>
+</body>
+</html>

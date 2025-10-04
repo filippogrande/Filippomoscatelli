@@ -10,40 +10,46 @@
     }
     
     .header {
-        padding: 2rem 0;
+        padding: 1.5rem 0;
     }
     
     .profile-section {
         flex-direction: column;
         text-align: center;
-        gap: 2rem;
+        gap: 1.5rem;
     }
     
     .name {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
     
     .title {
-        font-size: 1.25rem;
+        font-size: 1rem;
     }
     
     .contact-info {
         grid-template-columns: 1fr;
         text-align: left;
+        font-size: 0.875rem;
     }
     
     .section {
-        padding: 1.5rem;
+        padding: 1rem;
         margin-bottom: 1rem;
     }
     
     .section-title {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
+    }
+    
+    .section p {
+        font-size: 0.9rem;
+        line-height: 1.5;
     }
     
     .skills-grid {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        gap: 1rem;
     }
     
     .projects-grid {
@@ -61,6 +67,19 @@
     .timeline-marker {
         left: -1.5rem;
     }
+    
+    /* Riduci dimensioni elementi specifici */
+    .skill-category h3 {
+        font-size: 1rem;
+    }
+    
+    .project-card h3 {
+        font-size: 1.1rem;
+    }
+    
+    .project-card p {
+        font-size: 0.875rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -75,11 +94,59 @@
     }
     
     .profile-image img {
-        width: 120px;
-        height: 120px;
+        width: 100px;
+        height: 100px;
     }
     
     .name {
-        font-size: 1.75rem;
+        font-size: 1.25rem;
+    }
+    
+    .title {
+        font-size: 0.9rem;
+    }
+    
+    .section-title {
+        font-size: 1.1rem;
+    }
+    
+    .section p {
+        font-size: 0.8rem;
+        line-height: 1.4;
+    }
+    
+    .contact-info {
+        font-size: 0.8rem;
+    }
+    
+    .header {
+        padding: 1rem 0;
+    }
+    
+    .section {
+        padding: 0.75rem;
+    }
+}
+
+/* Breakpoint extra piccolo per telefoni molto piccoli */
+@media (max-width: 360px) {
+    .name {
+        font-size: 1.1rem;
+    }
+    
+    .title {
+        font-size: 0.8rem;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+    }
+    
+    .section p {
+        font-size: 0.75rem;
+    }
+    
+    .contact-info {
+        font-size: 0.75rem;
     }
 }

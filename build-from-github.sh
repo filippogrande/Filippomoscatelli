@@ -48,7 +48,7 @@ log_info "Repository: $GITHUB_REPO"
 log_info "Image: $IMAGE_NAME:$IMAGE_TAG"
 
 # Build dell'immagine direttamente da GitHub
-docker build -t $IMAGE_NAME:$IMAGE_TAG $GITHUB_REPO
+docker buildx build --platform linux/amd64,linux/arm64,linux/386 -t $IMAGE_NAME:$IMAGE_TAG $GITHUB_REPO
 
 # Tag con timestamp per backup
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)

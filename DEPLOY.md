@@ -62,12 +62,14 @@ docker pull filippogrande/cv-website:latest
 
 ### Caratteristiche immagine:
 - ✅ Base: nginx:alpine (leggera e sicura)
+- ✅ **Multi-platform**: linux/amd64 + linux/arm64 + linux/386
+- ✅ **Compatibilità universale**: Intel, AMD, Apple Silicon, ARM servers, x86 legacy
 - ✅ Build automatico da GitHub
 - ✅ Health check configurato (`/health`)
 - ✅ Security headers configurati
 - ✅ Gzip compression abilitata
 - ✅ Cache headers ottimizzati
-- ✅ Multi-language support
+- ✅ Multi-language support (IT/EN)
 
 ## ☸️ Kubernetes Quick Deploy
 
