@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Projects JSON</title>
+</head>
+<body>
+    <h1>Test Caricamento Projects JSON</h1>
+    <div id="result"></div>
+    
+    <script>
+        async function testProjectsJSON() {
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                resultDiv.innerHTML = '<p>Tentativo di fetch /data/projects.json...</p>';
+                
+                const response = await fetch('/data/projects.json', {cache: 'no-cache'});
+                
+                resultDiv.innerHTML += `<p>Status: ${response.status} ${response.statusText}</p>`;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML += `<p style="color: green;">✅ SUCCESS! Progetti trovati: ${data.length}</p>`;
+                    resultDiv.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    resultDiv.innerHTML += `<p style="color: red;">❌ ERRORE: ${response.status}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML += `<p style="color: red;">❌ ERRORE FETCH: ${error.message}</p>`;
+            }
+        }
+        
+        // Test automatico al caricamento
+        testProjectsJSON();
+    </script>
+</body>
+</html>

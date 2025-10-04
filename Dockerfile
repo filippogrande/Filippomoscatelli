@@ -23,6 +23,7 @@ RUN cp -r /tmp/Filippomoscatelli/index.html . && \
     cp -r /tmp/Filippomoscatelli/data/ ./data/ && \
     cp -r /tmp/Filippomoscatelli/FoodDelivery/ ./FoodDelivery/ && \
     cp -r /tmp/Filippomoscatelli/k8s/ ./k8s/ 2>/dev/null || true && \
+    cp -r /tmp/Filippomoscatelli/test-projects.html . 2>/dev/null || true && \
     cp -r /tmp/Filippomoscatelli/*.pdf . 2>/dev/null || true && \
     cp -r /tmp/Filippomoscatelli/*.png . 2>/dev/null || true && \
     cp -r /tmp/Filippomoscatelli/*.svg . 2>/dev/null || true && \

@@ -9,7 +9,10 @@ class ProjectsManager {
     }
 
     async initialize() {
-        if (!this.container) return;
+        if (!this.container) {
+            console.error('ProjectsManager: container not found for selector:', this.constructor.name);
+            return;
+        }
 
         console.debug('ProjectsManager: initializing, container found:', !!this.container);
 
@@ -20,10 +23,16 @@ class ProjectsManager {
             const projects = await this.fetchProjects();
             console.debug('ProjectsManager: fetched projects count=', Array.isArray(projects)?projects.length:'?', projects);
             const sorted = this.sortByDateDesc(projects);
+            console.debug('ProjectsManager: sorted projects:', sorted);
             this.render(sorted);
             this.renderMobile(sorted);
+            console.debug('ProjectsManager: rendering completed');
         } catch (err) {
             console.error('Errore caricamento progetti:', err);
+            // Mostra un messaggio di errore nell'UI
+            if (this.container) {
+                this.container.innerHTML = '<p style="color: red; text-align: center;">Errore nel caricamento dei progetti. Controlla la console per dettagli.</p>';
+            }
         }
     }
 
@@ -38,10 +47,21 @@ class ProjectsManager {
     }
 
     async fetchProjects() {
-    console.debug('ProjectsManager: fetching', this.dataUrl);
-        const res = await fetch(this.dataUrl, {cache: 'no-cache'});
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
+        console.debug('ProjectsManager: fetching', this.dataUrl);
+        try {
+            const res = await fetch(this.dataUrl, {cache: 'no-cache'});
+            console.debug('ProjectsManager: response status:', res.status, res.statusText);
+            if (!res.ok) {
+                console.error('ProjectsManager: fetch failed', res.status, res.statusText);
+                throw new Error(`HTTP ${res.status}`);
+            }
+            const data = await res.json();
+            console.debug('ProjectsManager: data received:', data);
+            return data;
+        } catch (error) {
+            console.error('ProjectsManager: error fetching projects:', error);
+            throw error;
+        }
     }
 
     sortByDateDesc(items) {
