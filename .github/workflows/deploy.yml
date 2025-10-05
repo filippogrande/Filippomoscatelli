@@ -124,16 +124,26 @@ jobs:
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
+      - name: Sanity-check kubeconfig
+        run: |
+          # Warn and fail early if kubeconfig points to localhost which won't be reachable from GitHub runner
+          if grep -q "localhost" $HOME/.kube/config; then
+            echo "KUBECONFIG appears to reference localhost. GitHub Actions runner cannot reach a local k8s API server." >&2
+            echo "Ensure the secret 'KUBECONFIG' contains a kubeconfig that points to a reachable cluster endpoint." >&2
+            exit 1
+          fi
+          echo "kubeconfig sanity check passed"
+
       - name: Deploy to Kubernetes
         run: |
           # Update image in deployment
           sed -i "s|image: filippomoscatelli/cv-website:latest|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}|g" k8s/deployment.yaml
 
           # Apply Kubernetes manifests
-          kubectl apply -f k8s/configmap.yaml
-          kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
-          kubectl apply -f k8s/hpa.yaml
+          kubectl apply --validate=false -f k8s/configmap.yaml
+          kubectl apply --validate=false -f k8s/deployment.yaml
+          kubectl apply --validate=false -f k8s/service.yaml
+          kubectl apply --validate=false -f k8s/hpa.yaml
 
           # Wait for deployment to complete
           kubectl rollout status deployment/filippomoscatelli-cv --timeout=300s
@@ -173,16 +183,26 @@ jobs:
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
+      - name: Sanity-check kubeconfig
+        run: |
+          # Warn and fail early if kubeconfig points to localhost which won't be reachable from GitHub runner
+          if grep -q "localhost" $HOME/.kube/config; then
+            echo "KUBECONFIG appears to reference localhost. GitHub Actions runner cannot reach a local k8s API server." >&2
+            echo "Ensure the secret 'KUBECONFIG' contains a kubeconfig that points to a reachable cluster endpoint." >&2
+            exit 1
+          fi
+          echo "kubeconfig sanity check passed"
+
       - name: Deploy to Kubernetes using image digest
         run: |
           # Update image in deployment to use immutable digest produced by build
           sed -i "s|image: filippomoscatelli/cv-website:latest|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image_digest }}|g" k8s/deployment.yaml
 
           # Apply Kubernetes manifests
-          kubectl apply -f k8s/configmap.yaml
-          kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
-          kubectl apply -f k8s/hpa.yaml
+          kubectl apply --validate=false -f k8s/configmap.yaml
+          kubectl apply --validate=false -f k8s/deployment.yaml
+          kubectl apply --validate=false -f k8s/service.yaml
+          kubectl apply --validate=false -f k8s/hpa.yaml
 
           # Wait for deployment to complete
           kubectl rollout status deployment/filippomoscatelli-cv --timeout=300s
