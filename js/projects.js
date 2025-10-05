@@ -14,19 +14,19 @@ class ProjectsManager {
             return;
         }
 
-        console.debug('ProjectsManager: initializing, container found:', !!this.container);
+    // initialization diagnostic removed
 
         // Crea container mobile
         this.createMobileContainer();
 
         try {
             const projects = await this.fetchProjects();
-            console.debug('ProjectsManager: fetched projects count=', Array.isArray(projects)?projects.length:'?', projects);
+            // fetched projects diagnostic removed
             const sorted = this.sortByDateDesc(projects);
-            console.debug('ProjectsManager: sorted projects:', sorted);
+            // sorted projects diagnostic removed
             this.render(sorted);
             this.renderMobile(sorted);
-            console.debug('ProjectsManager: rendering completed');
+            // rendering diagnostic removed
         } catch (err) {
             console.error('Errore caricamento progetti:', err);
             // Mostra un messaggio di errore nell'UI
@@ -47,16 +47,16 @@ class ProjectsManager {
     }
 
     async fetchProjects() {
-        console.debug('ProjectsManager: fetching', this.dataUrl);
+    // fetch diagnostic removed
         try {
             const res = await fetch(this.dataUrl, {cache: 'no-cache'});
-            console.debug('ProjectsManager: response status:', res.status, res.statusText);
+            // response status diagnostic removed
             if (!res.ok) {
                 console.error('ProjectsManager: fetch failed', res.status, res.statusText);
                 throw new Error(`HTTP ${res.status}`);
             }
             const data = await res.json();
-            console.debug('ProjectsManager: data received:', data);
+            // data received diagnostic removed
             return data;
         } catch (error) {
             console.error('ProjectsManager: error fetching projects:', error);

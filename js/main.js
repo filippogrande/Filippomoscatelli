@@ -21,7 +21,6 @@ class AppManager {
     registerModule(name, module) {
         if (module && typeof module.initialize === 'function') {
             this.modules.set(name, module);
-            console.debug(`AppManager: registered module "${name}"`);
         } else {
             console.error(`❌ Module "${name}" is invalid - missing initialize method`);
         }
@@ -135,11 +134,7 @@ class AppManager {
         this.registerAvailableModules();
         
         // Diagnostic: lista moduli registrati
-        try {
-            console.debug('AppManager: modules registered ->', Array.from(this.modules.keys()));
-        } catch (e) {
-            console.debug('AppManager: unable to list modules', e);
-        }
+    // diagnostic logs removed for production
 
         // Inizializza tutti i moduli
         await this.initializeModules();
@@ -229,15 +224,7 @@ class AppManager {
 // Crea istanza globale dell'app manager
 const appManager = new AppManager();
 
-// Fallback: assicurati che il modulo 'projects' sia registrato anche se registerAvailableModules fallisce
-if (!appManager.modules.has('projects') && typeof window !== 'undefined' && window.ProjectsManager) {
-    try {
-        appManager.registerModule('projects', new window.ProjectsManager());
-        console.debug('AppManager: fallback registered "projects" module');
-    } catch (e) {
-        console.error('AppManager: failed to register fallback projects module', e);
-    }
-}
+// Note: fallback registration removed - modules should register in their normal flow
 
 // Inizializzazione semplice dell'applicazione
 if (document.readyState === 'loading') {
