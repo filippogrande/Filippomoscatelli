@@ -229,6 +229,16 @@ class AppManager {
 // Crea istanza globale dell'app manager
 const appManager = new AppManager();
 
+// Fallback: assicurati che il modulo 'projects' sia registrato anche se registerAvailableModules fallisce
+if (!appManager.modules.has('projects') && typeof window !== 'undefined' && window.ProjectsManager) {
+    try {
+        appManager.registerModule('projects', new window.ProjectsManager());
+        console.debug('AppManager: fallback registered "projects" module');
+    } catch (e) {
+        console.error('AppManager: failed to register fallback projects module', e);
+    }
+}
+
 // Inizializzazione semplice dell'applicazione
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
