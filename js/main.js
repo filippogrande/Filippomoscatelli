@@ -21,6 +21,7 @@ class AppManager {
     registerModule(name, module) {
         if (module && typeof module.initialize === 'function') {
             this.modules.set(name, module);
+            console.debug(`AppManager: registered module "${name}"`);
         } else {
             console.error(`❌ Module "${name}" is invalid - missing initialize method`);
         }
@@ -133,6 +134,13 @@ class AppManager {
         // Registra i moduli disponibili
         this.registerAvailableModules();
         
+        // Diagnostic: lista moduli registrati
+        try {
+            console.debug('AppManager: modules registered ->', Array.from(this.modules.keys()));
+        } catch (e) {
+            console.debug('AppManager: unable to list modules', e);
+        }
+
         // Inizializza tutti i moduli
         await this.initializeModules();
         
