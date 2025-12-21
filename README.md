@@ -328,7 +328,7 @@ Il sito è ottimizzato per:
 
 Per domande o suggerimenti, contatta:
 
-- **Email**: filippo.moscatelli@proton.me
+- **Email**: contact@filippomoscatelli.com
 - **LinkedIn**: [linkedin.com](https://www.linkedin.com/in/filippo-moscatelli-52b566202/)
 - **GitHub**: [github.com](https://github.com/filippogrande)
 
