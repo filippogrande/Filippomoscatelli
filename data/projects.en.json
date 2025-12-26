@@ -1,0 +1,41 @@
+[
+  {
+    "id": "cv-website",
+    "title": "Self-Hosted CV Website",
+    "description": "Development and personal hosting of this multilingual CV website. It's continuously updated.",
+    "tech": ["HTML/CSS", "JavaScript", "Self-hosting", "Linux", "Nginx", "Cloudflare", "Umami Analytics"],
+    "startDate": "2025-07",
+    "endDate": null,
+    "links": [
+      { "label": "filippomoscatelli.com", "url": "https://filippomoscatelli.com" },
+      { "label": "GitHub", "url": "https://github.com/filippogrande/Filippomoscatelli" }
+    ]
+  },
+  {
+    "id": "food-delivery",
+    "title": "Food Delivery Application",
+    "description": "Project for the Mobile Computing exam: food delivery app implemented in Kotlin (native Android) and React Native with menu, orders and user profiles features.",
+    "tech": ["Kotlin", "React Native", "Mobile Development", "iOS", "Android"],
+    "startDate": "2025-03",
+    "endDate": "2025-09",
+    "link": "/FoodDelivery/index.html"
+  },
+  {
+    "id": "software-inc",
+    "title": "Software Inc. Print Manager",
+    "description": "Web tool to optimize print contract management in the Software Inc. video game.",
+    "tech": ["JavaScript", "HTML/CSS", "JSON", "LocalStorage", "Python"],
+    "startDate": "2024-07",
+    "endDate": null,
+    "link": "https://github.com/filippogrande/Software-Inc-Print-Manager"
+  },
+  {
+    "id": "nao-challenge",
+    "title": "NAO Challenge 2020",
+    "description": "Robotics competition with the NAO humanoid robot. Participation in selection and regional phases.",
+    "tech": ["Robotics", "NAO Robot", "Teamwork", "Problem Solving"],
+    "startDate": "2019-11",
+    "endDate": "2020-02",
+    "link": "#"
+  }
+]

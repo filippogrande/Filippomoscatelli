@@ -51,7 +51,10 @@ const translations = {
         'project3-description': 'Competizione di robotica con robot umanoide NAO. Partecipazione alle fasi di selezione e regionali con focus su programmazione e lavoro di squadra.',
         'project3-period': 'Nov 2019 - Feb 2020',
         'view-project': 'Stai guardando il progetto!',
+        // Label utilizzata per i link ai progetti quando non è fornita una label nel JSON
+        'view-project-link': 'Visualizza progetto',
         'view-github': 'Visualizza su GitHub',
+        'show-more': 'Mostra altri {n} progetti',
         'rights': 'Tutti i diritti riservati.'
     },
     en: {
@@ -100,7 +103,10 @@ const translations = {
         'project3-description': 'Robotics competition with NAO humanoid robot. Participation in selection and regional phases with focus on programming and teamwork.',
         'project3-period': 'Nov 2019 - Feb 2020',
         'view-project': 'You\'re viewing the project!',
+        // Label used for project links when JSON doesn't provide a label
+        'view-project-link': 'View project',
         'view-github': 'View on GitHub',
+        'show-more': 'Show {n} more projects',
         'rights': 'All rights reserved.'
     }
 };

@@ -173,7 +173,11 @@ class AppManager {
             this.registerModule('components', new window.ComponentsManager());
         }
         
-        if (window.LanguageManager) {
+        // Preferisci l'istanza globale `window.languageManager` se esiste per evitare
+        // di avere due istanze del LanguageManager (causa problemi di sincronizzazione)
+        if (window.languageManager) {
+            this.registerModule('language', window.languageManager);
+        } else if (window.LanguageManager) {
             this.registerModule('language', new window.LanguageManager());
         }
         

@@ -132,14 +132,14 @@
             <section class="section">
                 <h2 data-lang-it="Tecnologie Utilizzate" data-lang-en="Technologies Used">Tecnologie Utilizzate</h2>
                 <div class="tech-stack">
-                    <span class="tech-tag">Kotlin</span>
-                    <span class="tech-tag">React Native</span>
-                    <span class="tech-tag">Mobile Development</span>
-                    <span class="tech-tag">Android</span>
-                    <span class="tech-tag">iOS</span>
-                    <span class="tech-tag">Google Maps API</span>
-                    <span class="tech-tag">Geolocalizzazione</span>
-                    <span class="tech-tag">API REST</span>
+                    <span class="tech-tag" data-lang-it="Kotlin" data-lang-en="Kotlin">Kotlin</span>
+                    <span class="tech-tag" data-lang-it="React Native" data-lang-en="React Native">React Native</span>
+                    <span class="tech-tag" data-lang-it="Sviluppo Mobile" data-lang-en="Mobile Development">Sviluppo Mobile</span>
+                    <span class="tech-tag" data-lang-it="Android" data-lang-en="Android">Android</span>
+                    <span class="tech-tag" data-lang-it="iOS" data-lang-en="iOS">iOS</span>
+                    <span class="tech-tag" data-lang-it="Google Maps API" data-lang-en="Google Maps API">Google Maps API</span>
+                    <span class="tech-tag" data-lang-it="Geolocalizzazione" data-lang-en="Geolocation">Geolocalizzazione</span>
+                    <span class="tech-tag" data-lang-it="API REST" data-lang-en="REST APIs">API REST</span>
                 </div>
             </section>
 
@@ -210,6 +210,8 @@
 
             <section class="section">
                 <h2 data-lang-it="Interfaccia e Navigazione" data-lang-en="Interface and Navigation">Interfaccia e Navigazione</h2>
+                <!-- Notice: shown in the appropriate language -->
+                <p class="screenshot-note" data-lang-it="Nota: Sia le versioni React Native che Kotlin dell'app sono state sviluppate in italiano; eventuali testi visibili negli screenshot sono quindi in italiano." data-lang-en="Note: Both the React Native and Kotlin versions of the app were developed in Italian; any text visible inside the screenshots is therefore in Italian.">Nota: Sia le versioni React Native che Kotlin dell'app sono state sviluppate in italiano; eventuali testi visibili negli screenshot sono quindi in italiano.</p>
                 
                 <div class="app-section">
                     <h3 data-lang-it="Home Page" data-lang-en="Home Page">Home Page</h3>
@@ -473,10 +475,11 @@
         // Sistema di traduzione specifico per la pagina Food Delivery
         class FoodDeliveryLanguageManager {
             constructor() {
+                // default fallback
                 this.currentLanguage = 'it';
                 this.init();
             }
-            
+
             init() {
                 // Aspetta che il DOM sia caricato
                 if (document.readyState === 'loading') {
@@ -485,7 +488,7 @@
                     this.setupLanguageSystem();
                 }
             }
-            
+
             setupLanguageSystem() {
                 // Configura i pulsanti lingua
                 const langButtons = document.querySelectorAll('.lang-btn');
@@ -498,16 +501,29 @@
                         }
                     });
                 });
-                
-                // Imposta la lingua iniziale
-                this.changeLanguage(this.currentLanguage);
+
+                // Rileva la lingua preferita (da localStorage o dall'attributo lang)
+                const saved = localStorage.getItem('preferred-language');
+                const docLang = document.documentElement && document.documentElement.lang ? document.documentElement.lang : null;
+                const initial = (saved === 'it' || saved === 'en') ? saved : (docLang === 'en' ? 'en' : 'it');
+                this.changeLanguage(initial);
+
+                // Ascolta cambiamenti di lingua provenienti da altre pagine (storage event)
+                window.addEventListener('storage', (ev) => {
+                    if (ev.key === 'preferred-language' && (ev.newValue === 'it' || ev.newValue === 'en')) {
+                        this.changeLanguage(ev.newValue);
+                    }
+                });
             }
-            
+
             changeLanguage(lang) {
                 if (!['it', 'en'].includes(lang)) return;
-                
+
                 this.currentLanguage = lang;
-                
+
+                // Salva la preferenza in localStorage così altre pagine la ricordano
+                try { localStorage.setItem('preferred-language', lang); } catch (e) { /* ignore */ }
+
                 // Aggiorna tutti gli elementi con attributi data-lang
                 const elements = document.querySelectorAll('[data-lang-it], [data-lang-en]');
                 elements.forEach(element => {
@@ -521,7 +537,7 @@
                         }
                     }
                 });
-                
+
                 // Aggiorna i pulsanti lingua
                 document.querySelectorAll('.lang-btn').forEach(btn => {
                     if (btn.getAttribute('data-lang') === lang) {
@@ -530,10 +546,14 @@
                         btn.classList.remove('active');
                     }
                 });
-                
+
                 // Aggiorna l'attributo lang del documento
                 document.documentElement.lang = lang;
-                
+
+                // Event dispatch per integrazione con altri moduli (se presenti)
+                const event = new CustomEvent('languageChanged', { detail: { previousLanguage: null, newLanguage: lang, timestamp: new Date().toISOString() } });
+                document.dispatchEvent(event);
+
                 console.log(`Lingua cambiata a: ${lang}`);
             }
         }

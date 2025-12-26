@@ -3,9 +3,12 @@ class ProjectsManager {
     constructor(containerSelector = '.projects-grid') {
         this.container = document.querySelector(containerSelector);
         this.mobileContainer = null;
-        this.dataUrl = '/data/projects.json';
         this.mobileVisibleCount = 4;
         this.showingAllMobile = false;
+        this.items = [];
+        // lang and dataUrl are determined at initialize() time to respect the language module
+        this.lang = null;
+        this.dataUrl = '/data/projects.json';
     }
 
     async initialize() {
@@ -14,19 +17,39 @@ class ProjectsManager {
             return;
         }
 
-    // initialization diagnostic removed
+        // Determine current language at initialization time (language module may have already run)
+        this.lang = (document.documentElement && document.documentElement.lang) ? document.documentElement.lang : ((window.languageManager && typeof window.languageManager.getCurrentLanguage === 'function') ? window.languageManager.getCurrentLanguage() : 'it');
+        this.dataUrl = this.lang === 'en' ? '/data/projects.en.json' : '/data/projects.json';
 
         // Crea container mobile
         this.createMobileContainer();
 
         try {
             const projects = await this.fetchProjects();
-            // fetched projects diagnostic removed
             const sorted = this.sortByDateDesc(projects);
-            // sorted projects diagnostic removed
+            this.items = sorted;
             this.render(sorted);
             this.renderMobile(sorted);
-            // rendering diagnostic removed
+
+            // Re-render when language changes (reload data if necessary)
+            document.addEventListener('languageChanged', async (e) => {
+                try {
+                    const newLang = e && e.detail && e.detail.newLanguage ? e.detail.newLanguage : (document.documentElement.lang || 'it');
+                    if (newLang === this.lang) return; // nothing to do
+                    this.lang = newLang;
+                    this.dataUrl = this.lang === 'en' ? '/data/projects.en.json' : '/data/projects.json';
+                    // Fetch new data and re-render
+                    const newProjects = await this.fetchProjects();
+                    const sortedNew = this.sortByDateDesc(newProjects);
+                    this.items = sortedNew;
+                    this.showingAllMobile = false;
+                    this.render(sortedNew);
+                    this.renderMobile(sortedNew);
+                } catch (err2) {
+                    console.error('ProjectsManager: error reloading projects on language change', err2);
+                }
+            });
+
         } catch (err) {
             console.error('Errore caricamento progetti:', err);
             // Mostra un messaggio di errore nell'UI
@@ -130,7 +153,16 @@ class ProjectsManager {
                 if (p.link && !p.link.startsWith('/') && !p.link.startsWith('#') && p.link.includes('://')) {
                     a.target = '_blank';
                 }
-                a.textContent = 'Visualizza progetto';
+                // Localized default link text: use a dedicated translation key for link labels
+                let defaultLabel = 'Visualizza progetto';
+                try {
+                    if (window.languageManager && window.languageManager.translations && window.languageManager.translations[this.lang] && window.languageManager.translations[this.lang]['view-project-link']) {
+                        defaultLabel = window.languageManager.translations[this.lang]['view-project-link'];
+                    }
+                } catch (e) {
+                    // ignore
+                }
+                a.textContent = defaultLabel;
                 card.appendChild(a);
             }
 
@@ -141,7 +173,7 @@ class ProjectsManager {
     formatPeriod(start, end) {
         if (!start && !end) return '';
         const startLabel = this.formatDateShort(start);
-        const endLabel = end ? this.formatDateShort(end) : 'oggi';
+        const endLabel = end ? this.formatDateShort(end) : (this.lang === 'en' ? 'today' : 'oggi');
         return `${startLabel} - ${endLabel}`;
     }
 
@@ -152,8 +184,16 @@ class ProjectsManager {
         const year = parts[0];
         const month = parts[1] ? parseInt(parts[1], 10) : null;
         if (!month) return year;
-        const months = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
-        return `${months[month-1]} ${year}`;
+        // Use Intl for localized month short name
+        try {
+            const dt = new Date(Date.UTC(year, month - 1, 1));
+            const formatter = new Intl.DateTimeFormat(this.lang === 'en' ? 'en-US' : 'it-IT', { month: 'short', year: 'numeric' });
+            // formatter may return like "Jul 2025" or "lug 2025"; normalize spacing
+            return formatter.format(dt);
+        } catch (e) {
+            const months = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
+            return `${months[month-1]} ${year}`;
+        }
     }
 
     renderMobile(items) {
@@ -161,7 +201,7 @@ class ProjectsManager {
 
         this.mobileContainer.innerHTML = '';
         
-        const visibleItems = this.showingAllMobile ? items : items.slice(0, this.mobileVisibleCount);
+    const visibleItems = this.showingAllMobile ? items : items.slice(0, this.mobileVisibleCount);
         
         visibleItems.forEach((project, index) => {
             const accordionItem = this.createAccordionItem(project, index);
@@ -175,7 +215,14 @@ class ProjectsManager {
             
             const showMoreBtn = document.createElement('button');
             showMoreBtn.className = 'projects-show-more-btn';
-            showMoreBtn.textContent = `Mostra altri ${items.length - this.mobileVisibleCount} progetti`;
+            // localized "show more"
+            let showMoreText = `Mostra altri ${items.length - this.mobileVisibleCount} progetti`;
+            try {
+                if (window.languageManager && window.languageManager.translations && window.languageManager.translations[this.lang] && window.languageManager.translations[this.lang]['show-more']) {
+                    showMoreText = window.languageManager.translations[this.lang]['show-more'].replace('{n}', String(items.length - this.mobileVisibleCount));
+                }
+            } catch (e) {}
+            showMoreBtn.textContent = showMoreText;
             
             showMoreBtn.addEventListener('click', () => {
                 this.showingAllMobile = true;
