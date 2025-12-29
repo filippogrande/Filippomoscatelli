@@ -124,17 +124,55 @@
     </script>
 </head>
 <body>
-    <!-- Language selector temporarily removed for visual testing -->
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <button class="lang-btn active" data-lang="it">
+            <img src="https://flagcdn.com/24x18/it.png" alt="Italiano"> IT
+        </button>
+        <button class="lang-btn" data-lang="en">
+            <img src="https://flagcdn.com/24x18/gb.png" alt="English"> EN
+        </button>
+    </div>
 
     <!-- Back to Top Button -->
     <button id="backToTop" class="back-to-top" aria-label="Torna all'inizio">
         <i class="fas fa-chevron-up"></i>
     </button>
 
-    <!-- Header (content temporarily removed to show only background gradient) -->
-    <header class="header" style="min-height: 280px; display: flex; align-items: center;">
+    <!-- Header -->
+    <header class="header">
         <div class="container">
-            <!-- header content removed for visual testing -->
+            <div class="profile-section">
+                <div class="profile-image">
+                    <img src="https://avatars.githubusercontent.com/u/35425860?s=400&u=67f3f62f5d202537c1fed54db800531662db392a&v=4" alt="Filippo Moscatelli">
+                </div>
+                <div class="profile-info">
+                    <h1 class="name">Filippo Moscatelli</h1>
+                    <p class="title" data-key="job-title">Studente in Informatica per la Comunicazione Digitale</p>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <a href="mailto:contact@filippomoscatelli.com">contact@filippomoscatelli.com</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span data-key="location">Milano, Italia</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fab fa-linkedin"></i>
+                            <a href="https://www.linkedin.com/in/filippo-moscatelli-52b566202/" target="_blank">linkedin.com</a>
+                        </div>
+                        <div class="contact-item">
+                        <i class="fab fa-github"></i>
+                        <a href="https://github.com/filippogrande" target="_blank">github.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-file-pdf"></i>
+                        <a id="cv-download" href="filippomoscatelli_it.pdf" target="_blank" download>Scarica CV</a>
+                    </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
