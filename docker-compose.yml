@@ -1,10 +1,7 @@
-version: '3.8'
+version: "3.8"
 
 services:
   cv-website:
-    build: 
-      context: https://github.com/filippogrande/Filippomoscatelli.git
-      dockerfile: Dockerfile
     image: filippogrande/cv-website:latest
     container_name: filippomoscatelli-cv-local
     ports:
