@@ -167,9 +167,19 @@
                         <a href="https://github.com/filippogrande" target="_blank">github.com</a>
                     </div>
                     <div class="contact-item">
-                        <i class="fas fa-file-pdf"></i>
-                        <a id="cv-download" href="filippomoscatelli_it.pdf" target="_blank" download>Scarica CV</a>
+                        <i class="fas fa-file-download"></i>
+                        <a id="cv-download" href="filippomoscatelli_it.pdf" download>Scarica CV</a>
                     </div>
+                    <!-- 
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span id="phone-placeholder" data-key="phone">Telefono: +39 3664885448</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-calendar"></i>
+                        <span id="birthdate-placeholder" data-key="birthdate">Data di nascita: 28/10/2002</span>
+                    </div>
+                -->
                     </div>
                 </div>
             </div>
@@ -232,9 +242,21 @@
                                 <span class="skill-tag">WordPress</span>
                                 <span class="skill-tag">Self-hosting</span>
                                 <span class="skill-tag">Cloudflare</span>
+                                <span class="skill-tag" data-key="skill-jira">Jira</span>
+                                <span class="skill-tag" data-key="skill-functional-testing">Test funzionale</span>
+                                <span class="skill-tag" data-key="skill-mobile-testing">Mobile testing</span>
+                                <span class="skill-tag" data-key="skill-requirement-validation">Validazione requisiti</span>
+                                <span class="skill-tag" data-key="skill-iot">IoT</span>
                                 <span class="skill-tag">Excel</span>
                                 <span class="skill-tag">PowerPoint</span>
                                 <span class="skill-tag">Word</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <h3 data-key="soft-skills-title">Competenze trasversali</h3>
+                            <div class="skills-list">
+                                <span class="skill-tag" data-key="skill-teamwork">Teamwork</span>
+                                <span class="skill-tag" data-key="skill-problem-solving">Problem solving</span>
                             </div>
                         </div>
                     </div>
@@ -250,6 +272,17 @@
                 </div>
             </section>
 
+
+
+            <!-- Work Section (posizionato subito dopo Progetti) -->
+            <section class="section">
+                <h2 class="section-title" data-key="work-title">Esperienza Professionale</h2>
+                <div class="section-content">
+                    <div class="work-grid">
+                        <!-- I lavori verranno caricati dinamicamente da /data/work.json -->
+                    </div>
+                </div>
+            </section>
 
 
             <!-- Education Section -->
@@ -307,7 +340,7 @@
                         <h3 data-key="volunteer1-title">Educatore Gruppo Medie</h3>
                         <p class="school" data-key="volunteer1-organization">Oratorio Santa Maria di Lourdes, Milano</p>
                         <p class="period" data-key="volunteer1-period">Ott 2020 - Presente</p>
-                        <ul data-key="volunteer1-description">
+                        <ul class="no-bullets" data-key="volunteer1-description">
                             <li>Coordinamento e supporto educativo per ragazzi delle scuole medie in ambiente oratoriano</li>
                             <li>Sviluppo di attività formative, ricreative e di animazione</li>
                             <li>Gestione dinamiche di gruppo e mediazione conflitti tra adolescenti</li>
@@ -319,36 +352,37 @@
                
 
             <!-- Languages Section -->
-    <section class="section">
-        <h2 class="section-title" data-key="languages-title">Lingue</h2>
-        <div class="section-content">
-            <div class="languages-grid">
-                <div class="language-item">
-                    <div class="language-header">
-                        <h3 data-key="italian-title">Italiano</h3>
-                        <span class="language-level" data-key="native-level">Madrelingua</span>
-                    </div>
-                    <div class="language-bar">
-                        <div class="language-progress" style="width: 100%"></div>
+            <section class="section">
+                <h2 class="section-title" data-key="languages-title">Lingue</h2>
+                <div class="section-content">
+                    <div class="languages-grid">
+                        <div class="language-item">
+                            <div class="language-header">
+                                <h3 data-key="italian-title">Italiano</h3>
+                                <span class="language-level" data-key="native-level">Madrelingua</span>
+                            </div>
+                            <div class="language-bar">
+                                <div class="language-progress" style="width: 100%"></div>
+                            </div>
+                        </div>
+
+                        <div class="language-item">
+                            <div class="language-header">
+                                <h3 data-key="english-title">Inglese</h3>
+                                <span class="language-level" data-key="b2-level">B2 (non certificato)</span>
+                            </div>
+                            <div class="language-bar">
+                                <div class="language-progress" style="width: 60%"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="language-item">
-                    <div class="language-header">
-                        <h3 data-key="english-title">Inglese</h3>
-                        <span class="language-level" data-key="b2-level">B2 (non certificato)</span>
-                    </div>
-                    <div class="language-bar">
-                        <div class="language-progress" style="width: 75%"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+            </section>
         </div> <!-- chiude .container -->
     </main>
     <!-- Footer -->
     <footer class="footer">
-        © 2025 Filippo Moscatelli. Tutti i diritti riservati.
+        © 2025 Filippo Moscatelli. <span data-key="rights">Tutti i diritti riservati.</span>
     </footer>
     
 
@@ -364,6 +398,7 @@
     <script src="js/effects.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/projects.js"></script>
+    <script src="js/work.js"></script>
     <script src="js/main.js"></script>
 <script>
 // CV PDF download link updater + tracking
@@ -420,6 +455,24 @@ document.addEventListener('DOMContentLoaded', function() {
     var btn = document.querySelector('.lang-btn[data-lang="' + lang + '"]');
     if (btn) btn.click();
   }
+});
+</script>
+<script>
+// Fallback: riapplica le traduzioni su languageChanged e sui click dei bottoni lingua
+document.addEventListener('languageChanged', function() {
+    if (window.languageManager && typeof window.languageManager.translateElements === 'function') {
+        window.languageManager.translateElements(window.languageManager.getCurrentLanguage());
+    }
+});
+document.querySelectorAll && document.querySelectorAll('.lang-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+        // timing leggero per lasciare che altri handler aggiornino lo stato
+        setTimeout(function(){
+            if (window.languageManager && typeof window.languageManager.translateElements === 'function') {
+                window.languageManager.translateElements(window.languageManager.getCurrentLanguage());
+            }
+        }, 50);
+    });
 });
 </script>
 </body>

@@ -1,0 +1,12 @@
+[
+  {
+    "company": "Haier Europe",
+    "role": "IoT Quality Engineer Intern",
+    "startDate": "2026-02",
+    "endDate": "2026-07",
+    "location": "Brugherio, Lombardy, Italy",
+    "modality": "Hybrid",
+    "description": " Perform functional testing on the hOn smart home mobile application within a large-scale IoT ecosystem.\n Validate feature behavior against Product Owner specifications and acceptance criteria.\n Identify, document and report software issues using Jira with structured and reproducible bug reports.\n Collaborate with developers and Product Owners to clarify requirements and ensure alignment between specifications and implementation.\n Contribute to maintaining application reliability and feature consistency across releases.\n Work within an English-based ticketing workflow in a cross-functional product environment.",
+    "tech": ["Jira","Functional testing","Mobile application testing","Requirement validation","IoT","Teamwork","Problem solving"]
+  }
+]

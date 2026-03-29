@@ -15,6 +15,7 @@ const translations = {
         'backend-title': 'Backend',
         'database-title': 'Database',
         'tools-title': 'Strumenti',
+        'soft-skills-title': 'Competenze trasversali',
         'languages-title': 'Lingue',
         'italian-title': 'Italiano',
         'english-title': 'Inglese',
@@ -25,10 +26,10 @@ const translations = {
         'volunteer1-organization': 'Oratorio Santa Maria di Lourdes, Milano',
         'volunteer1-period': 'Ott 2020 - Presente',
         'volunteer1-description': `
-            <li>Accompagnamento educativo nel percorso di crescita di ragazzi delle medie</li>
-            <li>Organizzazione di attività ricreative e momenti di condivisione</li>
-            <li>Supporto nelle dinamiche di gruppo e relazioni interpersonali</li>
-            <li>Collaborazione con altri educatori e coordinatori dell'oratorio</li>
+            Accompagnamento educativo nel percorso di crescita di ragazzi delle medie
+            Organizzazione di attività ricreative e momenti di condivisione
+            Supporto nelle dinamiche di gruppo e relazioni interpersonali
+            Collaborazione con altri educatori e coordinatori dell'oratorio
         `,
         'education-title': 'Istruzione',
         'education1-title': 'Laurea in Informatica per la Comunicazione Digitale',
@@ -41,6 +42,7 @@ const translations = {
         'education2-description': 'Diploma con specializzazione in scienze applicate e informatica.',
         'skills-learned': 'Competenze acquisite:',
         'projects-title': 'Progetti',
+        'work-title': 'Esperienza Professionale',
         'project1-title': 'Sito Web CV Self-Hosted',
         'project1-description': 'Sviluppo e hosting personale di questo sito web CV multilingue, gestito tramite infrastruttura self-hosted domestica.',
         'project1-period': 'Lug 2025',
@@ -56,6 +58,15 @@ const translations = {
         'view-github': 'Visualizza su GitHub',
         'show-more': 'Mostra altri {n} progetti',
         'rights': 'Tutti i diritti riservati.'
+        ,
+        // Skill tags
+        'skill-jira': 'Jira',
+        'skill-functional-testing': 'Test funzionale',
+        'skill-mobile-testing': 'Mobile testing',
+        'skill-requirement-validation': 'Validazione requisiti',
+        'skill-iot': 'IoT',
+        'skill-teamwork': 'Teamwork',
+        'skill-problem-solving': 'Problem solving'
     },
     en: {
         'job-title': 'Computer Science Student for Digital Communication',
@@ -67,6 +78,7 @@ const translations = {
         'backend-title': 'Backend',
         'database-title': 'Database',
         'tools-title': 'Tools',
+        'soft-skills-title': 'Soft skills',
         'languages-title': 'Languages',
         'italian-title': 'Italian',
         'english-title': 'English',
@@ -77,10 +89,10 @@ const translations = {
         'volunteer1-organization': 'Oratorio Santa Maria di Lourdes, Milan',
         'volunteer1-period': 'Oct 2020 - Present',
         'volunteer1-description': `
-            <li>Educational support in the growth journey of middle school students</li>
-            <li>Organization of recreational activities and sharing moments</li>
-            <li>Support in group dynamics and interpersonal relationships</li>
-            <li>Collaboration with other educators and oratory coordinators</li>
+            Educational support in the growth journey of middle school students
+            Organization of recreational activities and sharing moments
+            Support in group dynamics and interpersonal relationships
+            Collaboration with other educators and oratory coordinators
         `,
         'education-title': 'Education',
         'education1-title': 'Bachelor\'s Degree in Computer Science for Digital Communication',
@@ -93,6 +105,7 @@ const translations = {
         'education2-description': 'Diploma with specialization in applied sciences and computer science.',
         'skills-learned': 'Skills acquired:',
         'projects-title': 'Projects',
+        'work-title': 'Work Experience',
         'project1-title': 'Self-Hosted CV Website',
         'project1-description': 'Development and personal hosting of this multilingual CV website, managed through domestic self-hosted infrastructure.',
         'project1-period': 'Jul 2025',
@@ -108,6 +121,15 @@ const translations = {
         'view-github': 'View on GitHub',
         'show-more': 'Show {n} more projects',
         'rights': 'All rights reserved.'
+        ,
+        // Skill tags
+        'skill-jira': 'Jira',
+        'skill-functional-testing': 'Functional testing',
+        'skill-mobile-testing': 'Mobile testing',
+        'skill-requirement-validation': 'Requirement validation',
+        'skill-iot': 'IoT',
+        'skill-teamwork': 'Teamwork',
+        'skill-problem-solving': 'Problem solving'
     }
 };
 
@@ -197,15 +219,31 @@ class LanguageManager {
         elementsToTranslate.forEach(element => {
             const key = element.getAttribute('data-key');
             if (this.translations[lang] && this.translations[lang][key]) {
+                const translation = this.translations[lang][key];
                 if (element.tagName === 'UL') {
-                    // Per le liste, sostituisci l'HTML interno
-                    element.innerHTML = this.translations[lang][key];
+                    // Se l'UL ha la classe `no-bullets` usiamo i \n per creare
+                    // line-break (<br>) mantenendo gli a-capo ma senza bullet.
+                    if (element.classList && element.classList.contains('no-bullets')) {
+                        const lines = String(translation).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+                        // escape basic HTML
+                        const esc = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+                        element.innerHTML = lines.map(l => esc(l)).join('<br>');
+                    } else {
+                        // Se la trad contiene <li> usala così com'è,
+                        // altrimenti split su newline e crea <li> preservando gli a-capo.
+                        if (/\<li[\s>]/i.test(translation)) {
+                            element.innerHTML = translation;
+                        } else {
+                            const lines = String(translation).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+                            element.innerHTML = lines.map(l => `<li>${l}</li>`).join('');
+                        }
+                    }
                 } else if (key === 'about-description') {
                     // Per la descrizione about, usa innerHTML per supportare <br>
-                    element.innerHTML = this.translations[lang][key];
+                    element.innerHTML = translation;
                 } else {
                     // Per altri elementi, sostituisci il testo
-                    element.textContent = this.translations[lang][key];
+                    element.textContent = translation;
                 }
                 translatedCount++;
             }

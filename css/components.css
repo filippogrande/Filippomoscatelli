@@ -12,6 +12,17 @@
     color: #374151;
 }
 
+/* Rimuove i punti elenco per liste specifiche (es. volontariato) */
+.no-bullets {
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0;
+}
+.no-bullets li {
+    margin-bottom: 0.5rem;
+    padding-left: 0;
+}
+
 .school {
     font-weight: 500;
     color: #4f46e5;
@@ -46,6 +57,29 @@
     font-size: 0.75rem;
     font-weight: 500;
     border: 1px solid #d1d5db;
+}
+
+/* Work meta styling: period and location placed inline */
+.work-meta {
+    margin-bottom: 0.25rem;
+}
+.work-meta .period {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+/* Location shown on its own line, muted and slightly smaller */
+.work-location {
+    color: #9ca3af;
+    font-size: 0.85rem;
+    margin-top: 0.125rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Maggiore specificità per evitare override da regole globali */
+.education-item .work-location,
+.work-item .work-location {
+    color: #9ca3af !important;
+    font-size: 0.85rem !important;
 }
 
 /* Projects */

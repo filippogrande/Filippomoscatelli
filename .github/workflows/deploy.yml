@@ -73,10 +73,12 @@ jobs:
 
       - name: Test Docker image
         run: |
-          docker run --rm -d -p 8080:80 --name test-cv ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          IMAGE_REF="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.buildpush.outputs.digest }}"
+          echo "Testing image $IMAGE_REF"
+          docker run --rm -d -p 8080:80 --name test-cv "$IMAGE_REF"
           sleep 10
-          curl -f http://localhost:8080/health || exit 1
-          docker stop test-cv
+          curl -f http://localhost:8080/health || (docker logs test-cv && exit 1)
+          docker stop test-cv || true
 
   security-scan:
     name: Security Scan
@@ -93,7 +95,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image_digest }}
           format: "sarif"
           output: "trivy-results.sarif"
 

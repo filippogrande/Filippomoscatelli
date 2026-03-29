@@ -197,6 +197,10 @@ class AppManager {
         if (window.ProjectsManager) {
             this.registerModule('projects', new window.ProjectsManager());
         }
+        // Work manager: carica dinamicamente le esperienze lavorative da JSON
+        if (window.WorkManager) {
+            this.registerModule('work', new window.WorkManager());
+        }
         
     }
 

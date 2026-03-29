@@ -4,30 +4,28 @@ FROM nginx:1.29.1-alpine-slim
 # Install git and curl for cloning repository
 RUN apk add --no-cache git curl
 
-# Set working directory
-WORKDIR /tmp
-
-# Clone the repository from GitHub
-RUN git clone https://github.com/filippogrande/Filippomoscatelli.git
-
-# Set working directory to nginx html
+# Use build context instead of cloning inside the image to ensure CI builds
+# reflect the checked-out commit. Copy project files into a temporary build
+# folder and then copy the needed assets into nginx html folder.
 WORKDIR /usr/share/nginx/html
 
-# Remove default nginx static assets
+# Clean default content
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy website files from cloned repository
-RUN cp -r /tmp/Filippomoscatelli/index.html . && \
-    cp -r /tmp/Filippomoscatelli/css/ ./css/ && \
-    cp -r /tmp/Filippomoscatelli/js/ ./js/ && \
-    cp -r /tmp/Filippomoscatelli/data/ ./data/ && \
-    cp -r /tmp/Filippomoscatelli/FoodDelivery/ ./FoodDelivery/ && \
-    cp -r /tmp/Filippomoscatelli/k8s/ ./k8s/ 2>/dev/null || true && \
-    cp -r /tmp/Filippomoscatelli/test-projects.html . 2>/dev/null || true && \
-    cp -r /tmp/Filippomoscatelli/*.pdf . 2>/dev/null || true && \
-    cp -r /tmp/Filippomoscatelli/*.png . 2>/dev/null || true && \
-    cp -r /tmp/Filippomoscatelli/*.svg . 2>/dev/null || true && \
-    cp -r /tmp/Filippomoscatelli/*.md . 2>/dev/null || true
+# Copy repository files from build context and move required assets
+COPY . /tmp/build
+RUN cp -r /tmp/build/index.html . && \
+    cp -r /tmp/build/css ./css && \
+    cp -r /tmp/build/js ./js && \
+    cp -r /tmp/build/data ./data && \
+    cp -r /tmp/build/FoodDelivery ./FoodDelivery && \
+    cp -r /tmp/build/k8s ./k8s 2>/dev/null || true && \
+    cp -r /tmp/build/test-projects.html . 2>/dev/null || true && \
+    cp -r /tmp/build/nginx.conf ./nginx.conf 2>/dev/null || true && \
+    cp -r /tmp/build/*.pdf . 2>/dev/null || true && \
+    cp -r /tmp/build/*.png . 2>/dev/null || true && \
+    cp -r /tmp/build/*.svg . 2>/dev/null || true && \
+    rm -rf /tmp/build
 
 # Copy custom nginx configuration from repository (if exists), otherwise use local copy
 COPY nginx.conf /tmp/local-nginx.conf
