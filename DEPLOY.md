@@ -61,7 +61,7 @@ docker pull filippogrande/cv-website:latest
 ```
 
 ### Caratteristiche immagine:
-- ✅ Base: nginx:alpine (leggera e sicura)
+- ✅ Base: nginx alpine-slim (leggera e sicura)
 - ✅ **Multi-platform**: linux/amd64 + linux/arm64 + linux/386
 - ✅ **Compatibilità universale**: Intel, AMD, Apple Silicon, ARM servers, x86 legacy
 - ✅ Build automatico da GitHub
@@ -83,10 +83,20 @@ kubectl get pods -l app=filippomoscatelli-cv
 
 ## 🤖 CI/CD Automatico
 
-Il repository include GitHub Actions per:
-- ✅ Build automatico su push
-- ✅ Test di sicurezza
-- ✅ Deploy automatico su K8s (se configurato)
+Workflow: `.github/workflows/deploy.yml` ("Build and Deploy CV Website")
+
+Su **pull request** verso `main`:
+- ✅ Build dell'immagine in locale (single-platform `linux/amd64`, nessun push su Docker Hub)
+- ✅ Smoke test del container: `docker run` + `curl http://localhost:8080/health`
+- ⏭️ Security scan e push **saltati** (girano solo su `main`)
+
+Su **push in `main`**:
+- ✅ Build multi-platform (`linux/amd64` + `linux/arm64` + `linux/386`) e push su Docker Hub
+- ✅ Tag pubblicati: `latest`, `main`, `sha-<short>`
+- ✅ Smoke test del container
+- ✅ Security scan (Trivy) con upload SARIF nella tab **Security** del repository
+
+Il **deploy su Kubernetes è manuale** (`kubectl apply -f k8s/`): i job di deploy automatico non fanno più parte del workflow.
 
 ## 📧 Support
 
