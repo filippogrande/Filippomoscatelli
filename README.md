@@ -13,7 +13,7 @@ Un sito web moderno e responsive per il curriculum vitae con supporto multilingu
 - **Performance**: Caricamento veloce e ottimizzato
 - **Analytics**: Integrazione con Umami Analytics per tracking privacy-friendly
 - **Containerizzato**: Docker container pronto per production
-- **Cloud-Ready**: Deployment automatizzato su Kubernetes
+- **Cloud-Ready**: manifest Kubernetes pronti in `k8s/` (deploy manuale)
 - **Scalabilità**: Auto-scaling con HPA (Horizontal Pod Autoscaler)
 
 ## 📁 Struttura del Progetto
@@ -31,6 +31,7 @@ Un sito web moderno e responsive per il curriculum vitae con supporto multilingu
 │   ├── language.js       # Gestione multilingue
 │   ├── analytics.js      # Integrazione analytics
 │   └── ...              # Altri moduli JavaScript
+├── data/                 # Contenuti in JSON (progetti, esperienza professionale)
 ├── k8s/                  # Manifest Kubernetes
 │   ├── deployment.yaml   # Deployment configuration
 │   ├── service.yaml      # Service configuration
@@ -58,7 +59,7 @@ Il sistema è configurato per fare build direttamente dal repository GitHub, per
 make build-github
 
 # Test del container
-docker run -d -p 8080:80 --name cv-test filippomoscatelli/cv-website:latest
+docker run -d -p 8080:80 --name cv-test filippogrande/cv-website:latest
 curl http://localhost:8080/health
 ```
 
@@ -118,10 +119,10 @@ make rollback
 
 ```bash
 # Build dell'immagine
-docker build -t filippomoscatelli/cv-website:latest .
+docker build -t filippogrande/cv-website:latest .
 
 # Run del container
-docker run -d -p 8080:80 --name cv-website filippomoscatelli/cv-website:latest
+docker run -d -p 8080:80 --name cv-website filippogrande/cv-website:latest
 ```
 
 ### Configurazione
@@ -155,34 +156,32 @@ kubectl apply -f k8s/
 
 ## 🤖 CI/CD con GitHub Actions
 
-Il repository include un workflow automatizzato che:
+Il repository include il workflow `.github/workflows/deploy.yml` ("Build and Deploy CV Website"):
 
-1. **Build automatico** su ogni push al branch `main`
-2. **Test di sicurezza** con Trivy scanner
-3. **Deploy automatico** su Kubernetes (se configurato)
-4. **Multi-platform builds** (AMD64, ARM64)
+1. **Su pull request verso `main`**: build dell'immagine in locale (single-platform `linux/amd64`, nessun push su Docker Hub) + smoke test del container (`docker run` e `curl /health`).
+2. **Su push in `main`**: build multi-platform (`linux/amd64`, `linux/arm64`, `linux/386`) e push su Docker Hub con i tag `latest`, `main` e `sha-<short>`.
+3. **Security scan** (solo su `main`): Trivy con upload dei risultati SARIF nella tab **Security** del repository.
+4. **Deploy su Kubernetes: manuale** (`kubectl apply -f k8s/` oppure `./deploy.sh all`): i job di deploy non fanno parte del workflow.
 
 ### Configurazione GitHub Actions
 
-Per abilitare il deployment automatico, configura questi secrets nel repository GitHub:
+Per il push dell'immagine su Docker Hub servono questi secrets nel repository GitHub:
 
 ```bash
 # Docker Hub credentials
 DOCKER_USERNAME=your-docker-username
 DOCKER_PASSWORD=your-docker-password
-
-# Kubernetes config (base64 encoded)
-KUBECONFIG=your-kubernetes-config-base64
 ```
 
 ### Trigger manuale
 
-Puoi anche triggerare manualmente il deployment:
+Puoi anche triggerare manualmente il workflow:
 
 1. Vai su **Actions** nel repository GitHub
 2. Seleziona **Build and Deploy CV Website**
 3. Clicca **Run workflow**
-4. Abilita **Deploy to Kubernetes** se necessario
+
+L'input `deploy_to_k8s` presente nel trigger manuale non è più usato dal workflow (il deploy su Kubernetes è manuale).
 
 ### Configurazione
 
@@ -226,18 +225,18 @@ Modifica i seguenti elementi nel file `index.html`:
 
 Per aggiungere un nuovo progetto:
 
-1. **HTML**: Aggiungi una nuova `<div class="project-card">` nella sezione progetti
-2. **Traduzioni**: Aggiungi le chiavi di traduzione in `script.js` per entrambe le lingue (it/en)
+1. **JSON**: Aggiungi una voce in `data/projects.json` (e `data/projects.en.json` per l'inglese)
+2. **Traduzioni**: Aggiungi le chiavi di traduzione in `js/language.js` per entrambe le lingue (it/en)
 3. **Stili**: I progetti utilizzano già la griglia responsive, quindi si adatteranno automaticamente
 
 - **Competenze**: Aggiungi o rimuovi skill nelle varie categorie
-- **Esperienza**: Aggiorna lavori e descrizioni
+- **Esperienza**: Aggiorna lavori e descrizioni in `data/work.json` (e `data/work.en.json`); la durata in mesi/anni accanto alle date viene calcolata in automatico
 - **Istruzione**: Modifica formazione e qualifiche
 - **Progetti**: Aggiungi i tuoi progetti personali
 
 ### Modificare le Traduzioni
 
-Nel file `script.js`, modifica l'oggetto `translations` per:
+Nel file `js/language.js`, modifica l'oggetto `translations` per:
 
 - Aggiornare le traduzioni esistenti
 - Aggiungere nuove stringhe traducibili
@@ -328,7 +327,7 @@ Il sito è ottimizzato per:
 
 Per domande o suggerimenti, contatta:
 
-- **Email**: contact@filippomoscatelli.com
+- **Email**: contact@mail.filippomoscatelli.com
 - **LinkedIn**: [linkedin.com](https://www.linkedin.com/in/filippo-moscatelli-52b566202/)
 - **GitHub**: [github.com](https://github.com/filippogrande)
 
