@@ -48,6 +48,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # Su pull_request {{branch}} e' VUOTA: il vecchio
+      # type=sha,prefix={{branch}}- generava il tag non valido ":-<sha>"
+      # e faceva fallire il build su OGNI PR. Prefisso ora fisso.
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -56,24 +59,32 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=sha,prefix={{branch}}-
+            type=sha,prefix=sha-
             type=raw,value=latest,enable={{is_default_branch}}
 
+      # PR: build locale single-platform (load nel runner, nessun push) con un
+      # tag esplicito, cosi' lo smoke test puo' avviare davvero l'immagine.
+      # Push su main: build multi-platform + push su Docker Hub.
       - name: Build and push Docker image
         id: buildpush
         uses: docker/build-push-action@v5
         with:
           context: .
-          platforms: linux/amd64,linux/arm64,linux/386
+          platforms: ${{ github.event_name == 'pull_request' && 'linux/amd64' || 'linux/amd64,linux/arm64,linux/386' }}
+          load: ${{ github.event_name == 'pull_request' }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: "${{ github.event_name == 'pull_request' && format('{0}/{1}:pr-{2}', env.REGISTRY, env.IMAGE_NAME, github.event.number) || steps.meta.outputs.tags }}"
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Test Docker image
         run: |
-          IMAGE_REF="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.buildpush.outputs.digest }}"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            IMAGE_REF="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.number }}"
+          else
+            IMAGE_REF="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.buildpush.outputs.digest }}"
+          fi
           echo "Testing image $IMAGE_REF"
           docker run --rm -d -p 8080:80 --name test-cv "$IMAGE_REF"
           sleep 10
