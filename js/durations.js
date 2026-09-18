@@ -15,6 +15,8 @@ class DurationsManager {
     constructor(selector = '[data-period-start]') {
         this.selector = selector;
         this.initialized = false;
+        this.applying = false;
+        this.observer = null;
     }
 
     /**
@@ -32,37 +34,60 @@ class DurationsManager {
      * Scrive o aggiorna la durata accanto a ogni periodo marcato
      */
     apply() {
-        if (typeof document === 'undefined' || !window.utils) {
+        if (typeof document === 'undefined' || !window.utils || this.applying) {
             return;
         }
 
-        const lang = this.getLanguage();
+        this.applying = true;
+        try {
+            const lang = this.getLanguage();
+
+            document.querySelectorAll(this.selector).forEach((element) => {
+                const label = window.utils.formatDuration(
+                    lang,
+                    element.getAttribute('data-period-start'),
+                    element.getAttribute('data-period-end')
+                );
+
+                const existing = element.querySelector('.work-duration');
+
+                if (!label) {
+                    if (existing) existing.remove();
+                    return;
+                }
+
+                const span = existing || document.createElement('span');
+                span.className = 'period work-duration';
+                span.textContent = ` (${label})`;
+                if (!existing) element.appendChild(span);
+            });
+        } finally {
+            this.applying = false;
+        }
+    }
+
+    /**
+     * Tiene sotto controllo i periodi: il cambio lingua riscrive il testo del
+     * periodo (textContent) e può cancellare lo span della durata senza emettere
+     * eventi. Senza questo observer la durata sparirebbe al primo cambio lingua.
+     */
+    watch() {
+        if (typeof MutationObserver === 'undefined') {
+            return;
+        }
+
+        if (!this.observer) {
+            this.observer = new MutationObserver(() => this.apply());
+        }
 
         document.querySelectorAll(this.selector).forEach((element) => {
-            const label = window.utils.formatDuration(
-                lang,
-                element.getAttribute('data-period-start'),
-                element.getAttribute('data-period-end')
-            );
-
-            const existing = element.querySelector('.work-duration');
-
-            if (!label) {
-                if (existing) existing.remove();
-                return;
-            }
-
-            const span = existing || document.createElement('span');
-            span.className = 'period work-duration';
-            span.textContent = ` (${label})`;
-            if (!existing) element.appendChild(span);
+            this.observer.observe(element, { childList: true });
         });
     }
 
     /**
-     * Inizializza il gestore: calcola subito e a ogni cambio lingua.
-     * Il cambio lingua riscrive il testo del periodo (traduzione), quindi il
-     * listener su 'languageChanged' è obbligatorio per riaccodare la durata.
+     * Inizializza il gestore: calcola subito, a ogni cambio lingua e a ogni
+     * riscrittura del periodo
      */
     initialize() {
         if (this.initialized) {
@@ -71,8 +96,9 @@ class DurationsManager {
         }
 
         this.initialized = true;
-        this.apply();
         document.addEventListener('languageChanged', () => this.apply());
+        this.watch();
+        this.apply();
     }
 }
 
