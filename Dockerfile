@@ -1,5 +1,5 @@
 # Use nginx alpine slim as base image for serving static content
-FROM nginx:1.29.1-alpine-slim
+FROM nginx:1.31.0-alpine-slim
 
 # Install git and curl for cloning repository
 RUN apk add --no-cache git curl
