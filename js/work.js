@@ -89,6 +89,16 @@ class WorkManager {
                 period.textContent = `${this.formatDateShort(w.startDate)}${w.startDate || w.endDate ? ' - ' : ''}${w.endDate ? this.formatDateShort(w.endDate) : (this.lang === 'en' ? 'Present' : 'Presente')}`;
                 meta.appendChild(period);
 
+                // Durata calcolata in automatico, accanto alle date.
+                // Se endDate manca si conta fino al mese corrente.
+                const duration = this.formatDuration(w.startDate, w.endDate);
+                if (duration) {
+                    const durationEl = document.createElement('span');
+                    durationEl.className = 'period work-duration';
+                    durationEl.textContent = ` (${duration})`;
+                    meta.appendChild(durationEl);
+                }
+
                 item.appendChild(meta);
             }
 
@@ -152,6 +162,43 @@ class WorkManager {
             const months = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
             return `${months[month-1]} ${year}`;
         }
+    }
+
+    /** Converte "YYYY-MM" in {anno, mese}; null se non è una data valida */
+    parseYearMonth(value) {
+        if (!value) return null;
+        const parts = String(value).split('-');
+        const year = parseInt(parts[0], 10);
+        const month = parts[1] ? parseInt(parts[1], 10) : null;
+        if (!year || !month || month < 1 || month > 12) return null;
+        return { year: year, month: month };
+    }
+
+    /** Numero di mesi fra due "YYYY-MM" (estremi inclusi); senza endDate conta fino ad oggi */
+    monthsBetween(startDate, endDate) {
+        const start = this.parseYearMonth(startDate);
+        if (!start) return 0;
+        let end = this.parseYearMonth(endDate);
+        if (!end) {
+            const now = new Date();
+            end = { year: now.getUTCFullYear(), month: now.getUTCMonth() + 1 };
+        }
+        const months = (end.year - start.year) * 12 + (end.month - start.month) + 1;
+        return months > 0 ? months : 0;
+    }
+
+    /** Durata leggibile: "8 mesi", "1 anno e 3 mesi", "2 anni" (EN: months/years) */
+    formatDuration(startDate, endDate) {
+        const months = this.monthsBetween(startDate, endDate);
+        if (!months) return '';
+        const en = this.lang === 'en';
+        const years = Math.floor(months / 12);
+        const rest = months % 12;
+        const yearLabel = (n) => en ? (n === 1 ? '1 year' : `${n} years`) : (n === 1 ? '1 anno' : `${n} anni`);
+        const monthLabel = (n) => en ? (n === 1 ? '1 month' : `${n} months`) : (n === 1 ? '1 mese' : `${n} mesi`);
+        if (years && rest) return en ? `${yearLabel(years)} ${monthLabel(rest)}` : `${yearLabel(years)} e ${monthLabel(rest)}`;
+        if (years) return yearLabel(years);
+        return monthLabel(rest);
     }
 }
 
