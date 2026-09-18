@@ -153,7 +153,7 @@ const AppConfig = {
 
     // Configurazione contatti e social
     contact: {
-        email: 'filipp28mo@gmail.com',
+        email: 'contact@mail.filippomoscatelli.com',
         location: {
             it: 'Milano, Italia',
             en: 'Milan, Italy'
@@ -161,7 +161,7 @@ const AppConfig = {
         social: {
             linkedin: 'https://linkedin.com/in/filippo-moscatelli',
             github: 'https://github.com/filippogrande',
-            email: 'mailto:filipp28mo@gmail.com'
+            email: 'mailto:contact@mail.filippomoscatelli.com'
         }
     },
 
@@ -321,4 +321,3 @@ if (typeof window !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { ConfigManager, configManager, AppConfig };
 }
-
