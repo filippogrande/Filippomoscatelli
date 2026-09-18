@@ -67,7 +67,7 @@ jobs:
       # Push su main: build multi-platform + push su Docker Hub.
       - name: Build and push Docker image
         id: buildpush
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           platforms: ${{ github.event_name == 'pull_request' && 'linux/amd64' || 'linux/amd64,linux/arm64,linux/386' }}
