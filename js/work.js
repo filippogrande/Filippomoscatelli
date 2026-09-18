@@ -89,6 +89,16 @@ class WorkManager {
                 period.textContent = `${this.formatDateShort(w.startDate)}${w.startDate || w.endDate ? ' - ' : ''}${w.endDate ? this.formatDateShort(w.endDate) : (this.lang === 'en' ? 'Present' : 'Presente')}`;
                 meta.appendChild(period);
 
+                // Durata calcolata in automatico, accanto alle date.
+                // Se endDate manca si conta fino al mese corrente.
+                const duration = this.formatDuration(w.startDate, w.endDate);
+                if (duration) {
+                    const durationEl = document.createElement('span');
+                    durationEl.className = 'period work-duration';
+                    durationEl.textContent = ` (${duration})`;
+                    meta.appendChild(durationEl);
+                }
+
                 item.appendChild(meta);
             }
 
@@ -152,6 +162,12 @@ class WorkManager {
             const months = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
             return `${months[month-1]} ${year}`;
         }
+    }
+
+    /** Durata in mesi/anni, nella lingua corrente. La logica sta in Utils (condivisa con durations.js) */
+    formatDuration(startDate, endDate) {
+        if (!window.utils) return '';
+        return window.utils.formatDuration(this.lang === 'en' ? 'en' : 'it', startDate, endDate);
     }
 }
 

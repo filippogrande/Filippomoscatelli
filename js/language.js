@@ -24,13 +24,16 @@ const translations = {
         'experience-title': 'Esperienza di Volontariato',
         'volunteer1-title': 'Educatore Gruppo Medie',
         'volunteer1-organization': 'Oratorio Santa Maria di Lourdes, Milano',
-        'volunteer1-period': 'Ott 2020 - Presente',
+        'volunteer1-period': 'Ott 2020 - Ago 2026',
         'volunteer1-description': `
             Accompagnamento educativo nel percorso di crescita di ragazzi delle medie
             Organizzazione di attività ricreative e momenti di condivisione
             Supporto nelle dinamiche di gruppo e relazioni interpersonali
             Collaborazione con altri educatori e coordinatori dell'oratorio
         `,
+        'volunteer2-title': 'Educatore Gruppo Adolescenti',
+        'volunteer2-organization': 'Oratorio Santa Maria di Lourdes, Milano',
+        'volunteer2-period': 'Set 2026 - Presente',
         'education-title': 'Istruzione',
         'education1-title': 'Laurea in Informatica per la Comunicazione Digitale',
         'education1-school': 'Università degli Studi di Milano',
@@ -87,13 +90,16 @@ const translations = {
         'experience-title': 'Volunteer Experience',
         'volunteer1-title': 'Middle School Group Educator',
         'volunteer1-organization': 'Oratorio Santa Maria di Lourdes, Milan',
-        'volunteer1-period': 'Oct 2020 - Present',
+        'volunteer1-period': 'Oct 2020 - Aug 2026',
         'volunteer1-description': `
             Educational support in the growth journey of middle school students
             Organization of recreational activities and sharing moments
             Support in group dynamics and interpersonal relationships
             Collaboration with other educators and oratory coordinators
         `,
+        'volunteer2-title': 'High School Group Educator',
+        'volunteer2-organization': 'Oratorio Santa Maria di Lourdes, Milan',
+        'volunteer2-period': 'Sep 2026 - Present',
         'education-title': 'Education',
         'education1-title': 'Bachelor\'s Degree in Computer Science for Digital Communication',
         'education1-school': 'University of Milan',

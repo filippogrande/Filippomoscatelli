@@ -201,6 +201,10 @@ class AppManager {
         if (window.WorkManager) {
             this.registerModule('work', new window.WorkManager());
         }
+        // Durations manager: durata (anni/mesi) accanto ai periodi marcati con data-period-*
+        if (window.DurationsManager) {
+            this.registerModule('durations', new window.DurationsManager());
+        }
         
     }
 
@@ -258,4 +262,3 @@ if (typeof window !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { AppManager, appManager };
 }
-
