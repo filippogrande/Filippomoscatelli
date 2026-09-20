@@ -51,11 +51,13 @@ const translations = {
         'project3-description': 'Competizione di robotica con robot umanoide NAO. Partecipazione alle fasi di selezione e regionali con focus su programmazione e lavoro di squadra.',
         'project3-period': 'Nov 2019 - Feb 2020',
         'view-project': 'Stai guardando il progetto!',
+        // Label utilizzata per i link ai progetti quando non è fornita una label nel JSON
         'view-project-link': 'Visualizza progetto',
         'view-github': 'Visualizza su GitHub',
         'show-more': 'Mostra altri {n} progetti',
         'rights': 'Tutti i diritti riservati.'
         ,
+        // Skill tags
         'skill-jira': 'Jira',
         'skill-functional-testing': 'Test funzionale',
         'skill-mobile-testing': 'Mobile testing',
@@ -110,11 +112,13 @@ const translations = {
         'project3-description': 'Robotics competition with NAO humanoid robot. Participation in selection and regional phases with focus on programming and teamwork.',
         'project3-period': 'Nov 2019 - Feb 2020',
         'view-project': 'You\'re viewing the project!',
+        // Label used for project links when JSON doesn't provide a label
         'view-project-link': 'View project',
         'view-github': 'View on GitHub',
         'show-more': 'Show {n} more projects',
         'rights': 'All rights reserved.'
         ,
+        // Skill tags
         'skill-jira': 'Jira',
         'skill-functional-testing': 'Functional testing',
         'skill-mobile-testing': 'Mobile testing',
@@ -133,33 +137,65 @@ class LanguageManager {
         this.initialized = false;
     }
 
+    /**
+     * Rileva la lingua preferita dall'utente
+     * @returns {string} Codice lingua ('it' o 'en')
+     */
     detectPreferredLanguage() {
+        // Controlla se c'è una preferenza salvata
         const savedLang = localStorage.getItem('preferred-language');
         if (savedLang && (savedLang === 'it' || savedLang === 'en')) {
             return savedLang;
         }
+        
+        // Altrimenti usa la lingua del browser
         const browserLang = navigator.language || navigator.userLanguage;
         const detectedLang = browserLang.startsWith('it') ? 'it' : 'en';
         return detectedLang;
     }
 
+    /**
+     * Cambia la lingua del sito
+     * @param {string} lang - Codice lingua ('it' o 'en')
+     */
     changeLanguage(lang) {
         const previousLanguage = this.currentLanguage;
+        
+        // Se la lingua è già quella corrente, non fare nulla
         if (previousLanguage === lang) {
             return;
         }
+        
+        // Aggiorna la lingua corrente
         this.currentLanguage = lang;
+        
+        // Aggiorna l'attributo lang del documento
         document.documentElement.lang = lang;
+        
+        // Aggiorna lo stato attivo dei pulsanti
         this.updateLanguageButtons(lang);
+        
+        // Aggiorna tutti gli elementi con data-key
         this.translateElements(lang);
+        
+        // Salva la preferenza nel localStorage
         localStorage.setItem('preferred-language', lang);
+        
+        // Aggiorna il titolo della pagina
         const newTitle = `Filippo Moscatelli - ${lang === 'it' ? 'CV' : 'Resume'}`;
         document.title = newTitle;
+        
+        // Emetti evento personalizzato per altri moduli
         this.emitLanguageChangeEvent(previousLanguage, lang);
     }
 
+    /**
+     * Aggiorna lo stato attivo dei pulsanti lingua
+     * @param {string} lang - Lingua attiva
+     */
     updateLanguageButtons(lang) {
         const langButtons = document.querySelectorAll('.lang-btn');
+        
         langButtons.forEach(btn => {
             btn.classList.remove('active');
             if (btn.getAttribute('data-lang') === lang) {
@@ -168,18 +204,29 @@ class LanguageManager {
         });
     }
 
+    /**
+     * Traduce tutti gli elementi con data-key
+     * @param {string} lang - Lingua target
+     */
     translateElements(lang) {
         const elementsToTranslate = document.querySelectorAll('[data-key]');
+        
+        let translatedCount = 0;
         elementsToTranslate.forEach(element => {
             const key = element.getAttribute('data-key');
             if (this.translations[lang] && this.translations[lang][key]) {
                 const translation = this.translations[lang][key];
                 if (element.tagName === 'UL') {
+                    // Se l'UL ha la classe `no-bullets` usiamo i \n per creare
+                    // line-break (<br>) mantenendo gli a-capo ma senza bullet.
                     if (element.classList && element.classList.contains('no-bullets')) {
                         const lines = String(translation).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+                        // escape basic HTML
                         const esc = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#39;');
                         element.innerHTML = lines.map(l => esc(l)).join('<br>');
                     } else {
+                        // Se la trad contiene <li> usala così com'è,
+                        // altrimenti split su newline e crea <li> preservando gli a-capo.
                         if (/\<li[\s>]/i.test(translation)) {
                             element.innerHTML = translation;
                         } else {
@@ -188,14 +235,22 @@ class LanguageManager {
                         }
                     }
                 } else if (key === 'about-description') {
+                    // Per la descrizione about, usa innerHTML per supportare <br>
                     element.innerHTML = translation;
                 } else {
+                    // Per altri elementi, sostituisci il testo
                     element.textContent = translation;
                 }
+                translatedCount++;
             }
         });
     }
 
+    /**
+     * Emette un evento personalizzato per il cambio lingua
+     * @param {string} previousLanguage - Lingua precedente
+     * @param {string} newLanguage - Nuova lingua
+     */
     emitLanguageChangeEvent(previousLanguage, newLanguage) {
         const event = new CustomEvent('languageChanged', {
             detail: {
@@ -207,37 +262,58 @@ class LanguageManager {
         document.dispatchEvent(event);
     }
 
+    /**
+     * Inizializza i listener per i pulsanti lingua
+     */
     initializeLanguageButtons() {
+        // Aspetta che il DOM sia completamente caricato
         const buttons = document.querySelectorAll('.lang-btn');
+        
         if (buttons.length === 0) {
             setTimeout(() => this.initializeLanguageButtons(), 500);
             return;
         }
+        
         buttons.forEach((btn, index) => {
+            // Rimuovi eventuali listener esistenti
             btn.removeEventListener('click', this.handleLanguageButtonClick);
+            
+            // Aggiungi il nuovo listener con bind
             btn.addEventListener('click', (e) => this.handleLanguageButtonClick(e, btn));
         });
     }
-
+    
+    /**
+     * Gestisce il click sui pulsanti lingua
+     */
     handleLanguageButtonClick(e, btn) {
         e.preventDefault();
         e.stopPropagation();
+        
         const lang = e.target.getAttribute('data-lang') || btn.getAttribute('data-lang');
+        
         if (!lang) {
             return;
         }
+        
         if (lang === this.currentLanguage) {
             return;
         }
+        
         this.changeLanguage(lang);
     }
 
+    /**
+     * Aggiunge supporto per scorciatoie da tastiera
+     */
     addKeyboardSupport() {
         document.addEventListener('keydown', (e) => {
+            // Alt + I per italiano
             if (e.altKey && e.key.toLowerCase() === 'i') {
                 e.preventDefault();
                 this.changeLanguage('it');
             }
+            // Alt + E per inglese
             if (e.altKey && e.key.toLowerCase() === 'e') {
                 e.preventDefault();
                 this.changeLanguage('en');
@@ -245,29 +321,46 @@ class LanguageManager {
         });
     }
 
+    /**
+     * Inizializza il gestore delle lingue
+     */
     initialize() {
         if (this.initialized) {
             return;
         }
+
+        // Rileva e imposta la lingua preferita
         const preferredLang = this.detectPreferredLanguage();
         this.changeLanguage(preferredLang);
+        
+        // Inizializza i pulsanti lingua
         this.initializeLanguageButtons();
+        
+        // Aggiungi supporto tastiera
         this.addKeyboardSupport();
+        
         this.initialized = true;
     }
 
+    /**
+     * Getter per la lingua corrente
+     * @returns {string} Lingua corrente
+     */
     getCurrentLanguage() {
         return this.currentLanguage;
     }
 }
 
+// Crea istanza globale del gestore lingue
 const languageManager = new LanguageManager();
 
+// Esporta per uso in altri moduli
 if (typeof window !== 'undefined') {
-    window.LanguageManager = LanguageManager;
-    window.languageManager = languageManager;
+    window.LanguageManager = LanguageManager; // Esporta la CLASSE
+    window.languageManager = languageManager; // Esporta l'ISTANZA
 }
 
+// Export per moduli ES6 (se supportato)
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { LanguageManager, languageManager, translations };
 }
