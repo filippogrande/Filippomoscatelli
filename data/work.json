@@ -5,7 +5,7 @@
     "startDate": "2026-02",
     "location": "Brugherio, Lombardia, Italia",
     "modality": "Ibrida",
-    "description": "Test funzionali, scrittura di test case e regression test su hOn, l'app mobile IoT di Haier Europe, in un ecosistema di dispositivi connessi su larga scala. Validazione delle funzionalità rispetto alle specifiche del Product Owner e ai criteri di accettazione tramite scenari end-to-end, segnalazione dei difetti su Jira con report strutturati e riproducibili. Verifica e differenziazione dei bug tra firmware dell'appliance e software dell'app, in collaborazione con sviluppatori e Product Owner per allineare specifica e implementazione, in un flusso di lavoro quotidiano in inglese.",
-    "tech": ["Jira","Test funzionale","Mobile testing","Requirement validation","IoT","Regression testing","Bug triage","Teamwork","Problem solving"]
+    "description": "Scrittura di test case ed esecuzione di test funzionali e di non regressione su hOn, l'app mobile IoT di Haier Europe, in un ecosistema di dispositivi connessi su larga scala, a partire dai requisiti definiti con i Product Owner. Validazione delle funzionalità rispetto alle specifiche definite dai Product Owner e ai criteri di accettazione tramite scenari end-to-end, con segnalazione dei difetti su Jira mediante report strutturati e riproducibili. Verifica e differenziazione dei bug tra firmware dell'appliance e software dell'app, in collaborazione con il team di sviluppo per allineare specifica e implementazione, in un flusso di lavoro quotidiano in inglese.",
+    "tech": ["Jira","Test case design","Functional testing","Regression testing","Mobile testing","Requirement validation","IoT","Bug triage","Teamwork","Problem solving"]
   }
 ]
