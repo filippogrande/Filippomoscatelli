@@ -51,6 +51,8 @@ class WorkManager {
             const res = await fetch(this.dataUrl, {cache: 'no-cache'});
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const json = await res.json();
+            // Se nginx restituisce index.html (fallback) il JSON non è un array: errore esplicito.
+            if (!Array.isArray(json)) throw new Error('Risposta non valida (atteso array JSON)');
             return json;
         } catch (e) {
             console.error('WorkManager: fetch error', e);

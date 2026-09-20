@@ -98,7 +98,7 @@ const translations = {
             Collaboration with other educators and oratory coordinators
         `,
         'volunteer2-title': 'High School Group Educator',
-        'volunteer2-organization': 'Oratorio Santa Maria di Lourdes, Milan',
+        'volunteer2-organization': 'Oratorio Santa Maria de Lourdes, Milan',
         'volunteer2-period': 'Sep 2026 - Present',
         'education-title': 'Education',
         'education1-title': 'Bachelor\'s Degree in Computer Science for Digital Communication',
@@ -232,7 +232,7 @@ class LanguageManager {
                     if (element.classList && element.classList.contains('no-bullets')) {
                         const lines = String(translation).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
                         // escape basic HTML
-                        const esc = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+                        const esc = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#39;');
                         element.innerHTML = lines.map(l => esc(l)).join('<br>');
                     } else {
                         // Se la trad contiene <li> usala così com'è,
