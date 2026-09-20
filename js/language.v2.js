@@ -9,7 +9,7 @@ const translations = {
         'job-title': 'Studente in Informatica per la Comunicazione Digitale',
         'location': 'Milano, Italia',
         'about-title': 'Chi Sono',
-        'about-description': 'Ciao, sono Filippo: QA engineer IoT e studente in Informatica per la Comunicazione Digitale. Tutti i giorni lavoro sui sistemi IoT di Haier Europe, in particolare sull\'app hOn. Mi attraggono i sistemi con una parte fisica, come veicoli, guida autonoma, dispositivi connessi e videogiochi. È per questo che ho scelto l\'IoT: capire e verificare come software e hardware lavorano insieme.',
+        'about-description': 'Ciao, sono Filippo: QA engineer IoT e studente in Informatica per la Comunicazione Digitale. Tutti i giorni lavoro sui sistemi IoT di Haier Europe, in particolare sull\'app hOn.<br><br>Mi attraggono i sistemi con una parte fisica, come veicoli, guida autonoma, dispositivi connessi e videogiochi.<br><br>È per questo che ho scelto l\'IoT: capire e verificare come software e hardware lavorano insieme.',
         'skills-title': 'Competenze',
         'frontend-title': 'Frontend',
         'backend-title': 'Backend',
@@ -25,12 +25,7 @@ const translations = {
         'volunteer1-title': 'Educatore Gruppo Medie',
         'volunteer1-organization': 'Oratorio Santa Maria di Lourdes, Milano',
         'volunteer1-period': 'Ott 2020 - Ago 2026',
-        'volunteer1-description': `
-            Accompagnamento educativo nel percorso di crescita di ragazzi delle medie
-            Organizzazione di attività ricreative e momenti di condivisione
-            Supporto nelle dinamiche di gruppo e relazioni interpersonali
-            Collaborazione con altri educatori e coordinatori dell'oratorio
-        `,
+        'volunteer1-description': `\n            Accompagnamento educativo nel percorso di crescita di ragazzi delle medie\n            Organizzazione di attività ricreative e momenti di condivisione\n            Supporto nelle dinamiche di gruppo e relazioni interpersonali\n            Collaborazione con altri educatori e coordinatori dell'oratorio\n        `,
         'volunteer2-title': 'Educatore Gruppo Adolescenti',
         'volunteer2-organization': 'Oratorio Santa Maria di Lourdes, Milano',
         'volunteer2-period': 'Set 2026 - Presente',
@@ -75,7 +70,7 @@ const translations = {
         'job-title': 'Computer Science Student for Digital Communication',
         'location': 'Milan, Italy',
         'about-title': 'About Me',
-        'about-description': 'Hi, I\'m Filippo: an IoT Quality Engineer and Computer Science for Digital Communication student. Every day I work on Haier Europe\'s IoT systems, in particular the hOn app. I\'m fascinated by systems with a real physical side, like vehicles, autonomous driving, connected devices and video games. That\'s why I chose IoT: to understand and verify how software and hardware work together.',
+        'about-description': 'Hi, I\'m Filippo: an IoT Quality Engineer and Computer Science for Digital Communication student. Every day I work on Haier Europe\'s IoT systems, in particular the hOn app.<br><br>I\'m fascinated by systems with a real physical side, like vehicles, autonomous driving, connected devices and video games.<br><br>That\'s why I chose IoT: to understand and verify how software and hardware work together.',
         'skills-title': 'Skills',
         'frontend-title': 'Frontend',
         'backend-title': 'Backend',
@@ -91,14 +86,9 @@ const translations = {
         'volunteer1-title': 'Middle School Group Educator',
         'volunteer1-organization': 'Oratorio Santa Maria di Lourdes, Milan',
         'volunteer1-period': 'Oct 2020 - Aug 2026',
-        'volunteer1-description': `
-            Educational support in the growth journey of middle school students
-            Organization of recreational activities and sharing moments
-            Support in group dynamics and interpersonal relationships
-            Collaboration with other educators and oratory coordinators
-        `,
+        'volunteer1-description': `\n            Educational support in the growth journey of middle school students\n            Organization of recreational activities and sharing moments\n            Support in group dynamics and interpersonal relationships\n            Collaboration with other educators and oratory coordinators\n        `,
         'volunteer2-title': 'High School Group Educator',
-        'volunteer2-organization': 'Oratorio Santa Maria de Lourdes, Milan',
+        'volunteer2-organization': 'Oratorio Santa Maria di Lourdes, Milan',
         'volunteer2-period': 'Sep 2026 - Present',
         'education-title': 'Education',
         'education1-title': 'Bachelor\'s Degree in Computer Science for Digital Communication',

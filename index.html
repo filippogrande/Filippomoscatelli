@@ -12,15 +12,15 @@
     <link rel="stylesheet" href="css/main.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Load inline scripts from external file for CSP compliance -->
     <script src="js/inline-scripts.js"></script>
-    
+
     <!-- Fallback per browser che non supportano JavaScript -->
     <noscript>
         <img src="https://filippomoscatelli.com/analytics/api/collect?website-id=a912f285-ced0-4c7f-9260-434d0ee8674a&url=fallback&title=NoJS" alt="" />
     </noscript>
-    
+
     <!-- Schema.org JSON-LD structured data -->
     <script type="application/ld+json">
     {
@@ -180,16 +180,6 @@
                         <i class="fas fa-file-download"></i>
                         <a id="cv-download" href="filippomoscatelli_it.pdf" download>Scarica CV</a>
                     </div>
-                    <!-- 
-                    <div class="contact-item">
-                        <i class="fas fa-phone"></i>
-                        <span id="phone-placeholder" data-key="phone">Telefono: +39 3664885448</span>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-calendar"></i>
-                        <span id="birthdate-placeholder" data-key="birthdate">Data di nascita: 28/10/2002</span>
-                    </div>
-                -->
                     </div>
                 </div>
             </div>
@@ -204,7 +194,7 @@
                 <h2 class="section-title" data-key="about-title">Chi Sono</h2>
                 <div class="section-content">
                     <p data-key="about-description">
-                        Ciao, sono Filippo: QA engineer IoT e studente in Informatica per la Comunicazione Digitale. Tutti i giorni lavoro sui sistemi IoT di Haier Europe, in particolare sull'app hOn. Mi attraggono i sistemi con una parte fisica, come veicoli, guida autonoma, dispositivi connessi e videogiochi. È per questo che ho scelto l'IoT: capire e verificare come software e hardware lavorano insieme.
+                        Ciao, sono Filippo: QA engineer IoT e studente in Informatica per la Comunicazione Digitale. Tutti i giorni lavoro sui sistemi IoT di Haier Europe, in particolare sull'app hOn.<br><br>Mi attraggono i sistemi con una parte fisica, come veicoli, guida autonoma, dispositivi connessi e videogiochi.<br><br>È per questo che ho scelto l'IoT: capire e verificare come software e hardware lavorano insieme.
                     </p>
                 </div>
             </section>
@@ -364,7 +354,6 @@
                     </div>
                 </div>
             </section>
-               
 
             <!-- Languages Section -->
             <section class="section">
@@ -399,13 +388,12 @@
     <footer class="footer">
         © 2025 Filippo Moscatelli. <span data-key="rights">Tutti i diritti riservati.</span>
     </footer>
-    
 
     <!-- Modular JavaScript Architecture -->
     <!-- Carica i moduli nell'ordine corretto: config → utils → css → components → feature modules → main -->
     <!-- MODULAR SYSTEM - SIMPLIFIED (NO PARALLAX) -->
     <script src="js/config.js"></script>
-    <script src="js/utils.js"></script>
+    <script src="js/utils.v2.js"></script>
     <script src="js/css-manager.js"></script>
     <script src="js/components.js"></script>
     <script src="js/language.v2.js"></script>

@@ -85,7 +85,7 @@ class Utils {
      * Legge dati dal localStorage
      * @param {string} key - Chiave
      * @param {*} defaultValue - Valore di default
-     * @returns {*} Valore letto o default
+     * @returns {*} Valore letto o defaultValue
      */
     getStorage(key, defaultValue = null) {
         try {
