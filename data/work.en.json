@@ -5,7 +5,7 @@
     "startDate": "2026-02",
     "location": "Brugherio, Lombardy, Italy",
     "modality": "Hybrid",
-    "description": " Perform functional testing on the hOn smart home mobile application within a large-scale IoT ecosystem.\n Validate feature behavior against Product Owner specifications and acceptance criteria.\n Identify, document and report software issues using Jira with structured and reproducible bug reports.\n Collaborate with developers and Product Owners to clarify requirements and ensure alignment between specifications and implementation.\n Contribute to maintaining application reliability and feature consistency across releases.\n Work within an English-based ticketing workflow in a cross-functional product environment.",
+    "description": "I'm an IoT Quality Engineer Intern at Haier Europe, working on the company's IoT systems with a focus on the hOn app. I run functional testing on a large-scale ecosystem of connected devices, validating features against Product Owner specifications and acceptance criteria through end-to-end scenarios. I write test cases and report bugs in Jira with reproducible reports, and collaborate with developers and Product Owners to keep spec and implementation aligned, in a daily English-based workflow.",
     "tech": ["Jira","Functional testing","Mobile application testing","Requirement validation","IoT","Teamwork","Problem solving"]
   }
 ]
