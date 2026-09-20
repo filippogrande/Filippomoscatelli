@@ -1,0 +1,376 @@
+/**
+ * Language Management Module
+ * Gestisce il cambio lingua e le traduzioni del sito
+ */
+
+// Traduzioni complete
+const translations = {
+    it: {
+        'job-title': 'Studente in Informatica per la Comunicazione Digitale',
+        'location': 'Milano, Italia',
+        'about-title': 'Chi Sono',
+        'about-description': 'Ciao, sono Filippo: QA engineer IoT e studente in Informatica per la Comunicazione Digitale. Tutti i giorni lavoro sui sistemi IoT di Haier Europe, in particolare sull\'app hOn. Mi attraggono i sistemi con una parte fisica, come veicoli, guida autonoma, dispositivi connessi e videogiochi. È per questo che ho scelto l\'IoT: capire e verificare come software e hardware lavorano insieme.',
+        'skills-title': 'Competenze',
+        'frontend-title': 'Frontend',
+        'backend-title': 'Backend',
+        'database-title': 'Database',
+        'tools-title': 'Strumenti',
+        'soft-skills-title': 'Competenze trasversali',
+        'languages-title': 'Lingue',
+        'italian-title': 'Italiano',
+        'english-title': 'Inglese',
+        'native-level': 'Madrelingua',
+        'b2-level': 'B2 (non certificato)',
+        'experience-title': 'Esperienza di Volontariato',
+        'volunteer1-title': 'Educatore Gruppo Medie',
+        'volunteer1-organization': 'Oratorio Santa Maria di Lourdes, Milano',
+        'volunteer1-period': 'Ott 2020 - Ago 2026',
+        'volunteer1-description': `
+            Accompagnamento educativo nel percorso di crescita di ragazzi delle medie
+            Organizzazione di attività ricreative e momenti di condivisione
+            Supporto nelle dinamiche di gruppo e relazioni interpersonali
+            Collaborazione con altri educatori e coordinatori dell'oratorio
+        `,
+        'volunteer2-title': 'Educatore Gruppo Adolescenti',
+        'volunteer2-organization': 'Oratorio Santa Maria di Lourdes, Milano',
+        'volunteer2-period': 'Set 2026 - Presente',
+        'education-title': 'Istruzione',
+        'education1-title': 'Laurea in Informatica per la Comunicazione Digitale',
+        'education1-school': 'Università degli Studi di Milano',
+        'education1-period': 'Set 2021 - in corso',
+        'education1-description': 'Laurea triennale in Scienze e Tecnologie Informatiche con focus sulla comunicazione digitale.',
+        'education2-title': 'Diploma di Liceo Scientifico - Scienze Applicate',
+        'education2-school': 'Ettore Conti, Milano',
+        'education2-period': '2016 - 2021',
+        'education2-description': 'Diploma con specializzazione in scienze applicate e informatica.',
+        'skills-learned': 'Competenze acquisite:',
+        'projects-title': 'Progetti',
+        'work-title': 'Esperienza Professionale',
+        'project1-title': 'Sito Web CV Self-Hosted',
+        'project1-description': 'Sviluppo e hosting personale di questo sito web CV multilingue, gestito tramite infrastruttura self-hosted domestica.',
+        'project1-period': 'Lug 2025',
+        'project2-title': 'Software Inc. Print Manager',
+        'project2-description': 'Tool web per ottimizzare la gestione dei contratti di stampa nel videogioco Software Inc. Include analisi di fattibilità, calcolo capacità e raccomandazioni strategiche.',
+        'project2-period': 'Lug 2025',
+        'project3-title': 'NAO Challenge 2020',
+        'project3-description': 'Competizione di robotica con robot umanoide NAO. Partecipazione alle fasi di selezione e regionali con focus su programmazione e lavoro di squadra.',
+        'project3-period': 'Nov 2019 - Feb 2020',
+        'view-project': 'Stai guardando il progetto!',
+        // Label utilizzata per i link ai progetti quando non è fornita una label nel JSON
+        'view-project-link': 'Visualizza progetto',
+        'view-github': 'Visualizza su GitHub',
+        'show-more': 'Mostra altri {n} progetti',
+        'rights': 'Tutti i diritti riservati.'
+        ,
+        // Skill tags
+        'skill-jira': 'Jira',
+        'skill-functional-testing': 'Test funzionale',
+        'skill-mobile-testing': 'Mobile testing',
+        'skill-requirement-validation': 'Validazione requisiti',
+        'skill-iot': 'IoT',
+        'skill-teamwork': 'Teamwork',
+        'skill-problem-solving': 'Problem solving'
+    },
+    en: {
+        'job-title': 'Computer Science Student for Digital Communication',
+        'location': 'Milan, Italy',
+        'about-title': 'About Me',
+        'about-description': 'Hi, I\'m Filippo: an IoT Quality Engineer and Computer Science for Digital Communication student. Every day I work on Haier Europe\'s IoT systems, in particular the hOn app. I\'m fascinated by systems with a real physical side, like vehicles, autonomous driving, connected devices and video games. That\'s why I chose IoT: to understand and verify how software and hardware work together.',
+        'skills-title': 'Skills',
+        'frontend-title': 'Frontend',
+        'backend-title': 'Backend',
+        'database-title': 'Database',
+        'tools-title': 'Tools',
+        'soft-skills-title': 'Soft skills',
+        'languages-title': 'Languages',
+        'italian-title': 'Italian',
+        'english-title': 'English',
+        'native-level': 'Native',
+        'b2-level': 'B2 (not certified)',
+        'experience-title': 'Volunteer Experience',
+        'volunteer1-title': 'Middle School Group Educator',
+        'volunteer1-organization': 'Oratorio Santa Maria di Lourdes, Milan',
+        'volunteer1-period': 'Oct 2020 - Aug 2026',
+        'volunteer1-description': `
+            Educational support in the growth journey of middle school students
+            Organization of recreational activities and sharing moments
+            Support in group dynamics and interpersonal relationships
+            Collaboration with other educators and oratory coordinators
+        `,
+        'volunteer2-title': 'High School Group Educator',
+        'volunteer2-organization': 'Oratorio Santa Maria de Lourdes, Milan',
+        'volunteer2-period': 'Sep 2026 - Present',
+        'education-title': 'Education',
+        'education1-title': 'Bachelor\'s Degree in Computer Science for Digital Communication',
+        'education1-school': 'University of Milan',
+        'education1-period': 'Sep 2021 - ongoing',
+        'education1-description': 'Bachelor\'s degree in Computer Science and Technologies with focus on digital communication.',
+        'education2-title': 'High School Diploma - Applied Sciences',
+        'education2-school': 'Ettore Conti, Milan',
+        'education2-period': '2016 - 2021',
+        'education2-description': 'Diploma with specialization in applied sciences and computer science.',
+        'skills-learned': 'Skills acquired:',
+        'projects-title': 'Projects',
+        'work-title': 'Work Experience',
+        'project1-title': 'Self-Hosted CV Website',
+        'project1-description': 'Development and personal hosting of this multilingual CV website, managed through domestic self-hosted infrastructure.',
+        'project1-period': 'Jul 2025',
+        'project2-title': 'Software Inc. Print Manager',
+        'project2-description': 'Web tool to optimize print contract management in the Software Inc. video game. Includes feasibility analysis, capacity calculation and strategic recommendations.',
+        'project2-period': 'Jul 2025',
+        'project3-title': 'NAO Challenge 2020',
+        'project3-description': 'Robotics competition with NAO humanoid robot. Participation in selection and regional phases with focus on programming and teamwork.',
+        'project3-period': 'Nov 2019 - Feb 2020',
+        'view-project': 'You\'re viewing the project!',
+        // Label used for project links when JSON doesn't provide a label
+        'view-project-link': 'View project',
+        'view-github': 'View on GitHub',
+        'show-more': 'Show {n} more projects',
+        'rights': 'All rights reserved.'
+        ,
+        // Skill tags
+        'skill-jira': 'Jira',
+        'skill-functional-testing': 'Functional testing',
+        'skill-mobile-testing': 'Mobile testing',
+        'skill-requirement-validation': 'Requirement validation',
+        'skill-iot': 'IoT',
+        'skill-teamwork': 'Teamwork',
+        'skill-problem-solving': 'Problem solving'
+    }
+};
+
+// Classe per la gestione delle lingue
+class LanguageManager {
+    constructor() {
+        this.currentLanguage = 'it';
+        this.translations = translations;
+        this.initialized = false;
+    }
+
+    /**
+     * Rileva la lingua preferita dall'utente
+     * @returns {string} Codice lingua ('it' o 'en')
+     */
+    detectPreferredLanguage() {
+        // Controlla se c'è una preferenza salvata
+        const savedLang = localStorage.getItem('preferred-language');
+        if (savedLang && (savedLang === 'it' || savedLang === 'en')) {
+            return savedLang;
+        }
+        
+        // Altrimenti usa la lingua del browser
+        const browserLang = navigator.language || navigator.userLanguage;
+        const detectedLang = browserLang.startsWith('it') ? 'it' : 'en';
+        return detectedLang;
+    }
+
+    /**
+     * Cambia la lingua del sito
+     * @param {string} lang - Codice lingua ('it' o 'en')
+     */
+    changeLanguage(lang) {
+        const previousLanguage = this.currentLanguage;
+        
+        // Se la lingua è già quella corrente, non fare nulla
+        if (previousLanguage === lang) {
+            return;
+        }
+        
+        // Aggiorna la lingua corrente
+        this.currentLanguage = lang;
+        
+        // Aggiorna l'attributo lang del documento
+        document.documentElement.lang = lang;
+        
+        // Aggiorna lo stato attivo dei pulsanti
+        this.updateLanguageButtons(lang);
+        
+        // Aggiorna tutti gli elementi con data-key
+        this.translateElements(lang);
+        
+        // Salva la preferenza nel localStorage
+        localStorage.setItem('preferred-language', lang);
+        
+        // Aggiorna il titolo della pagina
+        const newTitle = `Filippo Moscatelli - ${lang === 'it' ? 'CV' : 'Resume'}`;
+        document.title = newTitle;
+        
+        // Emetti evento personalizzato per altri moduli
+        this.emitLanguageChangeEvent(previousLanguage, lang);
+    }
+
+    /**
+     * Aggiorna lo stato attivo dei pulsanti lingua
+     * @param {string} lang - Lingua attiva
+     */
+    updateLanguageButtons(lang) {
+        const langButtons = document.querySelectorAll('.lang-btn');
+        
+        langButtons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-lang') === lang) {
+                btn.classList.add('active');
+            }
+        });
+    }
+
+    /**
+     * Traduce tutti gli elementi con data-key
+     * @param {string} lang - Lingua target
+     */
+    translateElements(lang) {
+        const elementsToTranslate = document.querySelectorAll('[data-key]');
+        
+        let translatedCount = 0;
+        elementsToTranslate.forEach(element => {
+            const key = element.getAttribute('data-key');
+            if (this.translations[lang] && this.translations[lang][key]) {
+                const translation = this.translations[lang][key];
+                if (element.tagName === 'UL') {
+                    // Se l'UL ha la classe `no-bullets` usiamo i \n per creare
+                    // line-break (<br>) mantenendo gli a-capo ma senza bullet.
+                    if (element.classList && element.classList.contains('no-bullets')) {
+                        const lines = String(translation).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+                        // escape basic HTML
+                        const esc = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#39;');
+                        element.innerHTML = lines.map(l => esc(l)).join('<br>');
+                    } else {
+                        // Se la trad contiene <li> usala così com'è,
+                        // altrimenti split su newline e crea <li> preservando gli a-capo.
+                        if (/\<li[\s>]/i.test(translation)) {
+                            element.innerHTML = translation;
+                        } else {
+                            const lines = String(translation).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+                            element.innerHTML = lines.map(l => `<li>${l}</li>`).join('');
+                        }
+                    }
+                } else if (key === 'about-description') {
+                    // Per la descrizione about, usa innerHTML per supportare <br>
+                    element.innerHTML = translation;
+                } else {
+                    // Per altri elementi, sostituisci il testo
+                    element.textContent = translation;
+                }
+                translatedCount++;
+            }
+        });
+    }
+
+    /**
+     * Emette un evento personalizzato per il cambio lingua
+     * @param {string} previousLanguage - Lingua precedente
+     * @param {string} newLanguage - Nuova lingua
+     */
+    emitLanguageChangeEvent(previousLanguage, newLanguage) {
+        const event = new CustomEvent('languageChanged', {
+            detail: {
+                previousLanguage,
+                newLanguage,
+                timestamp: new Date().toISOString()
+            }
+        });
+        document.dispatchEvent(event);
+    }
+
+    /**
+     * Inizializza i listener per i pulsanti lingua
+     */
+    initializeLanguageButtons() {
+        // Aspetta che il DOM sia completamente caricato
+        const buttons = document.querySelectorAll('.lang-btn');
+        
+        if (buttons.length === 0) {
+            setTimeout(() => this.initializeLanguageButtons(), 500);
+            return;
+        }
+        
+        buttons.forEach((btn, index) => {
+            // Rimuovi eventuali listener esistenti
+            btn.removeEventListener('click', this.handleLanguageButtonClick);
+            
+            // Aggiungi il nuovo listener con bind
+            btn.addEventListener('click', (e) => this.handleLanguageButtonClick(e, btn));
+        });
+    }
+    
+    /**
+     * Gestisce il click sui pulsanti lingua
+     */
+    handleLanguageButtonClick(e, btn) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const lang = e.target.getAttribute('data-lang') || btn.getAttribute('data-lang');
+        
+        if (!lang) {
+            return;
+        }
+        
+        if (lang === this.currentLanguage) {
+            return;
+        }
+        
+        this.changeLanguage(lang);
+    }
+
+    /**
+     * Aggiunge supporto per scorciatoie da tastiera
+     */
+    addKeyboardSupport() {
+        document.addEventListener('keydown', (e) => {
+            // Alt + I per italiano
+            if (e.altKey && e.key.toLowerCase() === 'i') {
+                e.preventDefault();
+                this.changeLanguage('it');
+            }
+            // Alt + E per inglese
+            if (e.altKey && e.key.toLowerCase() === 'e') {
+                e.preventDefault();
+                this.changeLanguage('en');
+            }
+        });
+    }
+
+    /**
+     * Inizializza il gestore delle lingue
+     */
+    initialize() {
+        if (this.initialized) {
+            return;
+        }
+
+        // Rileva e imposta la lingua preferita
+        const preferredLang = this.detectPreferredLanguage();
+        this.changeLanguage(preferredLang);
+        
+        // Inizializza i pulsanti lingua
+        this.initializeLanguageButtons();
+        
+        // Aggiungi supporto tastiera
+        this.addKeyboardSupport();
+        
+        this.initialized = true;
+    }
+
+    /**
+     * Getter per la lingua corrente
+     * @returns {string} Lingua corrente
+     */
+    getCurrentLanguage() {
+        return this.currentLanguage;
+    }
+}
+
+// Crea istanza globale del gestore lingue
+const languageManager = new LanguageManager();
+
+// Esporta per uso in altri moduli
+if (typeof window !== 'undefined') {
+    window.LanguageManager = LanguageManager; // Esporta la CLASSE
+    window.languageManager = languageManager; // Esporta l'ISTANZA
+}
+
+// Export per moduli ES6 (se supportato)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { LanguageManager, languageManager, translations };
+}
