@@ -5,7 +5,7 @@
     "startDate": "2026-02",
     "location": "Brugherio, Lombardia, Italia",
     "modality": "Ibrida",
-    "description": "Sono IoT Quality Engineer Intern in Haier Europe e lavoro sui sistemi IoT dell'azienda, con focus sull'app hOn. Svolgo test funzionale su un ecosistema di dispositivi connessi su larga scala, validando le funzionalità contro le specifiche del Product Owner e i criteri di accettazione attraverso scenari end-to-end. Scrivo test case e segnalo bug su Jira con report riproducibili, e collaboro con sviluppatori e Product Owner per allineare specifica e implementazione, in un flusso di lavoro quotidiano in inglese.",
-    "tech": ["Jira","Test funzionale","Mobile testing","Requirement validation","IoT","Teamwork","Problem solving"]
+    "description": "Test funzionali, scrittura di test case e regression test su hOn, l'app mobile IoT di Haier Europe, in un ecosistema di dispositivi connessi su larga scala. Validazione delle funzionalità rispetto alle specifiche del Product Owner e ai criteri di accettazione tramite scenari end-to-end, segnalazione dei difetti su Jira con report strutturati e riproducibili. Verifica e differenziazione dei bug tra firmware dell'appliance e software dell'app, in collaborazione con sviluppatori e Product Owner per allineare specifica e implementazione, in un flusso di lavoro quotidiano in inglese.",
+    "tech": ["Jira","Test funzionale","Mobile testing","Requirement validation","IoT","Regression testing","Bug triage","Teamwork","Problem solving"]
   }
 ]
