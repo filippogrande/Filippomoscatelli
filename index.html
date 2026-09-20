@@ -2,18 +2,26 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
+    <!-- Favicon per browser -->
     <link rel="icon" type="image/svg+xml" href="cv.svg">
     <link rel="icon" type="image/png" sizes="48x48" href="cv.png">
+    <!-- Canonical link statico -->
     <link rel="canonical" href="https://filippomoscatelli.com/" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Filippo Moscatelli - CV</title>
     <link rel="stylesheet" href="css/main.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Load inline scripts from external file for CSP compliance -->
     <script src="js/inline-scripts.js"></script>
+
+    <!-- Fallback per browser che non supportano JavaScript -->
     <noscript>
         <img src="https://filippomoscatelli.com/analytics/api/collect?website-id=a912f285-ced0-4c7f-9260-434d0ee8674a&url=fallback&title=NoJS" alt="" />
     </noscript>
+
+    <!-- Schema.org JSON-LD structured data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -126,6 +134,7 @@
     </script>
 </head>
 <body>
+    <!-- Language Selector -->
     <div class="language-selector">
         <button class="lang-btn active" data-lang="it">
             <img src="https://flagcdn.com/24x18/it.png" alt="Italiano"> IT
@@ -135,10 +144,12 @@
         </button>
     </div>
 
+    <!-- Back to Top Button -->
     <button id="backToTop" class="back-to-top" aria-label="Torna all'inizio">
         <i class="fas fa-chevron-up"></i>
     </button>
 
+    <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="profile-section">
@@ -175,8 +186,10 @@
         </div>
     </header>
 
+    <!-- Main Content -->
     <main class="main">
         <div class="container">
+            <!-- About Section -->
             <section class="section">
                 <h2 class="section-title" data-key="about-title">Chi Sono</h2>
                 <div class="section-content">
@@ -186,6 +199,7 @@
                 </div>
             </section>
 
+            <!-- Skills Section -->
             <section class="section">
                 <h2 class="section-title" data-key="skills-title">Competenze</h2>
                 <div class="section-content">
@@ -248,6 +262,7 @@
                     </div>
                 </div>
             </section>
+            <!-- Projects Section -->
             <section class="section">
                 <h2 class="section-title" data-key="projects-title">Progetti</h2>
                 <div class="section-content">
@@ -257,6 +272,9 @@
                 </div>
             </section>
 
+
+
+            <!-- Work Section (posizionato subito dopo Progetti) -->
             <section class="section">
                 <h2 class="section-title" data-key="work-title">Esperienza Professionale</h2>
                 <div class="section-content">
@@ -266,6 +284,8 @@
                 </div>
             </section>
 
+
+            <!-- Education Section -->
             <section class="section">
                 <h2 class="section-title" data-key="education-title">Istruzione</h2>
                 <div class="section-content">
@@ -312,6 +332,7 @@
                 </div>
             </section>
 
+            <!-- Experience Section -->
             <section class="section">
                 <h2 class="section-title" data-key="experience-title">Esperienza di Volontariato</h2>
                 <div class="section-content">
@@ -334,6 +355,7 @@
                 </div>
             </section>
 
+            <!-- Languages Section -->
             <section class="section">
                 <h2 class="section-title" data-key="languages-title">Lingue</h2>
                 <div class="section-content">
@@ -347,6 +369,7 @@
                                 <div class="language-progress" style="width: 100%"></div>
                             </div>
                         </div>
+
                         <div class="language-item">
                             <div class="language-header">
                                 <h3 data-key="english-title">Inglese</h3>
@@ -359,12 +382,16 @@
                     </div>
                 </div>
             </section>
-        </div>
+        </div> <!-- chiude .container -->
     </main>
+    <!-- Footer -->
     <footer class="footer">
         © 2025 Filippo Moscatelli. <span data-key="rights">Tutti i diritti riservati.</span>
     </footer>
 
+    <!-- Modular JavaScript Architecture -->
+    <!-- Carica i moduli nell'ordine corretto: config → utils → css → components → feature modules → main -->
+    <!-- MODULAR SYSTEM - SIMPLIFIED (NO PARALLAX) -->
     <script src="js/config.js"></script>
     <script src="js/utils.v2.js"></script>
     <script src="js/css-manager.js"></script>
@@ -378,6 +405,7 @@
     <script src="js/durations.v2.js"></script>
     <script src="js/main.js"></script>
 <script>
+// CV PDF download link updater + tracking
 function updateCVLink(lang) {
   var link = document.getElementById('cv-download');
   if (!link) return;
@@ -390,6 +418,7 @@ function updateCVLink(lang) {
   }
 }
 
+// Tracking download event (Umami custom event)
 function trackCVDownload(lang) {
   if (window.umami) {
     umami.track('cv_download_' + lang);
@@ -397,14 +426,17 @@ function trackCVDownload(lang) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Imposta link iniziale
   var activeBtn = document.querySelector('.lang-btn.active');
   var lang = activeBtn ? activeBtn.getAttribute('data-lang') : 'it';
   updateCVLink(lang);
+  // Aggiorna link quando si cambia lingua
   document.querySelectorAll('.lang-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
       updateCVLink(btn.getAttribute('data-lang'));
     });
   });
+  // Tracking click
   var cvLink = document.getElementById('cv-download');
   if (cvLink) {
     cvLink.addEventListener('click', function() {
@@ -416,18 +448,21 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
+// Language auto-detect from URL (/it or /en)
 document.addEventListener('DOMContentLoaded', function() {
   var path = window.location.pathname;
   var lang = null;
   if (path.endsWith('/it')) lang = 'it';
   else if (path.endsWith('/en')) lang = 'en';
   if (lang) {
+    // Simula click sul pulsante lingua corrispondente
     var btn = document.querySelector('.lang-btn[data-lang="' + lang + '"]');
     if (btn) btn.click();
   }
 });
 </script>
 <script>
+// Fallback: riapplica le traduzioni su languageChanged e sui click dei bottoni lingua
 document.addEventListener('languageChanged', function() {
     if (window.languageManager && typeof window.languageManager.translateElements === 'function') {
         window.languageManager.translateElements(window.languageManager.getCurrentLanguage());
@@ -435,6 +470,7 @@ document.addEventListener('languageChanged', function() {
 });
 document.querySelectorAll && document.querySelectorAll('.lang-btn').forEach(function(btn){
     btn.addEventListener('click', function(){
+        // timing leggero per lasciare che altri handler aggiornino lo stato
         setTimeout(function(){
             if (window.languageManager && typeof window.languageManager.translateElements === 'function') {
                 window.languageManager.translateElements(window.languageManager.getCurrentLanguage());
