@@ -15,6 +15,7 @@ const translations = {
         'backend-title': 'Backend',
         'database-title': 'Database',
         'tools-title': 'Strumenti',
+        'qa-skills-title': 'Competenze QA',
         'soft-skills-title': 'Competenze trasversali',
         'languages-title': 'Lingue',
         'italian-title': 'Italiano',
@@ -62,14 +63,13 @@ const translations = {
         'skill-functional-testing': 'Test funzionale',
         'skill-mobile-testing': 'Mobile testing',
         'skill-requirement-validation': 'Validazione requisiti',
-        'skill-iot': 'IoT',
-        'skill-agile': 'Agile',
-        'skill-scrum': 'Scrum',
         'skill-test-case-design': 'Test case design',
         'skill-regression-testing': 'Regression testing',
         'skill-bug-triage': 'Bug triage',
         'skill-teamwork': 'Teamwork',
-        'skill-problem-solving': 'Problem solving'
+        'skill-problem-solving': 'Problem solving',
+        'skill-agile': 'Agile',
+        'skill-scrum': 'Scrum'
     },
     en: {
         'job-title': 'Computer Science Student for Digital Communication',
@@ -81,6 +81,7 @@ const translations = {
         'backend-title': 'Backend',
         'database-title': 'Database',
         'tools-title': 'Tools',
+        'qa-skills-title': 'QA Skills',
         'soft-skills-title': 'Soft skills',
         'languages-title': 'Languages',
         'italian-title': 'Italian',
@@ -128,14 +129,13 @@ const translations = {
         'skill-functional-testing': 'Functional testing',
         'skill-mobile-testing': 'Mobile testing',
         'skill-requirement-validation': 'Requirement validation',
-        'skill-iot': 'IoT',
-        'skill-agile': 'Agile',
-        'skill-scrum': 'Scrum',
         'skill-test-case-design': 'Test case design',
         'skill-regression-testing': 'Regression testing',
         'skill-bug-triage': 'Bug triage',
         'skill-teamwork': 'Teamwork',
-        'skill-problem-solving': 'Problem solving'
+        'skill-problem-solving': 'Problem solving',
+        'skill-agile': 'Agile',
+        'skill-scrum': 'Scrum'
     }
 };
 
