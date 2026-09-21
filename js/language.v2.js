@@ -63,6 +63,11 @@ const translations = {
         'skill-mobile-testing': 'Mobile testing',
         'skill-requirement-validation': 'Validazione requisiti',
         'skill-iot': 'IoT',
+        'skill-agile': 'Agile',
+        'skill-scrum': 'Scrum',
+        'skill-test-case-design': 'Test case design',
+        'skill-regression-testing': 'Regression testing',
+        'skill-bug-triage': 'Bug triage',
         'skill-teamwork': 'Teamwork',
         'skill-problem-solving': 'Problem solving'
     },
@@ -124,6 +129,11 @@ const translations = {
         'skill-mobile-testing': 'Mobile testing',
         'skill-requirement-validation': 'Requirement validation',
         'skill-iot': 'IoT',
+        'skill-agile': 'Agile',
+        'skill-scrum': 'Scrum',
+        'skill-test-case-design': 'Test case design',
+        'skill-regression-testing': 'Regression testing',
+        'skill-bug-triage': 'Bug triage',
         'skill-teamwork': 'Teamwork',
         'skill-problem-solving': 'Problem solving'
     }
