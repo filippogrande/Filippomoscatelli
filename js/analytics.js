@@ -249,10 +249,10 @@ class AnalyticsManager {
                         url: href 
                     }, 'social');
                     tracked = true;
-                } else if (href.includes('mailto:filipp28mo@gmail.com')) {
+                } else if (href.includes('mailto:contact@mail.filippomoscatelli.com')) {
                     this.track('contact-email', { 
                         method: 'email', 
-                        address: 'filipp28mo@gmail.com',
+                        address: 'contact@mail.filippomoscatelli.com',
                         text: linkText 
                     }, 'contact');
                     tracked = true;
