@@ -13,15 +13,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      # html-validate valida l'HTML contro .htmlvalidate.json (preset recommended con
-      # le regole di stile/convenzione disattivate: void-style, no-inline-style,
-      # no-implicit-close, no-trailing-whitespace). Restano attive le regole
-      # strutturali: contenuto, ordine, occorrenze, attributi richiesti.
-      # Solo index.html e' la pagina del sito: test-projects.html e FoodDelivery/
-      # non sono serviti dall'immagine (vedi commenti nel Dockerfile) e ne
-      # approfittano solo i file JSON, non l'HTML.
+      # html-validate legge .htmlvalidate.json (preset recommended con le regole
+      # di stile disattivate) e .htmlvalidateignore (file esclusi: test-projects.html
+      # e FoodDelivery/, non serviti dall'immagine e non ancora ripuliti).
+      # Il glob "**/*.html" e' racchiuso tra virgolette: a shell aperto verrebbe
+      # espanso in cwd (indice .htmlvalidateignore) invece che passato al tool.
       - name: Validate HTML
-        run: npx --yes html-validate "index.html"
+        run: npx --yes html-validate "**/*.html"
 
   js:
     name: JS syntax check
@@ -30,9 +28,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      # ESLint 9+ usa la flat config: --ext e .eslintrc non esistono piu'.
-      # Qui si fa solo un syntax check (nessuna regola), cosi' il passo non
-      # scatta per mancanza di configurazione e resta utile come guardia.
+      # ESLint 9+ usa solo la flat config (eslint.config.js): --ext e .eslintrc non
+      # esistono piu', e senza config fallisce. La config e' nel repo, ma il passo
+      # resta una guardia: se manca o e' rotta il workflow si ferma qui.
       - name: Syntax check
         run: |
           npm install --save-dev eslint
