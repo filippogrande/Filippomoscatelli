@@ -16,11 +16,6 @@
     <!-- Load inline scripts from external file for CSP compliance -->
     <script src="js/inline-scripts.js"></script>
 
-    <!-- Fallback per browser che non supportano JavaScript -->
-    <noscript>
-        <img src="https://filippomoscatelli.com/analytics/api/collect?website-id=a912f285-ced0-4c7f-9260-434d0ee8674a&url=fallback&title=NoJS" alt="">
-    </noscript>
-
     <!-- Schema.org JSON-LD structured data -->
     <script type="application/ld+json">
     {
@@ -132,8 +127,14 @@
         ]
     }
     </script>
+
+    <!-- Fallback per browser che non supportano JavaScript (noscript deve stare in body) -->
 </head>
 <body>
+    <noscript>
+        <img src="https://filippomoscatelli.com/analytics/api/collect?website-id=a912f285-ced0-4c7f-9260-434d0ee8674a&url=fallback&title=NoJS" alt="">
+    </noscript>
+
     <!-- Language Selector -->
     <div class="language-selector">
         <!-- type="button": i bottoni non inviano un form (html-validate: no-implicit-button-type) -->
@@ -413,81 +414,81 @@
     <script src="js/work.v2.js"></script>
     <script src="js/durations.v2.js"></script>
     <script src="js/main.js"></script>
-<script>
-// CV PDF download link updater + tracking
-function updateCVLink(lang) {
-  var link = document.getElementById('cv-download');
-  if (!link) return;
-  if (lang === 'en') {
-    link.href = 'filippomoscatelli_en.pdf';
-    link.textContent = 'Download CV';
-  } else {
-    link.href = 'filippomoscatelli_it.pdf';
-    link.textContent = 'Scarica CV';
-  }
-}
+    <script>
+    // CV PDF download link updater + tracking
+    function updateCVLink(lang) {
+      var link = document.getElementById('cv-download');
+      if (!link) return;
+      if (lang === 'en') {
+        link.href = 'filippomoscatelli_en.pdf';
+        link.textContent = 'Download CV';
+      } else {
+        link.href = 'filippomoscatelli_it.pdf';
+        link.textContent = 'Scarica CV';
+      }
+    }
 
-// Tracking download event (Umami custom event)
-function trackCVDownload(lang) {
-  if (window.umami) {
-    umami.track('cv_download_' + lang);
-  }
-}
+    // Tracking download event (Umami custom event)
+    function trackCVDownload(lang) {
+      if (window.umami) {
+        umami.track('cv_download_' + lang);
+      }
+    }
 
-document.addEventListener('DOMContentLoaded', function() {
-  // Imposta link iniziale
-  var activeBtn = document.querySelector('.lang-btn.active');
-  var lang = activeBtn ? activeBtn.getAttribute('data-lang') : 'it';
-  updateCVLink(lang);
-  // Aggiorna link quando si cambia lingua
-  document.querySelectorAll('.lang-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      updateCVLink(btn.getAttribute('data-lang'));
-    });
-  });
-  // Tracking click
-  var cvLink = document.getElementById('cv-download');
-  if (cvLink) {
-    cvLink.addEventListener('click', function() {
+    document.addEventListener('DOMContentLoaded', function() {
+      // Imposta link iniziale
       var activeBtn = document.querySelector('.lang-btn.active');
       var lang = activeBtn ? activeBtn.getAttribute('data-lang') : 'it';
-      trackCVDownload(lang);
+      updateCVLink(lang);
+      // Aggiorna link quando si cambia lingua
+      document.querySelectorAll('.lang-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          updateCVLink(btn.getAttribute('data-lang'));
+        });
+      });
+      // Tracking click
+      var cvLink = document.getElementById('cv-download');
+      if (cvLink) {
+        cvLink.addEventListener('click', function() {
+          var activeBtn = document.querySelector('.lang-btn.active');
+          var lang = activeBtn ? activeBtn.getAttribute('data-lang') : 'it';
+          trackCVDownload(lang);
+        });
+      }
     });
-  }
-});
-</script>
-<script>
-// Language auto-detect from URL (/it or /en)
-document.addEventListener('DOMContentLoaded', function() {
-  var path = window.location.pathname;
-  var lang = null;
-  if (path.endsWith('/it')) lang = 'it';
-  else if (path.endsWith('/en')) lang = 'en';
-  if (lang) {
-    // Simula click sul pulsante lingua corrispondente
-    var btn = document.querySelector('.lang-btn[data-lang="' + lang + '"]');
-    if (btn) btn.click();
-  }
-});
-</script>
-<script>
-// Fallback: riapplica le traduzioni su languageChanged e sui click dei bottoni lingua
-document.addEventListener('languageChanged', function() {
-    if (window.languageManager && typeof window.languageManager.translateElements === 'function') {
-        window.languageManager.translateElements(window.languageManager.getCurrentLanguage());
-    }
-});
-document.querySelectorAll && document.querySelectorAll('.lang-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-        // timing leggero per lasciare che altri handler aggiornino lo stato
-        setTimeout(function(){
-            if (window.languageManager && typeof window.languageManager.translateElements === 'function') {
-                window.languageManager.translateElements(window.languageManager.getCurrentLanguage());
-            }
-        }, 50);
+    </script>
+    <script>
+    // Language auto-detect from URL (/it or /en)
+    document.addEventListener('DOMContentLoaded', function() {
+      var path = window.location.pathname;
+      var lang = null;
+      if (path.endsWith('/it')) lang = 'it';
+      else if (path.endsWith('/en')) lang = 'en';
+      if (lang) {
+        // Simula click sul pulsante lingua corrispondente
+        var btn = document.querySelector('.lang-btn[data-lang="' + lang + '"]');
+        if (btn) btn.click();
+      }
     });
-});
-</script>
-</body>
+    </script>
+    <script>
+    // Fallback: riapplica le traduzioni su languageChanged e sui click dei bottoni lingua
+    document.addEventListener('languageChanged', function() {
+        if (window.languageManager && typeof window.languageManager.translateElements === 'function') {
+            window.languageManager.translateElements(window.languageManager.getCurrentLanguage());
+        }
+    });
+    document.querySelectorAll && document.querySelectorAll('.lang-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            // timing leggero per lasciare che altri handler aggiornino lo stato
+            setTimeout(function(){
+                if (window.languageManager && typeof window.languageManager.translateElements === 'function') {
+                    window.languageManager.translateElements(window.languageManager.getCurrentLanguage());
+                }
+            }, 50);
+        });
+    });
+    </script>
     <script async src="https://filippomoscatelli.com/analytics/script.js" data-website-id="a912f285-ced0-4c7f-9260-434d0ee8674a"></script>
+</body>
 </html>
