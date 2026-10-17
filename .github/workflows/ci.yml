@@ -4,16 +4,36 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+
 jobs:
-  test:
+  html:
+    name: HTML validation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: HTML validation
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # html-validate valida l'HTML contro .htmlvalidate.json (preset recommended con
+      # le regole di stile/convenzione disattivate: void-style, no-inline-style,
+      # no-implicit-close, no-trailing-whitespace). Restano attive le regole
+      # strutturali: contenuto, ordine, occorrenze, attributi richiesti.
+      # Solo index.html e' la pagina del sito: test-projects.html e FoodDelivery/
+      # non sono serviti dall'immagine (vedi commenti nel Dockerfile) e ne
+      # approfittano solo i file JSON, non l'HTML.
+      - name: Validate HTML
+        run: npx --yes html-validate "index.html"
+
+  js:
+    name: JS syntax check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # ESLint 9+ usa la flat config: --ext e .eslintrc non esistono piu'.
+      # Qui si fa solo un syntax check (nessuna regola), cosi' il passo non
+      # scatta per mancanza di configurazione e resta utile come guardia.
+      - name: Syntax check
         run: |
-          npm install -g html-validate
-          html-validate "**/*.html"
-      - name: JS syntax check
-        run: |
-          npm install -g eslint
-          eslint . --ext .js
+          npm install --save-dev eslint
+          npx eslint js/
