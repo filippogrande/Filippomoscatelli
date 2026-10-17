@@ -56,6 +56,9 @@
     transition: width 0.6s ease;
 }
 
+/* Livello delle lingue. La larghezza e' inline in index.html (dipende dalla
+   lingua), quindi qui c'e' solo la base comune. */
+
 /* Footer */
 .footer {
     background: #374151;

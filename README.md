@@ -21,28 +21,28 @@ Un sito web moderno e responsive per il curriculum vitae con supporto multilingu
 ```
 ├── index.html              # Pagina principale
 ├── css/                    # File CSS modulari
-│   ├── main.css           # Stili principali
+│   ├── main.css           # Stili principali (importa i moduli sotto)
 │   ├── base.css           # Stili di base
 │   ├── components.css     # Componenti riutilizzabili
 │   ├── responsive.css     # Media queries responsive
 │   └── ...               # Altri file CSS specializzati
 ├── js/                    # JavaScript modulare
-│   ├── main.js           # Script principale
-│   ├── language.js       # Gestione multilingue
-│   ├── analytics.js      # Integrazione analytics
-│   └── ...              # Altri moduli JavaScript
-├── data/                 # Contenuti in JSON (progetti, esperienza professionale)
-├── k8s/                  # Manifest Kubernetes
+│   ├── main.js            # Script principale
+│   ├── language.v2.js     # Gestione multilingue
+│   ├── analytics.js       # Integrazione analytics
+│   └── ...                # Altri moduli JavaScript
+├── data/                  # Contenuti in JSON (progetti, esperienza professionale)
+├── k8s/                   # Manifest Kubernetes
 │   ├── deployment.yaml   # Deployment configuration
 │   ├── service.yaml      # Service configuration
 │   ├── ingress.yaml      # Ingress configuration
-│   └── ...              # Altri manifest K8s
+│   └── ...               # Altri manifest K8s
 ├── Dockerfile            # Container configuration
 ├── docker-compose.yml    # Compose per testing locale
-├── nginx.conf           # Configurazione Nginx
-├── deploy.sh            # Script di deployment
-├── Makefile            # Comandi automatizzati
-└── README.md           # Documentazione
+├── nginx.conf            # Configurazione Nginx
+├── deploy.sh             # Script di deployment
+├── Makefile              # Comandi automatizzati
+└── README.md             # Documentazione
 ```
 
 ## 🚀 Quick Start
@@ -156,12 +156,24 @@ kubectl apply -f k8s/
 
 ## 🤖 CI/CD con GitHub Actions
 
-Il repository include il workflow `.github/workflows/deploy.yml` ("Build and Deploy CV Website"):
+Il repository include due workflow:
+
+### `deploy.yml` ("Build and Deploy CV Website")
 
 1. **Su pull request verso `main`**: build dell'immagine in locale (single-platform `linux/amd64`, nessun push su Docker Hub) + smoke test del container (`docker run` e `curl /health`).
 2. **Su push in `main`**: build multi-platform (`linux/amd64`, `linux/arm64`, `linux/386`) e push su Docker Hub con i tag `latest`, `main` e `sha-<short>`.
 3. **Security scan** (solo su `main`): Trivy con upload dei risultati SARIF nella tab **Security** del repository.
-4. **Deploy su Kubernetes: manuale** (`kubectl apply -f k8s/` oppure `./deploy.sh all`): i job di deploy non fanno parte del workflow.
+4. **Deploy su Kubernetes: manuale** (`kubectl apply - f k8s/` oppure `./deploy.sh all`): i job di deploy non fanno parte del workflow.
+
+### `ci.yml` ("CI")
+
+1. **HTML validation** (su `push` e `pull_request` verso `main`): `html-validate` con la configurazione in `.htmlvalidate.json` (preset `recommended` con le regole di stile disattivate) e `.htmlvalidateignore` che esclude i file non serviti dal sito.
+2. **JS syntax check**: `eslint js/` con la flat config in `eslint.config.js` (solo controllo di sintassi, nessuna regola di stile).
+
+I file esclusi dalla validazione HTML:
+
+- `test-projects.html` — pagina di test locale, non servita dall'immagine Docker
+- `FoodDelivery/` — pagina demo del progetto, markup legacy da ripulire
 
 ### Configurazione GitHub Actions
 
@@ -226,7 +238,7 @@ Modifica i seguenti elementi nel file `index.html`:
 Per aggiungere un nuovo progetto:
 
 1. **JSON**: Aggiungi una voce in `data/projects.json` (e `data/projects.en.json` per l'inglese)
-2. **Traduzioni**: Aggiungi le chiavi di traduzione in `js/language.js` per entrambe le lingue (it/en)
+2. **Traduzioni**: Aggiungi le chiavi di traduzione in `js/language.v2.js` per entrambe le lingue (it/en)
 3. **Stili**: I progetti utilizzano già la griglia responsive, quindi si adatteranno automaticamente
 
 - **Competenze**: Aggiungi o rimuovi skill nelle varie categorie
@@ -236,7 +248,7 @@ Per aggiungere un nuovo progetto:
 
 ### Modificare le Traduzioni
 
-Nel file `js/language.js`, modifica l'oggetto `translations` per:
+Nel file `js/language.v2.js`, modifica l'oggetto `translations` per:
 
 - Aggiornare le traduzioni esistenti
 - Aggiungere nuove stringhe traducibili
@@ -244,7 +256,7 @@ Nel file `js/language.js`, modifica l'oggetto `translations` per:
 
 ### Personalizzare i Colori
 
-Nel file `styles.css`, modifica le variabili dei colori:
+Nel file `css/base.css` (o nei moduli CSS), modifica i colori:
 
 - **Colore principale**: Cerca `#4f46e5` e sostituiscilo
 - **Gradiente header**: Modifica `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`
@@ -297,7 +309,7 @@ Il sito è ottimizzato per:
 - Immagini ottimizzate
 - CSS e JavaScript minificati
 - Struttura semantica HTML5
-- Schema markup (può essere aggiunto)
+- Schema markup (JSON-LD Person in `index.html`)
 
 ## 🛠️ Estensioni Future
 

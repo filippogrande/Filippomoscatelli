@@ -6,7 +6,7 @@
     <link rel="icon" type="image/svg+xml" href="cv.svg">
     <link rel="icon" type="image/png" sizes="48x48" href="cv.png">
     <!-- Canonical link statico -->
-    <link rel="canonical" href="https://filippomoscatelli.com/" />
+    <link rel="canonical" href="https://filippomoscatelli.com/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Filippo Moscatelli - CV</title>
     <link rel="stylesheet" href="css/main.css">
@@ -15,11 +15,6 @@
 
     <!-- Load inline scripts from external file for CSP compliance -->
     <script src="js/inline-scripts.js"></script>
-
-    <!-- Fallback per browser che non supportano JavaScript -->
-    <noscript>
-        <img src="https://filippomoscatelli.com/analytics/api/collect?website-id=a912f285-ced0-4c7f-9260-434d0ee8674a&url=fallback&title=NoJS" alt="" />
-    </noscript>
 
     <!-- Schema.org JSON-LD structured data -->
     <script type="application/ld+json">
@@ -132,20 +127,27 @@
         ]
     }
     </script>
+
+    <!-- Fallback per browser che non supportano JavaScript (noscript deve stare in body) -->
 </head>
 <body>
+    <noscript>
+        <img src="https://filippomoscatelli.com/analytics/api/collect?website-id=a912f285-ced0-4c7f-9260-434d0ee8674a&url=fallback&title=NoJS" alt="">
+    </noscript>
+
     <!-- Language Selector -->
     <div class="language-selector">
-        <button class="lang-btn active" data-lang="it">
+        <!-- type="button": i bottoni non inviano un form (html-validate: no-implicit-button-type) -->
+        <button type="button" class="lang-btn active" data-lang="it">
             <img src="https://flagcdn.com/24x18/it.png" alt="Italiano"> IT
         </button>
-        <button class="lang-btn" data-lang="en">
+        <button type="button" class="lang-btn" data-lang="en">
             <img src="https://flagcdn.com/24x18/gb.png" alt="English"> EN
         </button>
     </div>
 
     <!-- Back to Top Button -->
-    <button id="backToTop" class="back-to-top" aria-label="Torna all'inizio">
+    <button type="button" id="backToTop" class="back-to-top" aria-label="Torna all'inizio">
         <i class="fas fa-chevron-up"></i>
     </button>
 
@@ -173,13 +175,13 @@
                             <a href="https://www.linkedin.com/in/filippo-moscatelli-52b566202/" target="_blank">linkedin.com</a>
                         </div>
                         <div class="contact-item">
-                        <i class="fab fa-github"></i>
-                        <a href="https://github.com/filippogrande" target="_blank">github.com</a>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-file-download"></i>
-                        <a id="cv-download" href="filippomoscatelli_it.pdf" download>Scarica CV</a>
-                    </div>
+                            <i class="fab fa-github"></i>
+                            <a href="https://github.com/filippogrande" target="_blank">github.com</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-file-download"></i>
+                            <a id="cv-download" href="filippomoscatelli_it.pdf" download>Scarica CV</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -372,6 +374,7 @@
                                 <span class="language-level" data-key="native-level">Madrelingua</span>
                             </div>
                             <div class="language-bar">
+                                <!-- width inline: 100% per il livello madrelingua (html-validate: no-inline-style) -->
                                 <div class="language-progress" style="width: 100%"></div>
                             </div>
                         </div>
@@ -382,6 +385,7 @@
                                 <span class="language-level" data-key="b2-level">B2 (non certificato)</span>
                             </div>
                             <div class="language-bar">
+                                <!-- width inline: 60% per il livello B2 (html-validate: no-inline-style) -->
                                 <div class="language-progress" style="width: 60%"></div>
                             </div>
                         </div>
@@ -410,81 +414,81 @@
     <script src="js/work.v2.js"></script>
     <script src="js/durations.v2.js"></script>
     <script src="js/main.js"></script>
-<script>
-// CV PDF download link updater + tracking
-function updateCVLink(lang) {
-  var link = document.getElementById('cv-download');
-  if (!link) return;
-  if (lang === 'en') {
-    link.href = 'filippomoscatelli_en.pdf';
-    link.textContent = 'Download CV';
-  } else {
-    link.href = 'filippomoscatelli_it.pdf';
-    link.textContent = 'Scarica CV';
-  }
-}
+    <script>
+    // CV PDF download link updater + tracking
+    function updateCVLink(lang) {
+      var link = document.getElementById('cv-download');
+      if (!link) return;
+      if (lang === 'en') {
+        link.href = 'filippomoscatelli_en.pdf';
+        link.textContent = 'Download CV';
+      } else {
+        link.href = 'filippomoscatelli_it.pdf';
+        link.textContent = 'Scarica CV';
+      }
+    }
 
-// Tracking download event (Umami custom event)
-function trackCVDownload(lang) {
-  if (window.umami) {
-    umami.track('cv_download_' + lang);
-  }
-}
+    // Tracking download event (Umami custom event)
+    function trackCVDownload(lang) {
+      if (window.umami) {
+        umami.track('cv_download_' + lang);
+      }
+    }
 
-document.addEventListener('DOMContentLoaded', function() {
-  // Imposta link iniziale
-  var activeBtn = document.querySelector('.lang-btn.active');
-  var lang = activeBtn ? activeBtn.getAttribute('data-lang') : 'it';
-  updateCVLink(lang);
-  // Aggiorna link quando si cambia lingua
-  document.querySelectorAll('.lang-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      updateCVLink(btn.getAttribute('data-lang'));
-    });
-  });
-  // Tracking click
-  var cvLink = document.getElementById('cv-download');
-  if (cvLink) {
-    cvLink.addEventListener('click', function() {
+    document.addEventListener('DOMContentLoaded', function() {
+      // Imposta link iniziale
       var activeBtn = document.querySelector('.lang-btn.active');
       var lang = activeBtn ? activeBtn.getAttribute('data-lang') : 'it';
-      trackCVDownload(lang);
+      updateCVLink(lang);
+      // Aggiorna link quando si cambia lingua
+      document.querySelectorAll('.lang-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          updateCVLink(btn.getAttribute('data-lang'));
+        });
+      });
+      // Tracking click
+      var cvLink = document.getElementById('cv-download');
+      if (cvLink) {
+        cvLink.addEventListener('click', function() {
+          var activeBtn = document.querySelector('.lang-btn.active');
+          var lang = activeBtn ? activeBtn.getAttribute('data-lang') : 'it';
+          trackCVDownload(lang);
+        });
+      }
     });
-  }
-});
-</script>
-<script>
-// Language auto-detect from URL (/it or /en)
-document.addEventListener('DOMContentLoaded', function() {
-  var path = window.location.pathname;
-  var lang = null;
-  if (path.endsWith('/it')) lang = 'it';
-  else if (path.endsWith('/en')) lang = 'en';
-  if (lang) {
-    // Simula click sul pulsante lingua corrispondente
-    var btn = document.querySelector('.lang-btn[data-lang="' + lang + '"]');
-    if (btn) btn.click();
-  }
-});
-</script>
-<script>
-// Fallback: riapplica le traduzioni su languageChanged e sui click dei bottoni lingua
-document.addEventListener('languageChanged', function() {
-    if (window.languageManager && typeof window.languageManager.translateElements === 'function') {
-        window.languageManager.translateElements(window.languageManager.getCurrentLanguage());
-    }
-});
-document.querySelectorAll && document.querySelectorAll('.lang-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-        // timing leggero per lasciare che altri handler aggiornino lo stato
-        setTimeout(function(){
-            if (window.languageManager && typeof window.languageManager.translateElements === 'function') {
-                window.languageManager.translateElements(window.languageManager.getCurrentLanguage());
-            }
-        }, 50);
+    </script>
+    <script>
+    // Language auto-detect from URL (/it or /en)
+    document.addEventListener('DOMContentLoaded', function() {
+      var path = window.location.pathname;
+      var lang = null;
+      if (path.endsWith('/it')) lang = 'it';
+      else if (path.endsWith('/en')) lang = 'en';
+      if (lang) {
+        // Simula click sul pulsante lingua corrispondente
+        var btn = document.querySelector('.lang-btn[data-lang="' + lang + '"]');
+        if (btn) btn.click();
+      }
     });
-});
-</script>
-</body>
+    </script>
+    <script>
+    // Fallback: riapplica le traduzioni su languageChanged e sui click dei bottoni lingua
+    document.addEventListener('languageChanged', function() {
+        if (window.languageManager && typeof window.languageManager.translateElements === 'function') {
+            window.languageManager.translateElements(window.languageManager.getCurrentLanguage());
+        }
+    });
+    document.querySelectorAll && document.querySelectorAll('.lang-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            // timing leggero per lasciare che altri handler aggiornino lo stato
+            setTimeout(function(){
+                if (window.languageManager && typeof window.languageManager.translateElements === 'function') {
+                    window.languageManager.translateElements(window.languageManager.getCurrentLanguage());
+                }
+            }, 50);
+        });
+    });
+    </script>
     <script async src="https://filippomoscatelli.com/analytics/script.js" data-website-id="a912f285-ced0-4c7f-9260-434d0ee8674a"></script>
+</body>
 </html>
