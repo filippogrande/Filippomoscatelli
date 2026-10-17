@@ -16,8 +16,7 @@ jobs:
       # html-validate legge .htmlvalidate.json (preset recommended con le regole
       # di stile disattivate) e .htmlvalidateignore (file esclusi: test-projects.html
       # e FoodDelivery/, non serviti dall'immagine e non ancora ripuliti).
-      # Il glob "**/*.html" e' racchiuso tra virgolette: a shell aperto verrebbe
-      # espanso in cwd (indice .htmlvalidateignore) invece che passato al tool.
+      # Il glob "**/*.html" resta tra virgolette: espanso dal tool, non dalla shell.
       - name: Validate HTML
         run: npx --yes html-validate "**/*.html"
 
@@ -29,8 +28,11 @@ jobs:
         uses: actions/checkout@v7
 
       # ESLint 9+ usa solo la flat config (eslint.config.js): --ext e .eslintrc non
-      # esistono piu', e senza config fallisce. La config e' nel repo, ma il passo
-      # resta una guardia: se manca o e' rotta il workflow si ferma qui.
+      # esistono piu', e senza config esce con errore. La config e' nel repo e
+      # applica solo la regola no-undef con l'ambiente browser: tutti i file js/
+      # devono quindi rispettarla. Il codice e' legacy con fallback silenziosi
+      # (catch vuoti, variabili globali non dichiarate) che questa regola segnala:
+      # il passo resta una guardia, non un blocco sulla stile.
       - name: Syntax check
         run: |
           npm install --save-dev eslint
