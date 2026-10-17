@@ -1,0 +1,17 @@
+{
+  "$schema": "https://html-validate.org/schemas/config.json",
+  "extends": ["html-validate:recommended"],
+  "root": true,
+  "rules": {
+    "void-style": "off",
+    "no-inline-style": "off",
+    "no-implicit-close": "off",
+    "no-trailing-whitespace": "off",
+    "element-permitted-content": "error",
+    "element-permitted-occurrences": "error",
+    "element-permitted-order": "error",
+    "element-required-content": "error",
+    "element-required-attributes": "error",
+    "no-implicit-button-type": "error"
+  }
+}
