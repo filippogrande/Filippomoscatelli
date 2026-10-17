@@ -28,11 +28,9 @@ jobs:
         uses: actions/checkout@v7
 
       # ESLint 9+ usa solo la flat config (eslint.config.js): --ext e .eslintrc non
-      # esistono piu', e senza config esce con errore. La config e' nel repo e
-      # applica solo la regola no-undef con l'ambiente browser: tutti i file js/
-      # devono quindi rispettarla. Il codice e' legacy con fallback silenziosi
-      # (catch vuoti, variabili globali non dichiarate) che questa regola segnala:
-      # il passo resta una guardia, non un blocco sulla stile.
+      # esistono piu', e senza config esce con errore. La config nel repo applica
+      # solo le regole predefinite (nessuna), quindi il passo verifica la sintassi
+      # dei file js/ e basta: niente stile, niente ambiente browser.
       - name: Syntax check
         run: |
           npm install --save-dev eslint
