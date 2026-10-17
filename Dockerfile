@@ -20,7 +20,6 @@ RUN cp -r /tmp/build/index.html . && \
     cp -r /tmp/build/data ./data && \
     cp -r /tmp/build/FoodDelivery ./FoodDelivery && \
     cp -r /tmp/build/k8s ./k8s 2>/dev/null || true && \
-    cp -r /tmp/build/test-projects.html . 2>/dev/null || true && \
     cp -r /tmp/build/nginx.conf ./nginx.conf 2>/dev/null || true && \
     cp -r /tmp/build/*.pdf . 2>/dev/null || true && \
     cp -r /tmp/build/*.png . 2>/dev/null || true && \
