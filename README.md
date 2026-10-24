@@ -1,336 +1,71 @@
 # CV di Filippo Moscatelli
 
-Un sito web moderno e responsive per il curriculum vitae con supporto multilingue (Italiano/Inglese), containerizzato con Docker e deployabile su Kubernetes.
+Sito statico single-page con il curriculum (IT/EN), servito da nginx dentro un container Docker
+e deployato su Kubernetes. Non c'e' backend e non c'e' build: i contenuti che cambiano
+(progetti, esperienze) sono file JSON in `data/` che il browser legge con `fetch`.
 
-## 🌟 Caratteristiche
+- HTML/CSS/JavaScript vanilla: niente `package.json`, niente npm
+- Lingue italiano/inglese, con rilevamento da URL (`/it`, `/en`), dal browser e da `localStorage`
+- Analytics Umami self-hosted
+- Immagine `filippogrande/cv-website:latest` (multi-platform), health check su `/health`
+- Pagina dedicata al progetto Food Delivery in `FoodDelivery/`
+- CV scaricabile in PDF: `filippomoscatelli_it.pdf`, `filippomoscatelli_en.pdf`
 
-- **Design Moderno**: Layout pulito e professionale con design responsive
-- **Multilingue**: Supporto completo per Italiano e Inglese
-- **Responsive**: Ottimizzato per desktop, tablet e mobile
-- **Animazioni**: Effetti di transizione fluidi e animazioni CSS
-- **Accessibilità**: Supporto per tastiera e lettori di schermo
-- **Print-Friendly**: Ottimizzato per la stampa
-- **Performance**: Caricamento veloce e ottimizzato
-- **Analytics**: Integrazione con Umami Analytics per tracking privacy-friendly
-- **Containerizzato**: Docker container pronto per production
-- **Cloud-Ready**: manifest Kubernetes pronti in `k8s/` (deploy manuale)
-- **Scalabilità**: Auto-scaling con HPA (Horizontal Pod Autoscaler)
-
-## 📁 Struttura del Progetto
-
-```
-├── index.html              # Pagina principale
-├── css/                    # File CSS modulari
-│   ├── main.css           # Stili principali
-│   ├── base.css           # Stili di base
-│   ├── components.css     # Componenti riutilizzabili
-│   ├── responsive.css     # Media queries responsive
-│   └── ...               # Altri file CSS specializzati
-├── js/                    # JavaScript modulare
-│   ├── main.js           # Script principale
-│   ├── language.js       # Gestione multilingue
-│   ├── analytics.js      # Integrazione analytics
-│   └── ...              # Altri moduli JavaScript
-├── data/                 # Contenuti in JSON (progetti, esperienza professionale)
-├── k8s/                  # Manifest Kubernetes
-│   ├── deployment.yaml   # Deployment configuration
-│   ├── service.yaml      # Service configuration
-│   ├── ingress.yaml      # Ingress configuration
-│   └── ...              # Altri manifest K8s
-├── Dockerfile            # Container configuration
-├── docker-compose.yml    # Compose per testing locale
-├── nginx.conf           # Configurazione Nginx
-├── deploy.sh            # Script di deployment
-├── Makefile            # Comandi automatizzati
-└── README.md           # Documentazione
-```
-
-## 🚀 Quick Start
-
-### Deployment da Repository GitHub
-
-Il sistema è configurato per fare build direttamente dal repository GitHub, permettendo deployment senza dover clonare localmente:
+## Avvio
 
 ```bash
-# Build diretto da GitHub (metodo più semplice)
-./build-from-github.sh
+make dev          # build dell'immagine + docker-compose up -d
+# sito su http://localhost:8080
 
-# Oppure con make
-make build-github
-
-# Test del container
-docker run -d -p 8080:80 --name cv-test filippogrande/cv-website:latest
-curl http://localhost:8080/health
-```
-
-### Sviluppo Locale
-
-```bash
-# Clone del repository (solo per sviluppo locale)
-git clone https://github.com/filippogrande/Filippomoscatelli.git
-cd Filippomoscatelli
-
-# Avvia in locale con Docker
-make dev
-# oppure
-docker-compose up -d
-
-# Il sito sarà disponibile su http://localhost:8080
-```
-
-### Build e Test
-
-```bash
-# Build locale dell'immagine Docker
-make build
-
-# Build da GitHub (raccomandato per production)
-make build-github
-
-# Test del container
-make test
-
-# Visualizza logs
-make logs
-
-# Ferma il container
+make logs          # log del container
 make stop
 ```
 
-### Deploy su Kubernetes
+Alternative:
 
 ```bash
-# Deploy completo (build + push + deploy)
-make prod
-
-# Solo deploy (se l'immagine è già buildutta)
-make deploy
-
-# Verifica stato deployment
-make status
-
-# Rollback se necessario
-make rollback
+make build-github                                              # build multi-platform da GitHub
+docker run -d -p 8080:80 filippogrande/cv-website:latest         # immagine gia' pubblicata
+kubectl apply -f k8s/                                          # deploy su Kubernetes
 ```
 
-## 🐳 Docker
+## Struttura
 
-### Build Manuale
-
-```bash
-# Build dell'immagine
-docker build -t filippogrande/cv-website:latest .
-
-# Run del container
-docker run -d -p 8080:80 --name cv-website filippogrande/cv-website:latest
+```
+index.html                 pagina unica (sezioni del CV)
+AGENTS.md                  radice della mappa: leggilo per primo
+css/                       fogli di stile (caricati da js/css-manager.js)
+js/                        moduli: main, config, language, projects, work, analytics, ...
+data/                      contenuti in JSON (progetti, esperienze; IT ed EN)
+k8s/                       manifest Kubernetes
+FoodDelivery/              pagina del progetto Food Delivery (+ screenshot)
+filippomoscatelli_it.pdf   CV scaricabile (italiano)
+filippomoscatelli_en.pdf   CV scaricabile (inglese)
+Dockerfile, Dockerfile.multistage, nginx.conf, docker-compose.yml
+Makefile, deploy.sh, build-from-github.sh, test-deployment.sh
+.github/                   workflow CI e dependabot
 ```
 
-### Configurazione
+## Indice
 
-Il container usa Nginx Alpine per servire i file statici con:
+| Vuoi... | Apri |
+|---|---|
+| Trovare un file o un simbolo | `docs/REFERENCE.md` |
+| Capire come funziona il sito o il deploy | `docs/ARCHITECTURE.md` |
+| Buildare, testare, deployare, cambiare i contenuti | `docs/OPERATIONS.md` |
+| Conoscere le regole prima di toccare il repo | `docs/CONVENTIONS.md` |
+| Sapere da dove partire | `AGENTS.md` |
 
-- Compressione Gzip abilitata
-- Cache headers ottimizzati
-- Security headers configurati
-- Health check endpoint su `/health`
-- Supporto per routing multilingue
+## Documentazione
 
-## ☸️ Kubernetes
+Quattro doc in `docs/`, uno per tipo: `REFERENCE.md` (la mappa richiesta -> file -> simbolo),
+`ARCHITECTURE.md` (come funziona), `OPERATIONS.md` (i passi), `CONVENTIONS.md` (le regole).
+La mappa si aggiorna nella stessa PR che sposta o rinomina qualcosa.
 
-### Prerequisiti
+## Supporto
 
-- Cluster Kubernetes funzionante
-- kubectl configurato
-- Nginx Ingress Controller (opzionale, per l'ingress)
-- Cert-Manager (opzionale, per SSL/TLS)
+- Sito: https://filippomoscatelli.com
+- Repository: https://github.com/filippogrande/Filippomoscatelli
+- Immagine: https://hub.docker.com/r/filippogrande/cv-website
 
-### Deployment
-
-```bash
-# Usando lo script di deployment
-./deploy.sh all
-
-# Oppure manualmente
-kubectl apply -f k8s/
-```
-
-## 🤖 CI/CD con GitHub Actions
-
-Il repository include il workflow `.github/workflows/deploy.yml` ("Build and Deploy CV Website"):
-
-1. **Su pull request verso `main`**: build dell'immagine in locale (single-platform `linux/amd64`, nessun push su Docker Hub) + smoke test del container (`docker run` e `curl /health`).
-2. **Su push in `main`**: build multi-platform (`linux/amd64`, `linux/arm64`, `linux/386`) e push su Docker Hub con i tag `latest`, `main` e `sha-<short>`.
-3. **Security scan** (solo su `main`): Trivy con upload dei risultati SARIF nella tab **Security** del repository.
-4. **Deploy su Kubernetes: manuale** (`kubectl apply -f k8s/` oppure `./deploy.sh all`): i job di deploy non fanno parte del workflow.
-
-### Configurazione GitHub Actions
-
-Per il push dell'immagine su Docker Hub servono questi secrets nel repository GitHub:
-
-```bash
-# Docker Hub credentials
-DOCKER_USERNAME=your-docker-username
-DOCKER_PASSWORD=your-docker-password
-```
-
-### Trigger manuale
-
-Puoi anche triggerare manualmente il workflow:
-
-1. Vai su **Actions** nel repository GitHub
-2. Seleziona **Build and Deploy CV Website**
-3. Clicca **Run workflow**
-
-L'input `deploy_to_k8s` presente nel trigger manuale non è più usato dal workflow (il deploy su Kubernetes è manuale).
-
-### Configurazione
-
-I manifest Kubernetes includono:
-
-- **Deployment**: 2 repliche con rolling update
-- **Service**: ClusterIP per comunicazione interna
-- **Ingress**: Esposizione esterna con SSL/TLS
-- **HPA**: Auto-scaling basato su CPU/memoria
-- **ConfigMap**: Configurazioni environment-specific
-
-### Monitoring
-
-```bash
-# Stato dei pod
-kubectl get pods -l app=filippomoscatelli-cv
-
-# Logs dei pod
-kubectl logs -l app=filippomoscatelli-cv -f
-
-# Metriche HPA
-kubectl get hpa filippomoscatelli-cv-hpa
-
-# Eventi del deployment
-kubectl describe deployment filippomoscatelli-cv
-```
-
-## 🎨 Personalizzazione
-
-### Modificare le Informazioni Personali
-
-Modifica i seguenti elementi nel file `index.html`:
-
-- **Nome**: Cambia il contenuto del tag `<h1 class="name">`
-- **Foto**: Sostituisci l'URL nel tag `<img>` della sezione profilo
-- **Contatti**: Aggiorna email, telefono, indirizzo, LinkedIn e GitHub
-- **Descrizione**: Modifica il contenuto della sezione "About"
-- **Progetti**: Aggiungi o modifica i progetti nella sezione dedicata
-
-### Aggiungere Nuovi Progetti
-
-Per aggiungere un nuovo progetto:
-
-1. **JSON**: Aggiungi una voce in `data/projects.json` (e `data/projects.en.json` per l'inglese)
-2. **Traduzioni**: Aggiungi le chiavi di traduzione in `js/language.js` per entrambe le lingue (it/en)
-3. **Stili**: I progetti utilizzano già la griglia responsive, quindi si adatteranno automaticamente
-
-- **Competenze**: Aggiungi o rimuovi skill nelle varie categorie
-- **Esperienza**: Aggiorna lavori e descrizioni in `data/work.json` (e `data/work.en.json`); la durata in mesi/anni accanto alle date viene calcolata in automatico
-- **Istruzione**: Modifica formazione e qualifiche
-- **Progetti**: Aggiungi i tuoi progetti personali
-
-### Modificare le Traduzioni
-
-Nel file `js/language.js`, modifica l'oggetto `translations` per:
-
-- Aggiornare le traduzioni esistenti
-- Aggiungere nuove stringhe traducibili
-- Supportare lingue aggiuntive
-
-### Personalizzare i Colori
-
-Nel file `styles.css`, modifica le variabili dei colori:
-
-- **Colore principale**: Cerca `#4f46e5` e sostituiscilo
-- **Gradiente header**: Modifica `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`
-- **Colori di sfondo**: Personalizza i colori delle sezioni
-
-## 🔧 Funzionalità Avanzate
-
-### Scorciatoie da Tastiera
-
-- **Alt + I**: Cambia lingua in Italiano
-- **Alt + E**: Cambia lingua in Inglese
-
-### Memorizzazione Preferenze
-
-Il sito ricorda automaticamente la lingua scelta dall'utente utilizzando il localStorage del browser.
-
-### Rilevamento Lingua Automatico
-
-Il sito rileva automaticamente la lingua preferita del browser dell'utente al primo accesso.
-
-### Analytics Privacy-Friendly
-
-Il sito integra Umami Analytics per tracciare:
-
-- Visite e pagine viste
-- Interazioni con link (social media, progetti, contatti)
-- Cambio di lingua e preferenze utente
-- Comportamento di navigazione (scroll depth, tempo sulla pagina)
-
-**Privacy**: Gli analytics sono self-hosted e non condividono dati con terze parti.
-
-## 🌐 Browser Supportati
-
-- Chrome (versione 80+)
-- Firefox (versione 75+)
-- Safari (versione 13+)
-- Edge (versione 80+)
-
-## 📱 Responsive Design
-
-Il sito è ottimizzato per:
-
-- **Desktop**: Layout standard, è il sistema su cui è specificatamente pensato
-- **Tablet**: Layout adattivo con elementi ridimensionati
-- **Mobile**: Layout a colonna singola con navigazione mobile-friendly
-
-## 🎯 SEO e Performance
-
-- Meta tag ottimizzati
-- Immagini ottimizzate
-- CSS e JavaScript minificati
-- Struttura semantica HTML5
-- Schema markup (può essere aggiunto)
-
-## 🛠️ Estensioni Future
-
-### 🎨 Miglioramenti UI/UX
-
-- [x] **Sistema di Analytics** (Umami Analytics integrato)
-- [ ] **Modalità scura/chiara**: Toggle per switchare tra tema chiaro e scuro
-
-### 📄 Funzionalità CV
-
-- [x] **Versione PDF scaricabile**: Pulsante per generare e scaricare automaticamente il CV in formato PDF (è stato implementato con un file statico pdf ottenuto da un sito)
-- [x] **Schema markup**: Codice strutturato (JSON-LD) per aiutare i motori di ricerca a riconoscere il CV
-- [ ] **Miglioramento delle competenze**: le competenze on mouse over fanno vedere dove sono state acquisite
-- [ ] **Galleria progetti estesa**: Pagina dedicata con screenshot, descrizioni dettagliate e demo live
-
-### 📊 Monitoring e Analytics _(richiede backend)_
-
-- [x] **Statistiche di visita**: Analytics per monitorare visualizzazioni e interazioni (Umami integrato)
-- [ ] **Performance monitoring**: Monitoraggio velocità di caricamento e ottimizzazioni
-
-### 📝 Contenuti Futuri
-
-- [ ] **Certificazioni**: Sezione dedicata quando otterrai certificazioni tecniche
-- [ ] **Pubblicazioni**: Se inizierai a scrivere articoli o paper
-
-## 📞 Supporto
-
-Per domande o suggerimenti, contatta:
-
-- **Email**: contact@mail.filippomoscatelli.com
-- **LinkedIn**: [linkedin.com](https://www.linkedin.com/in/filippo-moscatelli-52b566202/)
-- **GitHub**: [github.com](https://github.com/filippogrande)
-
-## 📄 Licenza
-
-Questo progetto è rilasciato sotto licenza MIT. Sei libero di utilizzarlo e modificarlo per i tuoi scopi personali e commerciali.
+Licenza: MIT.
