@@ -7,7 +7,12 @@
 
 # Node modules (se mai dovessi usarli)
 node_modules
+**/node_modules
 npm-debug.log*
+scripts/package-lock.json
+
+# Tooling di build (i PDF si generano in CI, non dentro l'immagine)
+scripts/
 
 # Environment files
 .env
