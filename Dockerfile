@@ -15,6 +15,7 @@ RUN rm -rf /usr/share/nginx/html/*
 # Copy repository files from build context and move required assets
 COPY . /tmp/build
 RUN cp -r /tmp/build/index.html . && \
+    cp -r /tmp/build/print-cv.html . 2>/dev/null || true && \
     cp -r /tmp/build/css ./css && \
     cp -r /tmp/build/js ./js && \
     cp -r /tmp/build/data ./data && \
