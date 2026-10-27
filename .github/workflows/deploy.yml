@@ -54,6 +54,30 @@ jobs:
           npm install --no-audit --no-fund
           npm run build
 
+      # Verifica vera dell'output: esistenza, firma %PDF e dimensione minima.
+      # Senza questo un PDF vuoto o troncato passerebbe inosservato fino al
+      # download dell'utente finale.
+      - name: Check generated PDFs
+        run: |
+          for f in filippomoscatelli_it.pdf filippomoscatelli_en.pdf; do
+            if [ ! -s "$f" ]; then echo "Manca o e' vuoto: $f"; exit 1; fi
+            if [ "$(head -c 5 "$f")" != "%PDF-" ]; then echo "Non e' un PDF: $f"; exit 1; fi
+            bytes=$(wc -c < "$f")
+            if [ "$bytes" -lt 20000 ]; then echo "Sospettosamente piccolo ($bytes byte): $f"; exit 1; fi
+            echo "$f OK ($bytes byte)"
+          done
+
+      # I PDF non vengono committati: chi rivede la PR li scarica da qui.
+      - name: Upload generated CV PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: cv-pdf-${{ github.event.pull_request.number || github.run_id }}
+          path: |
+            filippomoscatelli_it.pdf
+            filippomoscatelli_en.pdf
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
