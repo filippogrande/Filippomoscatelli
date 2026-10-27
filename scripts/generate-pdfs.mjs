@@ -90,6 +90,9 @@ async function renderPdf(browser, port, lang) {
     const failure = await page.evaluate('window.PRINT_ERROR || null');
     if (failure) throw new Error('print-cv.html: ' + failure);
 
+    // aspetta i webfont, altrimenti il PDF esce con il fallback di sistema
+    await page.evaluate('document.fonts && document.fonts.ready ? document.fonts.ready.then(function () { return true; }) : true');
+
     const out = path.join(ROOT, 'filippomoscatelli_' + lang + '.pdf');
     await page.pdf({
       path: out,
