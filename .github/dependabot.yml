@@ -56,3 +56,21 @@ updates:
         update-types: ["minor", "patch"]
     commit-message:
       prefix: "ci"
+
+  # Dipendenze del generatore PDF (scripts/package.json)
+  - package-ecosystem: "npm"
+    directory: "/scripts"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Rome"
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      minor-e-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    commit-message:
+      prefix: "deps"
