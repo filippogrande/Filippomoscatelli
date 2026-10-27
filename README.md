@@ -4,12 +4,13 @@ Sito statico single-page con il curriculum (IT/EN), servito da nginx dentro un c
 e deployato su Kubernetes. Non c'e' backend e non c'e' build: i contenuti che cambiano
 (progetti, esperienze) sono file JSON in `data/` che il browser legge con `fetch`.
 
-- HTML/CSS/JavaScript vanilla: niente `package.json`, niente npm
+- HTML/CSS/JavaScript vanilla: niente `package.json` per il sito, niente npm
 - Lingue italiano/inglese, con rilevamento da URL (`/it`, `/en`), dal browser e da `localStorage`
 - Analytics Umami self-hosted
 - Immagine `filippogrande/cv-website:latest` (multi-platform), health check su `/health`
 - Pagina dedicata al progetto Food Delivery in `FoodDelivery/`
-- CV scaricabile in PDF: `filippomoscatelli_it.pdf`, `filippomoscatelli_en.pdf`
+- CV scaricabile in PDF: `filippomoscatelli_it.pdf`, `filippomoscatelli_en.pdf`,
+  generati da `print-cv.html` con `make pdf` (e automaticamente dalla CI prima della build)
 
 ## Avvio
 
@@ -19,6 +20,7 @@ make dev          # build dell'immagine + docker-compose up -d
 
 make logs          # log del container
 make stop
+make pdf           # rigenera i due PDF del CV (richiede Node 20+ e Chrome)
 ```
 
 Alternative:
@@ -33,14 +35,16 @@ kubectl apply -f k8s/                                          # deploy su Kuber
 
 ```
 index.html                 pagina unica (sezioni del CV)
+print-cv.html              pagina sorgente dei PDF (layout A4, non in navigazione)
 AGENTS.md                  radice della mappa: leggilo per primo
-css/                       fogli di stile (caricati da js/css-manager.js)
-js/                        moduli: main, config, language, projects, work, analytics, ...
+css/                       fogli di stile (caricati da js/css-manager.js; print-cv.css solo per la stampa)
+js/                        moduli: main, config, language, projects, work, analytics, print-cv, ...
 data/                      contenuti in JSON (progetti, esperienze; IT ed EN)
+scripts/                   generatore dei PDF (puppeteer-core, unico package.json del repo)
 k8s/                       manifest Kubernetes
 FoodDelivery/              pagina del progetto Food Delivery (+ screenshot)
-filippomoscatelli_it.pdf   CV scaricabile (italiano)
-filippomoscatelli_en.pdf   CV scaricabile (inglese)
+filippomoscatelli_it.pdf   CV scaricabile (italiano, generato)
+filippomoscatelli_en.pdf   CV scaricabile (inglese, generato)
 Dockerfile, Dockerfile.multistage, nginx.conf, docker-compose.yml
 Makefile, deploy.sh, build-from-github.sh, test-deployment.sh
 .github/                   workflow CI (html-validate+ESLint), deploy, dependabot

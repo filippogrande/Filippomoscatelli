@@ -47,18 +47,24 @@ risponde alla tua domanda, apri il file e cerca il simbolo. Tre letture, non di 
 | Chi verifica i prerequisiti e builda da GitHub | `deploy.sh` | `check_prerequisites()`, `build_image()` |
 | Chi applica i manifest e attende il rollout | `deploy.sh` | `deploy_k8s()` |
 | Chi testa il container | `test-deployment.sh` | `test_container()` |
-| Elenco dei comandi disponibili | `Makefile` | target `build`, `build-github`, `test-full`, `deploy`, `prod` |
+| Elenco dei comandi disponibili | `Makefile` | target `build`, `build-github`, `pdf`, `test-full`, `deploy`, `prod` |
 | Definizione del deployment Kubernetes | `k8s/deployment.yaml` | `filippomoscatelli-cv`, `replicas: 2` |
 | Esposizione esterna e TLS | `k8s/ingress.yaml` | `filippomoscatelli-cv-ingress` |
 | Autoscaling | `k8s/hpa.yaml` | `filippomoscatelli-cv-hpa` |
 | Servizio interno | `k8s/service.yaml` | `filippomoscatelli-cv-service` |
 | Cosa builda e pubblica la CI (docker image) | `.github/workflows/deploy.yml` | job `build`, `security-scan` |
+| Chi rigenera i PDF del CV a ogni build | `.github/workflows/deploy.yml` | step `Generate CV PDFs` (prima della build Docker) |
 | Chi valida HTML e JS su ogni push/PR | `.github/workflows/ci.yml` | job `html`, `js` |
 | Configurazione html-validate | `.htmlvalidate.json` | preset `recommended`, stile off |
 | File esclusi dalla validazione HTML | `.htmlvalidateignore` | `test-projects.html`, `FoodDelivery/` |
 | Configurazione ESLint (solo parser) | `eslint.config.js` | flat config, nessuna regola |
-| Aggiornamenti automatici delle dipendenze | `.github/dependabot.yml` | voci `docker`, `docker-compose`, `github-actions` |
-| PDF del CV scaricabili dal sito | `filippomoscatelli_it.pdf`, `filippomoscatelli_en.pdf` | link impostato da `updateCVLink()` in `index.html` |
+| Aggiornamenti automatici delle dipendenze | `.github/dependabot.yml` | voci `docker`, `docker-compose`, `github-actions`, `npm` (`/scripts`) |
+| Pagina sorgente dei PDF del CV (non in navigazione) | `print-cv.html` | `<main id="cv">`, parametro `?lang=it\|en` |
+| Chi renderizza il CV in formato A4 per i PDF | `js/print-cv.js` | `buildWork()`, `buildSkills()`, `window.PRINT_READY` |
+| Dove sta lo stile della pagina di stampa | `css/print-cv.css` | `@page`, `.cv-section`, `.cv-entry` |
+| Chi produce `filippomoscatelli_it.pdf` / `_en.pdf` | `scripts/generate-pdfs.mjs` | `main()`, `renderPdf()`, `startServer()` |
+| Come si lancia la generazione dei PDF in locale | `Makefile` | target `pdf` |
+| PDF del CV scaricabili dal sito | `filippomoscatelli_it.pdf`, `filippomoscatelli_en.pdf` | generati da `scripts/generate-pdfs.mjs`, link in `updateCVLink()` |
 | Altre versioni del CV (solo su git, non servite) | `Altre versioni pdf/` | `Filippo-moscatelli-CV.pdf`, `filippomoscatelli_it.pdf`, `filippomoscatelli_en.pdf` |
 | Favicon | `cv.svg`, `cv.png` | `<link rel="icon">` in `index.html` |
 | Variabili d'ambiente previste (solo nomi, nessun valore) | `.env.example` | `IMAGE_NAME`, `NAMESPACE`, `DOMAIN`, `REPLICAS` |
@@ -71,19 +77,26 @@ risponde alla tua domanda, apri il file e cerca il simbolo. Tre letture, non di 
 - **Contenuti**: progetti e esperienze sono JSON in `data/`, uno per lingua. Il rendering e' in
   `js/projects.js` e `js/work.v2.js`; le date hanno formato `YYYY-MM`, la durata e' calcolata da
   `js/utils.v2.js` e non va scritta a mano.
+- **PDF**: `print-cv.html` + `js/print-cv.js` non duplicano i contenuti — leggono `translations`
+  da `js/language.v2.js`, il blocco `.skills-grid` di `index.html` e i JSON in `data/`.
+  `scripts/generate-pdfs.mjs` serve la root del repo su `127.0.0.1`, renderizza con Chrome
+  headless e salva i due PDF in root. La CI li rigenera prima della build Docker, quindi
+  l'immagine pubblicata ha sempre i PDF aggiornati; un `make deploy` da locale builda da GitHub
+  e quindi richiede un `make pdf` prima, se i contenuti sono cambiati.
 - **Lingue**: due meccanismi separati. Il CV usa `data-key` + `translations` (`js/language.v2.js`);
   la pagina `FoodDelivery/index.html` usa `data-lang-it` / `data-lang-en` e il suo
   `FoodDeliveryLanguageManager`. Cambiare lingua al CV non cambia la pagina Food Delivery.
 - **Stili**: i fogli in `css/` non sono linkati uno a uno da `index.html`: parte il
   `css/main.css` (che li importa con `@import`) e `js/css-manager.js` li inietta come `<link>`.
-  Non esistono variabili CSS (`:root` non c'e') e non esiste `styles.css`.
+  Non esistono variabili CSS (`:root` non c'e') e non esiste `styles.css`. `css/print-cv.css`
+  e' l'eccezione: e' linkato solo da `print-cv.html`.
 - **Analytics**: l'id sito Umami compare in tre posti — `index.html` (tag `<script>` e `<noscript>`),
   `js/config.js` (`AppConfig.analytics.websiteId`), `js/inline-scripts.js`. Se lo cambi, cambiano tutti.
 - **Deploy**: due strade. `build-from-github.sh` = buildx multi-platform da GitHub, niente clone,
   niente push. `deploy.sh` = clone da GitHub + build single-platform + tag timestamp + apply k8s.
-- **Dipendenze**: niente `package.json`, niente npm. Le uniche dipendenze sono l'immagine base nei
-  `Dockerfile` e le action in `.github/workflows/`: tutte coperte da `.github/dependabot.yml`.
-  FontAwesome e il font Inter arrivano da CDN.
+- **Dipendenze**: il sito non ha dipendenze npm. L'unico `package.json` e' in `scripts/`
+  (`puppeteer-core`) e serve solo a generare i PDF: non entra nell'immagine (`.dockerignore`
+  esclude `scripts/` e `**/node_modules`).
 
 ## Limiti noti (dove la mappa e' sottile)
 

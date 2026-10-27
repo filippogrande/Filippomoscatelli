@@ -1,6 +1,6 @@
 # Makefile per Filippomoscatelli CV Website
 
-.PHONY: help build run stop clean deploy status rollback test
+.PHONY: help build run stop clean deploy status rollback test pdf
 
 # Variabili
 IMAGE_NAME = filippogrande/cv-website
@@ -57,6 +57,11 @@ test: ## Testa il container in locale
 test-full: ## Test completo del deployment
 	@echo "🧪 Running full deployment test..."
 	./test-deployment.sh
+
+pdf: ## Genera i PDF del CV da print-cv.html (richiede Chrome/Chromium)
+	@echo "📄 Generating CV PDFs from print-cv.html..."
+	cd scripts && npm install --no-audit --no-fund && npm run build
+	@echo "✅ PDF generati: filippomoscatelli_it.pdf, filippomoscatelli_en.pdf"
 
 deploy-build: ## Build e deploy su Kubernetes (da GitHub)
 	@echo "🚀 Building from GitHub and deploying..."

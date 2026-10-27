@@ -1,0 +1,13 @@
+{
+  "name": "cv-pdf-generator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Genera filippomoscatelli_it.pdf / _en.pdf da print-cv.html",
+  "scripts": {
+    "build": "node generate-pdfs.mjs"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^24.0.0"
+  }
+}
