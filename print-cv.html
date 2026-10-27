@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name=”robots” content="noindex,nofollow">
+    <title>Filippo Moscatelli - CV (stampa)</title>
+    <link rel="stylesheet" href="css/print-cv.css">
+</head>
+<body>
+    <!--
+        Pagina sorgente dei PDF del CV (filippomoscatelli_it.pdf / _en.pdf).
+        Non fa parte della navigazione del sito: la genera scripts/generate-pdfs.mjs
+        in CI e in locale con `make pdf`.
+        Contenuti: js/print-cv.js li legge dalle stesse fonti del sito.
+    -->
+    <main id="cv"></main>
+
+    <script src="js/language.v2.js"></script>
+    <script src="js/print-cv.js"></script>
+</body>
+</html>
