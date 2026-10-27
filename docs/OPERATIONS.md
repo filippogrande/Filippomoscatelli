@@ -8,6 +8,7 @@
 - `make` (i comandi principali sono target del `Makefile`)
 - `kubectl` con un cluster raggiungibile, solo per il deploy
 - Per la CI: i secrets `DOCKER_USERNAME` e `DOCKER_PASSWORD` nel repository
+- Per i PDF in locale: Node 20+ e Chrome/Chromium installati
 
 ## Avvio locale
 
@@ -38,6 +39,7 @@ docker build -t filippogrande/cv-website:latest .
 | `make build-github` | `./build-from-github.sh` — buildx multi-platform da GitHub, niente clone locale |
 | `make push` | buildx multi-platform con `--push` su Docker Hub |
 | `make prod` | `./deploy.sh all` — build da GitHub, push (disabilitato), deploy |
+| `make pdf` | rigenera `filippomoscatelli_it.pdf` e `_en.pdf` da `print-cv.html` |
 
 `./build-from-github.sh <tag>` accetta un tag come primo argomento (default `latest`) e crea
 anche un tag con timestamp.
@@ -55,6 +57,30 @@ anche un tag con timestamp.
 
 La CI fa il suo smoke test a ogni giro: su PR build + `docker run` + `curl /health`;
 su `main` anche build multi-platform, push e scan Trivy.
+
+## Generare i PDF del CV
+
+I PDF non si sostituiscono piu' a mano: si generano dalla pagina `print-cv.html`.
+
+```bash
+make pdf
+```
+
+Cosa succede: `scripts/generate-pdfs.mjs` avvia un server statico sulla root del repo,
+apre `print-cv.html?lang=it` e `?lang=en` in Chrome headless, attende `window.PRINT_READY`
+e scrive `filippomoscatelli_it.pdf` / `filippomoscatelli_en.pdf` in root.
+
+- Richiede Node 20+ e Chrome/Chromium. Se il browser non e' in un percorso standard,
+  indicarlo con `CHROME_PATH=/percorso/chrome make pdf`.
+- **In CI e' automatico**: il job `build` di `.github/workflows/deploy.yml` lancia
+  `Generate CV PDFs` prima della build Docker, quindi l'immagine pubblicata contiene
+  sempre i PDF aggiornati. Non serve committare i PDF a mano dopo una modifica ai contenuti.
+- **Eccezione**: `make deploy` / `make deploy-build` buildano da GitHub (clone), non dal
+  workspace locale. Se hai cambiato i contenuti e deployi cosi', lancia prima `make pdf`
+  e committa i PDF, altrimenti l'immagine avra' la versione precedente.
+- Verifica rapida dell'output: apri il PDF e controlla che la prima pagina finisca con
+  una sezione completa (niente titolo orfano a fondo pagina) e che il numero di pagine
+  sia 1 o 2.
 
 ## Deploy su Kubernetes
 
@@ -102,8 +128,8 @@ non e' piu' usato dal workflow: il deploy su Kubernetes resta manuale.
   `css/sections.css`). Non esistono variabili CSS (`:root` non c'e') e non esiste `styles.css`.
 - **Pagina Food Delivery**: modificare `FoodDelivery/index.html`; usa `data-lang-it` e
   `data-lang-en`, non `data-key`.
-- **PDF del CV**: sostituire `filippomoscatelli_it.pdf` / `filippomoscatelli_en.pdf` in root.
-  Il pulsante "Scarica CV" punta a questi due file (`updateCVLink()` in `index.html`).
+- **PDF del CV**: non si toccano a mano. Dopo una modifica a contenuti o traduzioni lancia
+  `make pdf` (o lascia fare alla CI). Vedi "Generare i PDF del CV".
 
 ## Aggiornare la documentazione
 
