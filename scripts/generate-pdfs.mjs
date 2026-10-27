@@ -84,14 +84,21 @@ async function renderPdf(browser, port, lang) {
   const target = 'http://127.0.0.1:' + port + '/print-cv.html?lang=' + lang;
 
   try {
-    await page.goto(target, { waitUntil: 'networkidle0', timeout: 30000 });
+    // 'load' e non 'networkidle0': le richieste esterne (webfont) non devono
+    // poter bloccare la generazione. Il contenuto arriva da localhost.
+    await page.goto(target, { waitUntil: 'load', timeout: 30000 });
     await page.waitForFunction('window.PRINT_READY === true || typeof window.PRINT_ERROR === "string"', { timeout: 20000 });
 
     const failure = await page.evaluate('window.PRINT_ERROR || null');
     if (failure) throw new Error('print-cv.html: ' + failure);
 
-    // aspetta i webfont, altrimenti il PDF esce con il fallback di sistema
-    await page.evaluate('document.fonts && document.fonts.ready ? document.fonts.ready.then(function () { return true; }) : true');
+    // I webfont sono un di piu': aspettiamo al massimo 3s, mai indefinitamente.
+    await page.evaluate(
+      'Promise.race(['
+      + 'document.fonts ? document.fonts.ready : Promise.resolve(),'
+      + 'new Promise(function (r) { setTimeout(r, 3000); })'
+      + ']).then(function () { return true; })'
+    );
 
     const out = path.join(ROOT, 'filippomoscatelli_' + lang + '.pdf');
     await page.pdf({
