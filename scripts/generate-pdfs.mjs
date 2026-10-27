@@ -84,8 +84,8 @@ async function renderPdf(browser, port, lang) {
   const target = 'http://127.0.0.1:' + port + '/print-cv.html?lang=' + lang;
 
   try {
-    // 'load' e non 'networkidle0': le richieste esterne (webfont) non devono
-    // poter bloccare la generazione. Il contenuto arriva da localhost.
+    // 'load' e non 'networkidle0': le richieste esterne (webfont, foto) non
+    // devono poter bloccare la generazione. Il contenuto arriva da localhost.
     await page.goto(target, { waitUntil: 'load', timeout: 30000 });
     await page.waitForFunction('window.PRINT_READY === true || typeof window.PRINT_ERROR === "string"', { timeout: 20000 });
 
@@ -97,6 +97,17 @@ async function renderPdf(browser, port, lang) {
       'Promise.race(['
       + 'document.fonts ? document.fonts.ready : Promise.resolve(),'
       + 'new Promise(function (r) { setTimeout(r, 3000); })'
+      + ']).then(function () { return true; })'
+    );
+
+    // La foto profilo arriva dal CDN di GitHub: senza questa attesa il PDF
+    // uscirebbe con il cerchio vuoto. Tetto a 5s, poi si stampa comunque.
+    await page.evaluate(
+      'Promise.race(['
+      + 'Promise.all(Array.prototype.map.call(document.images, function (img) {'
+      + '  return img.complete ? Promise.resolve() : new Promise(function (r) { img.onload = img.onerror = r; });'
+      + '})),'
+      + 'new Promise(function (r) { setTimeout(r, 5000); })'
       + ']).then(function () { return true; })'
     );
 
