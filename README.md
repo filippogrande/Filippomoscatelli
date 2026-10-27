@@ -43,7 +43,7 @@ filippomoscatelli_it.pdf   CV scaricabile (italiano)
 filippomoscatelli_en.pdf   CV scaricabile (inglese)
 Dockerfile, Dockerfile.multistage, nginx.conf, docker-compose.yml
 Makefile, deploy.sh, build-from-github.sh, test-deployment.sh
-.github/                   workflow CI e dependabot
+.github/                   workflow CI (html-validate+ESLint), deploy, dependabot
 ```
 
 ## Indice
