@@ -6,11 +6,17 @@
  *  - competenze: il blocco .skills-grid di index.html
  *  - esperienze e progetti: data/work*.json, data/projects*.json
  *
+ * Struttura: header in stile sito (banda + foto tonda), Chi Sono a tutta
+ * larghezza, poi corpo su due colonne (esperienze a sinistra, competenze /
+ * istruzione / lingue a destra).
+ *
  * Al termine imposta window.PRINT_READY = true (usato da scripts/generate-pdfs.mjs).
  */
 
 (function () {
   'use strict';
+
+  var AVATAR = 'https://avatars.githubusercontent.com/u/35425860?s=400&u=67f3f62f5d202537c1fed54db800531662db392a&v=4';
 
   var params = new URLSearchParams(window.location.search);
   var lang = params.get('lang') === 'en' ? 'en' : 'it';
@@ -28,8 +34,8 @@
     return node;
   }
 
-  function section(titleKey, fallbackTitle) {
-    var s = el('section', 'cv-section');
+  function section(titleKey, fallbackTitle, modifier) {
+    var s = el('section', 'cv-section' + (modifier ? ' ' + modifier : ''));
     s.appendChild(el('h2', 'cv-section__title', tr(titleKey, fallbackTitle)));
     return s;
   }
@@ -109,24 +115,30 @@
   function buildHeader() {
     var header = el('header', 'cv-header');
 
-    var left = el('div', 'cv-header__left');
-    left.appendChild(el('div', 'cv-header__name', 'Filippo Moscatelli'));
-    left.appendChild(el('div', 'cv-header__role', tr('job-title', '')));
+    var photo = el('div', 'cv-header__photo');
+    var img = document.createElement('img');
+    img.src = AVATAR;
+    img.alt = 'Filippo Moscatelli';
+    photo.appendChild(img);
+
+    var info = el('div', 'cv-header__info');
+    info.appendChild(el('div', 'cv-header__name', 'Filippo Moscatelli'));
+    info.appendChild(el('div', 'cv-header__role', tr('job-title', '')));
 
     var contacts = el('div', 'cv-header__contacts');
-    var email = el('div');
-    email.textContent = 'contact@mail.filippomoscatelli.com';
-    var place = el('div', null, tr('location', ''));
-    var links = el('div');
-    links.textContent = 'linkedin.com/in/filippo-moscatelli-52b566202';
-    var gh = el('div', null, 'github.com/filippogrande');
-    contacts.appendChild(email);
-    contacts.appendChild(place);
-    contacts.appendChild(links);
-    contacts.appendChild(gh);
+    var values = [
+      'contact@mail.filippomoscatelli.com',
+      tr('location', ''),
+      'linkedin.com/in/filippo-moscatelli-52b566202',
+      'github.com/filippogrande',
+    ];
+    values.forEach(function (v) {
+      if (v) contacts.appendChild(el('span', 'cv-header__contact', v));
+    });
 
-    header.appendChild(left);
-    header.appendChild(contacts);
+    info.appendChild(contacts);
+    header.appendChild(photo);
+    header.appendChild(info);
     return header;
   }
 
@@ -147,8 +159,7 @@
 
       var org = el('div', 'cv-entry__org', w.company || '');
       if (w.location) {
-        var place = el('span', 'cv-entry__place', ' · ' + w.location + (w.modality ? ' (' + w.modality + ')' : ''));
-        org.appendChild(place);
+        org.appendChild(el('span', 'cv-entry__place', ' · ' + w.location + (w.modality ? ' (' + w.modality + ')' : '')));
       }
       e.appendChild(org);
 
@@ -185,10 +196,10 @@
         items.push(key ? tr(key, tag.textContent.trim()) : tag.textContent.trim());
       });
 
-      var row = el('div', 'cv-skill-row');
-      row.appendChild(el('div', 'cv-skill-row__cat', catName));
-      row.appendChild(el('div', 'cv-skill-row__items', items.join(', ')));
-      s.appendChild(row);
+      var group = el('div', 'cv-skill');
+      group.appendChild(el('div', 'cv-skill__cat', catName));
+      group.appendChild(el('div', 'cv-skill__items', items.join(', ')));
+      s.appendChild(group);
     });
 
     return s;
@@ -240,7 +251,6 @@
 
   function buildLanguages() {
     var s = section('languages-title', 'Lingue');
-    var wrap = el('div', 'cv-langs');
 
     function langItem(nameKey, levelKey, fallbackName) {
       var item = el('div', 'cv-lang');
@@ -249,9 +259,8 @@
       return item;
     }
 
-    wrap.appendChild(langItem('italian-title', 'native-level', 'Italiano'));
-    wrap.appendChild(langItem('english-title', 'b2-level', 'Inglese'));
-    s.appendChild(wrap);
+    s.appendChild(langItem('italian-title', 'native-level', 'Italiano'));
+    s.appendChild(langItem('english-title', 'b2-level', 'Inglese'));
     return s;
   }
 
@@ -279,12 +288,22 @@
 
         root.appendChild(buildHeader());
         root.appendChild(buildAbout());
-        root.appendChild(buildWork(work));
-        root.appendChild(buildSkills(skillsGrid));
-        root.appendChild(buildProjects(projects));
-        root.appendChild(buildEducation());
-        root.appendChild(buildVolunteer());
-        root.appendChild(buildLanguages());
+
+        var body = el('div', 'cv-body');
+        var main = el('div', 'cv-body__main');
+        var side = el('div', 'cv-body__side');
+
+        main.appendChild(buildWork(work));
+        main.appendChild(buildProjects(projects));
+        main.appendChild(buildVolunteer());
+
+        side.appendChild(buildSkills(skillsGrid));
+        side.appendChild(buildEducation());
+        side.appendChild(buildLanguages());
+
+        body.appendChild(main);
+        body.appendChild(side);
+        root.appendChild(body);
 
         window.PRINT_READY = true;
       })
