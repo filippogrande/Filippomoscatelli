@@ -1,0 +1,37 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  html:
+    name: HTML validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # html-validate legge .htmlvalidate.json (preset recommended con le regole
+      # di stile disattivate) e .htmlvalidateignore (file esclusi: test-projects.html
+      # e FoodDelivery/, non serviti dall'immagine e non ancora ripuliti).
+      # Il glob "**/*.html" resta tra virgolette: espanso dal tool, non dalla shell.
+      - name: Validate HTML
+        run: npx --yes html-validate "**/*.html"
+
+  js:
+    name: JS syntax check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # ESLint 9+ usa solo la flat config (eslint.config.js): --ext e .eslintrc non
+      # esistono piu', e senza config esce con errore. La config nel repo applica
+      # solo le regole predefinite (nessuna), quindi il passo verifica la sintassi
+      # dei file js/ e basta: niente stile, niente ambiente browser.
+      - name: Syntax check
+        run: |
+          npm install --save-dev eslint
+          npx eslint js/
