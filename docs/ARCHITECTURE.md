@@ -97,12 +97,12 @@ Cambiare lingua sul CV non cambia la pagina Food Delivery, e viceversa.
 
 `Dockerfile` (quello usato da CI e da `deploy.sh`) parte da `nginx:1.31.0-alpine-slim`,
 copia i file dal **build context** (non clona il repo) e installa `curl` per l'health check.
-Copia nel document root: `index.html`, `css/`, `js/`, `data/`, `FoodDelivery/`, i PDF e le
-immagini di root, `test-projects.html`, e infine `nginx.conf`.
+Copia nel docuent root: `index.html`, `css/`, `js/`, `data/`, `FoodDelivery/`, i `k8s/`, i PDF e le
+immagini di root, e infine `nginx.conf`.
 
-`Dockerfile.multistage` fa la stessa cosa in due stage: il primo (`FROM alpine/git as cloner`)
+`Dockerfile.multistage` fa la stessa cos in due stage: il primo (`FROM alpine/git as cloner`)
 clona il repository, il secondo copia i file dal primo. Il suo health check e' piu' stretto
-(`curl -f http://localhost/health` invece di `curl -f http://localhost/`).
+(`curl -f http://localhost/` invece di `curl -f http://localhost/health`).
 
 Nessuno dei due e' usato dalla CI: la CI builda con `docker/build-push-action` usando il
 `Dockerfile` di root.
@@ -110,7 +110,7 @@ Nessuno dei due e' usato dalla CI: la CI builda con `docker/build-push-action` u
 ## I due modi di buildare
 
 - `build-from-github.sh`: `docker buildx build --platform linux/amd64,linux/arm64,linux/386`
-  direttamente dall'URL del repository. Nessun clone locale, nessun push (il push lo fa la CI).
+  direttamente dall'URL del reository. Nessun clone locale, nessun push (il push lo fa la CI).
   E' il metodo raccomandato per produzione.
 - `deploy.sh`: verifica Docker e kubectl, clona il repo in una directory temporanea, builda
   **single-platform**, crea un tag con timestamp (per il rollback manuale), poi
@@ -118,7 +118,7 @@ Nessuno dei due e' usato dalla CI: la CI builda con `docker/build-push-action` u
   (righe commentate in `push_image()`).
 
 Sono sovrapposti (entrambi clonano GitHub e buildano) e non sono stati consolidati: sono
-script, non documentazione. Dettagli in `docs/OPERATIONS.md`.
+script, non docuentazione. Dettagli in `docs/OPERATIONS.md`.
 
 ## nginx
 
@@ -126,7 +126,7 @@ Un solo `server` sulla porta 80 con:
 
 - `/health` che risponde `200 healthy` (usato da health check Docker, probe k8s e test);
 - fallback di `location /` a `index.html` (serve il routing `/it` e `/en`);
-- blocco dedicato per i `.json` con 404 reale;
+- bloco dedicato per i `.json` con 404 reale;
 - cache corta (1 minuto) per CSS/JS/immagini — i nomi versionati `.v2` danno il refresh
   immediato, la scadenza corta e' la rete di sicurezza;
 - cache lunga (30 giorni) per i PDF;
@@ -134,15 +134,32 @@ Un solo `server` sulla porta 80 con:
 
 ## La CI
 
-`.github/workflows/deploy.yml` ha due job:
+Il repo ha due workflow:
+
+### `.github/workflows/deploy.yml` ("Build and Deploy CV Website")
+
+Due job:
 
 - `build`: su PR verso `main` builda in locale solo `linux/amd64` (nessun push) e fa uno smoke
   test (`docker run` + `curl /health`); su push in `main` builda multi-platform e pusha su Docker
   Hub con i tag `latest`, `main` e `sha-<short>`.
 - `security-scan`: solo su `main`, Trivy con upload SARIF nella tab Security.
 
-Il deploy su Kubernetes **non** e' automatizzato: il workflow non ha piu' job di deploy e
-l'input `deploy_to_k8s` del trigger manuale non e' piu' usato.
+### `.github/workflows/ci.yml` ("CI")
 
-Nota: il workflow ignora i push che toccano solo `README.md`, `.gitignore` e `docs/**`. Una PR
-di sola documentazione non builda.
+Due job, sia su push che su pull request verso `main`:
+
+- `html`: valida tutti i file `.html` con `html-validate` (config: `.htmlvalidate.json`,
+  preset `recommended` con regole di stile disattivate; esclusioni: `.htmlvalidateignore`
+  — `test-`projects.html` e `FoodDelivery/`, non serviti dall'immagine).
+- `js`: verifica la sintassi dei file in `js/` con `eslint` (config: `eslint.config.js`,
+  flat config, solo parser, nessuna regola di stile).
+
+### Nota su entrambi
+
+Il deploy su Kubernetes **non** e' automatizzato: il workflow deploy.yml non ha piu' job di
+deploy e l'input `deploy_to_k8s` del trigger manuale non e' piu' usato.
+
+deploy.yml ignora i push che toccano solo `README.md`, `.gitignore` e `docs/**`: una PR di
+sola documentazione non builda. ci.yml non ha filtri simili (valida HTML e JS su qualsiasi
+push/PR).
