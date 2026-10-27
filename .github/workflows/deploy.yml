@@ -37,6 +37,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
+      # I PDF del CV non sono piu' file caricati a mano: si generano da
+      # print-cv.html, che legge gli stessi JSON e le stesse traduzioni del
+      # sito. Girano PRIMA della build Docker cosi' l'immagine pubblicata
+      # contiene sempre i PDF aggiornati. Chrome e' preinstallato sui runner
+      # ubuntu-latest (/usr/bin/google-chrome); puppeteer-core non scarica un
+      # browser suo.
+      - name: Set up Node for PDF generation
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Generate CV PDFs
+        working-directory: scripts
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
