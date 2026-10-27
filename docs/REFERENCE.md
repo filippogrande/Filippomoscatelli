@@ -36,7 +36,7 @@ risponde alla tua domanda, apri il file e cerca il simbolo. Tre letture, non di 
 | Dove sono i contenuti dei progetti | `data/projects.json`, `data/projects.en.json` | array di progetti |
 | Dove sono le esperienze lavorative | `data/work.json`, `data/work.en.json` | array di esperienze |
 | Chi risponde a `/health` | `nginx.conf` | `location /health` |
-| Perche' un JSON mancante deve dare 404 vero | `nginx.conf` | `location ~* \\.json$` |
+| Perche' un JSON mancante deve dare 404 vero | `nginx.conf` | `location ~* \.json$` |
 | Dove sono gzip, cache e header di sicurezza | `nginx.conf` | `gzip on`, `add_header X-Frame-Options` |
 | Come viene instradato il routing per lingua (`/it`, `/en`) | `nginx.conf` | `location ~ ^/(it\|en)/?$` |
 | Chi definisce l'immagine di produzione | `Dockerfile` | `FROM nginx:1.31.0-alpine-slim`, `HEALTHCHECK` |
