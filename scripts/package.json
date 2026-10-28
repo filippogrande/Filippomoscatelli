@@ -8,6 +8,6 @@
     "build": "node generate-pdfs.mjs"
   },
   "devDependencies": {
-    "puppeteer-core": "^24.0.0"
+    "puppeteer-core": "^25.15.0"
   }
 }
