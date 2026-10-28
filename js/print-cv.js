@@ -6,9 +6,9 @@
  *  - competenze: il blocco .skills-grid di index.html
  *  - esperienze e progetti: data/work*.json, data/projects*.json
  *
- * Ordine: header in stile sito → Chi Sono → Competenze (3 colonne) → corpo su
- * due colonne (sinistra: Esperienza Professionale + Volontariato; destra:
- * Progetti + Istruzione + Lingue).
+ * Ordine: header in stile sito → Chi Sono → Competenze (3 colonne) →
+ * flusso a due colonne gestito dal browser (CSS multicolonna): le sezioni
+ * scorrono in ordine e il browser bilancia le altezze da solo.
  *
  * Al termine imposta window.PRINT_READY = true (usato da scripts/generate-pdfs.mjs).
  */
@@ -357,20 +357,16 @@
         root.appendChild(buildAbout());
         root.appendChild(buildSkills(skillsGrid));
 
-        var body = el('div', 'cv-body');
-        var left = el('div', 'cv-body__left');
-        var right = el('div', 'cv-body__right');
-
-        left.appendChild(buildWork(work));
-        left.appendChild(buildVolunteer());
-
-        right.appendChild(buildProjects(projects));
-        right.appendChild(buildEducation());
-        right.appendChild(buildLanguages());
-
-        body.appendChild(left);
-        body.appendChild(right);
-        root.appendChild(body);
+        // Flusso unico a due colonne: il browser riempie la prima colonna e
+        // tracima nella seconda, bilanciando le altezze (column-fill: balance).
+        // Le sezioni non si spezzano grazie a break-inside: avoid in CSS.
+        var flow = el('div', 'cv-flow');
+        flow.appendChild(buildWork(work));
+        flow.appendChild(buildVolunteer());
+        flow.appendChild(buildProjects(projects));
+        flow.appendChild(buildEducation());
+        flow.appendChild(buildLanguages());
+        root.appendChild(flow);
 
         window.PRINT_READY = true;
       })
