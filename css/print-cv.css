@@ -74,19 +74,31 @@ body {
 .cv-header__contacts {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.8mm 3.4mm;
+  align-items: center;
+  gap: 1mm 3.4mm;
   margin-top: 2mm;
   font-size: 7.9pt;
   opacity: 0.96;
 }
 
 .cv-header__contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.1mm;
   white-space: nowrap;
 }
 
 .cv-header__contact a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Icone brand (LinkedIn, GitHub) disegnate inline nel renderer */
+.cv-icon {
+  width: 3mm;
+  height: 3mm;
+  flex: 0 0 auto;
+  opacity: 0.9;
 }
 
 /* ---------------- Sezioni ---------------- */
