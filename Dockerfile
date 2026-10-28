@@ -1,5 +1,9 @@
-# Use nginx alpine slim as base image for serving static content
-FROM nginx:1.31.0-alpine-slim
+# Base image fissata a una patch recente: 1.31.0-alpine-slim e' stato costruito a
+# maggio 2026 e da allora si portava dietro openssl e pcre2 non patchati (alert
+# Trivy #46 #51 #78 #83 openssl, #115 #116 #117 #118 pcre2). 1.31.8-alpine-slim
+# e' del 24 ottobre 2026. Resta la stessa serie 1.31, quindi nessun salto di
+# comportamento: cambiano solo i pacchetti alpine sotto.
+FROM nginx:1.31.8-alpine-slim
 
 # Nessun pacchetto extra: git non serve piu' (il build usa il context, non un clone)
 # e curl serviva solo all'HEALTHCHECK, che ora usa il wget di busybox gia' presente
