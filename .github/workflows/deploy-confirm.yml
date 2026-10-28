@@ -1,0 +1,46 @@
+# Conferma manuale: quando il container sul master e' stato aggiornato davvero
+# (docker compose pull && up -d), lanciare questo workflow con la versione.
+# Chiude il deployment 'production' in stato success, cosi' la pagina Deployments
+# racconta la storia vera: pending = immagine pronta, success = sito aggiornato.
+name: Confirm production deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Versione confermata, senza la v (es. 1.0.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  confirm:
+    name: Confirm deploy
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Mark the deployment for that version as success
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "Versione non valida: '$VERSION' (atteso X.Y.Z, senza la v)"
+            exit 1
+          fi
+
+          ID="$(gh api "repos/$GITHUB_REPOSITORY/deployments?environment=production&per_page=50" \
+                 --jq ".[] | select(.description | contains(\"v$VERSION \")) | .id" | head -n1)"
+          if [ -z "$ID" ]; then
+            echo "Nessun deployment per v$VERSION"
+            exit 1
+          fi
+
+          gh api --method POST "repos/$GITHUB_REPOSITORY/deployments/$ID/statuses" \
+            -f state=success \
+            -f description="Deploy confermato sul master (v$VERSION)" \
+            -f environment_url="https://filippomoscatelli.com"
+
+          echo "Deployment $ID segnato success per v$VERSION"
