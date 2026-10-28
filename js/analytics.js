@@ -8,6 +8,11 @@
  *   language-switch { from, to }            -> chi cambia lingua
  *   engagement      { max_scroll, seconds } -> uno solo a fine visita
  *
+ * Piu' un sesto, condizionato: cv-visit, quando si arriva con un parametro
+ * `src` nell'URL (es. ?src=cv_it). Serve a distinguere chi ha aperto il sito da
+ * un CV PDF: un PDF non trasmette referrer, quindi senza parametro quella visita
+ * risulterebbe indistinguibile da un accesso diretto.
+ *
  * Rimosso rispetto alla versione precedente: session-start, i quattro
  * scroll-depth-*, i cinque time-*, lang-current-*, lang-to-*, scroll-summary e
  * il tracking di ogni link esterno. Una visita produceva 10-15 eventi e
@@ -57,6 +62,7 @@ class AnalyticsManager {
         if (this.initialized) return;
         this.initialized = true;
         this.umamiAvailable = true;
+        this.trackEntrySource();
         this.attachListeners();
     }
 
@@ -75,6 +81,21 @@ class AnalyticsManager {
         } catch (error) {
             console.error('Umami: invio evento fallito', eventName, error);
         }
+    }
+
+    /**
+     * Anche `utm_source` e' accettato: se un giorno il link usa la forma UTM
+     * standard funziona senza toccare il codice.
+     */
+    trackEntrySource() {
+        const params = new URLSearchParams(window.location.search);
+        const source = params.get('src') || params.get('utm_source');
+        if (!source) return;
+
+        this.track('cv-visit', {
+            source: source,
+            language: source.indexOf('_en') !== -1 ? 'en' : 'it'
+        });
     }
 
     attachListeners() {
