@@ -31,8 +31,6 @@ RUN cp -r /tmp/build/index.html . && \
     cp -r /tmp/build/*.svg . 2>/dev/null || true && \
     rm -rf /tmp/build
 
-    rm -rf /tmp/build
-
 # Configurazione nginx: va solo in /etc/nginx, mai nella web root.
 COPY nginx.conf /etc/nginx/nginx.conf
 
