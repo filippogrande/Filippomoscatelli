@@ -166,6 +166,64 @@ jobs:
 
           docker stop test-cv || true
 
+  # Traccia il rilascio nella pagina Deployments: tag git vX.Y.Z (da VERSION) e un
+  # deployment 'production' che dice esattamente a che punto siamo. Lo stato e'
+  # PENDING di proposito: l'immagine e' pubblicata, il sito non e' ancora stato
+  # spostato (il passaggio sul master e' manuale). Diventa SUCCESS con il workflow
+  # 'Confirm production deploy', quando il deploy e' davvero avvenuto.
+  release:
+    name: Release
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      deployments: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Tag the release
+        run: |
+          VERSION="$(tr -d '[:space:]' < VERSION)"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          if git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null; then
+            echo "Tag v$VERSION gia' esistente: la versione non e' stata bumpata"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a "v$VERSION" -m "CV v$VERSION - $(git rev-parse --short HEAD)"
+            git push origin "v$VERSION"
+            echo "Creato tag v$VERSION"
+          fi
+
+      - name: Create deployment
+        id: dep
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          SHORT_SHA="$(git rev-parse --short HEAD)"
+          jq -n \
+            --arg ref "v$VERSION" \
+            --arg desc "Sito v$VERSION - immagine sha-$SHORT_SHA" \
+            '{ref:$ref, environment:"production", description:$desc, auto_merge:false, required_contexts:[], transient_environment:false}' \
+            | gh api --method POST "repos/$GITHUB_REPOSITORY/deployments" --input - > deployment.json
+          jq -r '.id' deployment.json >> "$GITHUB_OUTPUT"
+
+      - name: Mark deployment as pending
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/deployments/${{ steps.dep.outputs.id }}/statuses" \
+            -f state=pending \
+            -f description="Immagine pubblicata su Docker Hub, deploy sul master non ancora confermato" \
+            -f environment_url="https://filippomoscatelli.com" \
+            -F auto_inactive=true
+
   security-scan:
     name: Security Scan
     runs-on: ubuntu-24.04
@@ -189,5 +247,3 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: "trivy-results.sarif"
-
-  # Kubernetes deploy jobs removed - this workflow now only builds, scans and pushes the Docker image
