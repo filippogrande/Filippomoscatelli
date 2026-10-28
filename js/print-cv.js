@@ -6,9 +6,9 @@
  *  - competenze: il blocco .skills-grid di index.html
  *  - esperienze e progetti: data/work*.json, data/projects*.json
  *
- * Ordine: header in stile sito → Chi Sono → Competenze (3 colonne) →
- * parte finale su due colonne (sinistra: Esperienza, Progetti; destra:
- * Istruzione, Volontariato, Lingue).
+ * Ordine: header in stile sito → Chi Sono → Competenze (3 colonne) → corpo su
+ * due colonne (sinistra: Esperienza Professionale + Volontariato; destra:
+ * Progetti + Istruzione + Lingue).
  *
  * Al termine imposta window.PRINT_READY = true (usato da scripts/generate-pdfs.mjs).
  */
@@ -362,10 +362,10 @@
         var right = el('div', 'cv-body__right');
 
         left.appendChild(buildWork(work));
-        left.appendChild(buildProjects(projects));
+        left.appendChild(buildVolunteer());
 
+        right.appendChild(buildProjects(projects));
         right.appendChild(buildEducation());
-        right.appendChild(buildVolunteer());
         right.appendChild(buildLanguages());
 
         body.appendChild(left);
