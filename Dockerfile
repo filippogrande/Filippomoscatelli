@@ -1,8 +1,10 @@
 # Use nginx alpine slim as base image for serving static content
 FROM nginx:1.31.0-alpine-slim
 
-# Install git and curl for cloning repository
-RUN apk add --no-cache git curl
+# Nessun pacchetto extra: git non serve piu' (il build usa il context, non un clone)
+# e curl serviva solo all'HEALTHCHECK, che ora usa il wget di busybox gia' presente
+# nell'immagine base. Ogni pacchetto in meno e' una superficie CVE in meno: git e curl
+# trascinavano expat, brotli e parte di pcre2 (alert Trivy #149 #125 #124 #173).
 
 # Use build context instead of cloning inside the image to ensure CI builds
 # reflect the checked-out commit. Copy project files into a temporary build
@@ -44,9 +46,9 @@ RUN chmod -R 755 /usr/share/nginx/html
 # Expose port 80
 EXPOSE 80
 
-# Health check
+# Health check (wget di busybox: nessun pacchetto da installare)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost/ || exit 1
+    CMD wget -q -O /dev/null http://localhost/health || exit 1
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
