@@ -164,16 +164,22 @@ jobs:
           fi
           echo "healthcheck interno (wget su 127.0.0.1) OK"
 
-          # Guardie anti-regressione sui leak chiusi nella 1.0.1: senza questi
-          # controlli il problema puo' rientrare in silenzio al prossimo cambio
-          # di Dockerfile.
-          if curl -fsS -o /dev/null http://localhost:8080/nginx.conf; then
-            echo "LEAK: /nginx.conf e' servito pubblicamente dall'immagine"
+          # Guardie anti-regressione sui leak chiusi nella 1.0.1. Il controllo e'
+          # sul FILESYSTEM del container, non via HTTP: il sito ha un fallback SPA
+          # (try_files $uri $uri/ /index.html + error_page 404 /index.html), quindi
+          # qualsiasi path inesistente risponde 200 con index.html. Un check HTTP
+          # segnalerebbe un falso leak proprio quando il file NON c'e' piu'.
+          if docker exec test-cv test -e /usr/share/nginx/html/nginx.conf; then
+            echo "LEAK: nginx.conf presente nella web root dell'immagine"
             exit 1
           fi
-          echo "/nginx.conf non servito (atteso)"
+          echo "nginx.conf assente dalla web root (atteso)"
 
-          if curl -fsS http://localhost:8080/js/config.js | grep -q '192\\.168\\.'; then
+          if ! docker exec test-cv test -f /usr/share/nginx/html/js/config.js; then
+            echo "js/config.js non presente nell'immagine: controllo saltato male"
+            exit 1
+          fi
+          if docker exec test-cv grep -q '192\.168\.' /usr/share/nginx/html/js/config.js; then
             echo "LEAK: js/config.js contiene un IP di rete interna"
             exit 1
           fi
