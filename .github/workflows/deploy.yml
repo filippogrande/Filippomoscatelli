@@ -164,6 +164,31 @@ jobs:
           fi
           echo "healthcheck interno (wget su 127.0.0.1) OK"
 
+          # Guardie anti-regressione sui leak chiusi nella 1.0.1. Il controllo e'
+          # sul FILESYSTEM del container, non via HTTP: il sito ha un fallback SPA
+          # (try_files $uri $uri/ /index.html + error_page 404 /index.html), quindi
+          # qualsiasi path inesistente risponde 200 con index.html. Un check HTTP
+          # segnalerebbe un falso leak proprio quando il file NON c'e' piu'.
+          if docker exec test-cv test -e /usr/share/nginx/html/nginx.conf; then
+            echo "LEAK: nginx.conf presente nella web root dell'immagine"
+            exit 1
+          fi
+          echo "nginx.conf assente dalla web root (atteso)"
+
+          if ! docker exec test-cv test -f /usr/share/nginx/html/js/config.js; then
+            echo "js/config.js non presente nell'immagine: controllo saltato male"
+            exit 1
+          fi
+          # Solo URL con IP reale: js/config.js contiene legittimamente
+          # hostname.includes('192.168.') in detectEnvironment(), che non e' un
+          # IP esposto. Il pattern richiede schema + quattro ottetti.
+          if docker exec test-cv grep -Eq 'https?://192\.168\.[0-9]{1,3}\.[0-9]{1,3}' /usr/share/nginx/html/js/config.js; then
+            echo "LEAK: js/config.js contiene un IP di rete interna"
+            docker exec test-cv grep -En 'https?://[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' /usr/share/nginx/html/js/config.js
+            exit 1
+          fi
+          echo "js/config.js senza IP interni (atteso)"
+
           docker stop test-cv || true
 
   # Traccia il rilascio nella pagina Deployments: tag git vX.Y.Z (da VERSION) e un
@@ -245,8 +270,10 @@ jobs:
       actions: read
 
     steps:
+      # Action pinnata: prima era @master, cioe' codice che cambia sotto i piedi
+      # a ogni run, in un job con security-events: write.
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image_digest }}
           format: "sarif"
@@ -256,3 +283,15 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: "trivy-results.sarif"
+
+      # Il SARIF aggiorna la scheda Security ma nel log non lascia nulla: senza
+      # questo passaggio non hai modo di vedere i conteggi per severita' se non
+      # aprendo GitHub. exit-code 0: il verdetto resta al SARIF, qui serve solo
+      # la tabella.
+      - name: Trivy summary (tabella nel log)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image_digest }}
+          format: "table"
+          severity: "CRITICAL,HIGH,MEDIUM,LOW"
+          exit-code: "0"

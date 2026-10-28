@@ -20,6 +20,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const LANGS = ['it', 'en'];
 
+// Spazio utile di una A4 con i margini di @page (10mm sopra, 9mm sotto),
+// in px a 96dpi. Il viewport va messo a questa misura PRIMA di far misurare
+// la pagina: solo cosi' il fit automatico vede lo stesso layout che finisce
+// nel PDF (altrimenti misura il viewport di default, piu' largo e piu' basso).
+const PAGE_WIDTH_PX = Math.round((210 - 10 - 10) * (96 / 25.4));
+const PAGE_HEIGHT_PX = Math.round((297 - 10 - 9) * (96 / 25.4));
+
 const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -110,6 +117,26 @@ async function renderPdf(browser, port, lang) {
       + 'new Promise(function (r) { setTimeout(r, 5000); })'
       + ']).then(function () { return true; })'
     );
+
+    // Media print + viewport pari al foglio: da qui in poi le misure JS
+    // coincidono con quelle della stampa.
+    await page.emulateMediaType('print');
+    await page.setViewport({ width: PAGE_WIDTH_PX, height: PAGE_HEIGHT_PX, deviceScaleFactor: 1 });
+
+    // Il fit deve stare in UNA pagina: l'italiano ci sta al 100%, l'inglese
+    // (un rigo in piu' nel Chi Sono) scende di qualche punto percentuale.
+    // E' un calcolo, non una regola per lingua: se il testo cambia, si adatta.
+    const fit = await page.evaluate('window.PRINT_APPLY_FIT ? window.PRINT_APPLY_FIT() : null');
+    if (fit) {
+      const pct = (fit.scale * 100).toFixed(1);
+      console.log('  ' + lang + ': contenuto ' + fit.height + '/' + fit.limit + ' px, scala ' + pct + '%');
+      if (fit.overflow) {
+        throw new Error(
+          'Il CV ' + lang.toUpperCase() + ' non sta in una pagina A4 nemmeno al ' + pct + '%: '
+          + 'va accorciato il testo (Chi Sono), non rimpicciolito oltre il limite.'
+        );
+      }
+    }
 
     const out = path.join(ROOT, 'filippomoscatelli_' + lang + '.pdf');
     await page.pdf({

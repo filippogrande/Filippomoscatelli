@@ -19,10 +19,12 @@ const AppConfig = {
     analytics: {
         enabled: true,
         websiteId: 'a912f285-ced0-4c7f-9260-434d0ee8674a',
+        // Solo path relativi. Lo script Umami viene caricato da
+        // js/inline-scripts.js come https://filippomoscatelli.com/analytics/script.js
+        // (same-origin): nessun modulo legge piu' gli endpoint con IP di rete
+        // interna, che restavano nel bundle pubblico (disclosure di 192.168.1.x).
         endpoints: {
-            script: 'http://192.168.1.4:3000/script.js',
-            api: '/analytics/api',
-            proxy: 'http://192.168.1.100:8085/analytics'
+            api: '/analytics/api'
         },
         tracking: {
             autoTrack: true,
