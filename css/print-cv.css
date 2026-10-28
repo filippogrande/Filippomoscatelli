@@ -3,8 +3,8 @@
  * Non viene caricato dal sito.
  *
  * Ordine: header in stile sito → Chi Sono → Competenze (3 colonne) → corpo su
- * due colonne (sinistra: Esperienza + Progetti; destra: Istruzione +
- * Volontariato + Lingue). Tutto pensato per stare in una pagina A4.
+ * due colonne bilanciate (sinistra: Esperienza Professionale + Volontariato;
+ * destra: Progetti + Istruzione + Lingue). Tutto pensato per una pagina A4.
  */
 
 @page {
@@ -258,10 +258,10 @@ body {
   line-height: 1.32;
 }
 
-/* ---------------- Corpo a due colonne ---------------- */
+/* ---------------- Corpo a due colonne bilanciate ---------------- */
 .cv-body {
   display: grid;
-  grid-template-columns: 1.25fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 6mm;
   align-items: start;
 }
