@@ -3,9 +3,8 @@
  * Non viene caricato dal sito.
  *
  * Ordine: header in stile sito → Chi Sono → Competenze (3 colonne) → flusso a
- * due colonne. Le sezioni del flusso possono spezzarsi tra le voci (non al
- * loro interno): cosi' il browser non deve lasciare buchi quando una sezione
- * intera non entra nel resto della colonna.
+ * due colonne. Le sezioni del flusso possono spezzarsi tra le voci per non
+ * lasciare buchi, tranne quelle marcate come "da tenere intere" (Progetti).
  */
 
 @page {
@@ -291,6 +290,14 @@ body {
 .cv-flow .cv-section {
   break-inside: auto;
   page-break-inside: auto;
+}
+
+/* Progetti deve restare unito: le tre card non si sparpagliano tra le due
+ * colonne. Se non entra nel resto della colonna salta intero nell'altra,
+ * lasciando un po' di bianco — scelta voluta, meglio del blocco spezzato. */
+.cv-flow .cv-section[data-section="projects"] {
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 /* ---------------- Lingue ---------------- */
