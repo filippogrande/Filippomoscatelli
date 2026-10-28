@@ -164,6 +164,21 @@ jobs:
           fi
           echo "healthcheck interno (wget su 127.0.0.1) OK"
 
+          # Guardie anti-regressione sui leak chiusi nella 1.0.1: senza questi
+          # controlli il problema puo' rientrare in silenzio al prossimo cambio
+          # di Dockerfile.
+          if curl -fsS -o /dev/null http://localhost:8080/nginx.conf; then
+            echo "LEAK: /nginx.conf e' servito pubblicamente dall'immagine"
+            exit 1
+          fi
+          echo "/nginx.conf non servito (atteso)"
+
+          if curl -fsS http://localhost:8080/js/config.js | grep -q '192\\.168\\.'; then
+            echo "LEAK: js/config.js contiene un IP di rete interna"
+            exit 1
+          fi
+          echo "js/config.js senza IP interni (atteso)"
+
           docker stop test-cv || true
 
   # Traccia il rilascio nella pagina Deployments: tag git vX.Y.Z (da VERSION) e un
@@ -245,8 +260,10 @@ jobs:
       actions: read
 
     steps:
+      # Action pinnata: prima era @master, cioe' codice che cambia sotto i piedi
+      # a ogni run, in un job con security-events: write.
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image_digest }}
           format: "sarif"
@@ -256,3 +273,15 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: "trivy-results.sarif"
+
+      # Il SARIF aggiorna la scheda Security ma nel log non lascia nulla: senza
+      # questo passaggio non hai modo di vedere i conteggi per severita' se non
+      # aprendo GitHub. exit-code 0: il verdetto resta al SARIF, qui serve solo
+      # la tabella.
+      - name: Trivy summary (tabella nel log)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image_digest }}
+          format: "table"
+          severity: "CRITICAL,HIGH,MEDIUM,LOW"
+          exit-code: "0"
