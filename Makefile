@@ -1,6 +1,9 @@
 # Makefile per Filippomoscatelli CV Website
+#
+# Il deploy non e' piu' su Kubernetes: l'immagine la pubblica la CI su Docker Hub
+# e sul master si fa `docker compose pull && docker compose up -d`.
 
-.PHONY: help build run stop clean deploy status rollback test pdf
+.PHONY: help build build-github push run stop logs clean test test-full pdf dev
 
 # Variabili
 IMAGE_NAME = filippogrande/cv-website
@@ -63,33 +66,7 @@ pdf: ## Genera i PDF del CV da print-cv.html (richiede Chrome/Chromium)
 	cd scripts && npm install --no-audit --no-fund && npm run build
 	@echo "✅ PDF generati: filippomoscatelli_it.pdf, filippomoscatelli_en.pdf"
 
-deploy-build: ## Build e deploy su Kubernetes (da GitHub)
-	@echo "🚀 Building from GitHub and deploying..."
-	./deploy.sh all
-
-deploy-build-local: ## Build e deploy su Kubernetes (da file locali)
-	@echo "🚀 Building from local files and deploying..."
-	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) . && ./deploy.sh deploy
-
-deploy: ## Deploy su Kubernetes
-	@echo "📦 Deploying to Kubernetes..."
-	./deploy.sh deploy
-
-status: ## Mostra lo stato del deployment
-	@echo "📊 Checking deployment status..."
-	./deploy.sh status
-
-rollback: ## Rollback del deployment
-	@echo "⏪ Rolling back deployment..."
-	./deploy.sh rollback
-
-k8s-cleanup: ## Rimuove tutto da Kubernetes
-	@echo "🧹 Cleaning up Kubernetes resources..."
-	./deploy.sh cleanup
-
 dev: build run ## Build e avvia per sviluppo locale
-
-prod: deploy-build ## Deploy completo in produzione
 
 # Target di default
 .DEFAULT_GOAL := help
