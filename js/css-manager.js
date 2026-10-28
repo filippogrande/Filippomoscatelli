@@ -54,6 +54,9 @@ class CSSManager {
      */
     async loadModularCSS() {
         
+        // L'ordine conta: ogni modulo puo' sovrascrivere il precedente.
+        // scale.css va per ultimo, dopo responsive, cosi' la scala tipografica
+        // da desktop vince sulle regole gia' scritte per quelle larghezze.
         const modules = [
             'base.css',
             'language-selector.css',
@@ -63,7 +66,8 @@ class CSSManager {
             'components.css',
             'footer.css',
             'animations.css',
-            'responsive.css'
+            'responsive.css',
+            'scale.css'
         ];
 
         try {
