@@ -64,6 +64,7 @@ class CSSManager {
             'sections.css',
             'timeline.css',
             'components.css',
+            'project-cards.css',
             'footer.css',
             'animations.css',
             'responsive.css',
