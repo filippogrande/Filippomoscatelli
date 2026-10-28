@@ -3,10 +3,9 @@
  * Non viene caricato dal sito.
  *
  * Ordine: header in stile sito → Chi Sono → Competenze (3 colonne) → flusso a
- * due colonne gestito dal browser (CSS multicolonna). Il flusso evita il
- * problema del bilanciamento: non decidiamo noi cosa finisce a sinistra, il
- * browser riempie la prima colonna e tracima nella seconda, con le sezioni
- * che non si spezzano (break-inside: avoid).
+ * due colonne. Le sezioni del flusso possono spezzarsi tra le voci (non al
+ * loro interno): cosi' il browser non deve lasciare buchi quando una sezione
+ * intera non entra nel resto della colonna.
  */
 
 @page {
@@ -93,8 +92,6 @@ body {
 /* ---------------- Sezioni ---------------- */
 .cv-section {
   margin-bottom: 3.2mm;
-  break-inside: avoid;
-  page-break-inside: avoid;
 }
 
 .cv-section:last-child {
@@ -268,11 +265,20 @@ body {
   line-height: 1.32;
 }
 
-/* ---------------- Flusso a due colonne (multicolonna) ---------------- */
+/* ---------------- Flusso a due colonne ---------------- */
 .cv-flow {
   column-count: 2;
   column-gap: 6mm;
   column-fill: balance;
+}
+
+/* Le sezioni del flusso possono spezzarsi tra una voce e l'altra: senza questo
+ * una sezione che non entra nel resto della colonna salta intera nell'altra,
+ * lasciando un buco in fondo. Le voci (.cv-entry, .cv-project, .cv-skill)
+ * restano indivisibili, e il titolo non resta mai orfano in fondo. */
+.cv-flow .cv-section {
+  break-inside: auto;
+  page-break-inside: auto;
 }
 
 /* ---------------- Lingue ---------------- */
