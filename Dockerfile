@@ -1,8 +1,14 @@
-# Use nginx alpine slim as base image for serving static content
-FROM nginx:1.31.0-alpine-slim
+# Base image fissata a una patch recente: 1.31.0-alpine-slim e' stato costruito a
+# maggio 2026 e da allora si portava dietro openssl e pcre2 non patchati (alert
+# Trivy #46 #51 #78 #83 openssl, #115 #116 #117 #118 pcre2). 1.31.8-alpine-slim
+# e' del 24 ottobre 2026. Resta la stessa serie 1.31, quindi nessun salto di
+# comportamento: cambiano solo i pacchetti alpine sotto.
+FROM nginx:1.31.8-alpine-slim
 
-# Install git and curl for cloning repository
-RUN apk add --no-cache git curl
+# Nessun pacchetto extra: git non serve piu' (il build usa il context, non un clone)
+# e curl serviva solo all'HEALTHCHECK, che ora usa il wget di busybox gia' presente
+# nell'immagine base. Ogni pacchetto in meno e' una superficie CVE in meno: git e curl
+# trascinavano expat, brotli e parte di pcre2 (alert Trivy #149 #125 #124 #173).
 
 # Use build context instead of cloning inside the image to ensure CI builds
 # reflect the checked-out commit. Copy project files into a temporary build
@@ -44,9 +50,11 @@ RUN chmod -R 755 /usr/share/nginx/html
 # Expose port 80
 EXPOSE 80
 
-# Health check
+# Health check (wget di busybox: nessun pacchetto da installare).
+# 127.0.0.1 e non 'localhost': dentro l'immagine localhost risolve prima in IPv6
+# (::1) e il nostro nginx.conf ascolta solo su IPv4 -> connection refused.
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost/ || exit 1
+    CMD wget -q -O /dev/null http://127.0.0.1/health || exit 1
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
