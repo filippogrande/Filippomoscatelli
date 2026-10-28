@@ -6,9 +6,9 @@
  *  - competenze: il blocco .skills-grid di index.html
  *  - esperienze e progetti: data/work*.json, data/projects*.json
  *
- * Struttura: header in stile sito (banda + foto tonda), Chi Sono a tutta
- * larghezza, poi corpo su due colonne (esperienze a sinistra, competenze /
- * istruzione / lingue a destra).
+ * Struttura: header in stile sito (banda + foto tonda), Chi Sono, Esperienza,
+ * Progetti a card, Competenze a tutta larghezza su tre colonne, poi in basso
+ * Istruzione + Volontariato a sinistra e Lingue a destra.
  *
  * Al termine imposta window.PRINT_READY = true (usato da scripts/generate-pdfs.mjs).
  */
@@ -17,6 +17,9 @@
   'use strict';
 
   var AVATAR = 'https://avatars.githubusercontent.com/u/35425860?s=400&u=67f3f62f5d202537c1fed54db800531662db392a&v=4';
+  var LINKEDIN = 'https://www.linkedin.com/in/filippo-moscatelli-52b566202/';
+  var GITHUB = 'https://github.com/filippogrande';
+  var EMAIL = 'contact@mail.filippomoscatelli.com';
 
   var params = new URLSearchParams(window.location.search);
   var lang = params.get('lang') === 'en' ? 'en' : 'it';
@@ -32,6 +35,13 @@
     if (className) node.className = className;
     if (text !== undefined && text !== null) node.textContent = text;
     return node;
+  }
+
+  function link(text, href) {
+    var a = document.createElement('a');
+    a.href = href;
+    a.textContent = text;
+    return a;
   }
 
   function section(titleKey, fallbackTitle, modifier) {
@@ -126,15 +136,22 @@
     info.appendChild(el('div', 'cv-header__role', tr('job-title', '')));
 
     var contacts = el('div', 'cv-header__contacts');
-    var values = [
-      'contact@mail.filippomoscatelli.com',
-      tr('location', ''),
-      'linkedin.com/in/filippo-moscatelli-52b566202',
-      'github.com/filippogrande',
-    ];
-    values.forEach(function (v) {
-      if (v) contacts.appendChild(el('span', 'cv-header__contact', v));
-    });
+
+    var mail = el('span', 'cv-header__contact');
+    mail.appendChild(link(EMAIL, 'mailto:' + EMAIL));
+    contacts.appendChild(mail);
+
+    var place = tr('location', '');
+    if (place) contacts.appendChild(el('span', 'cv-header__contact', place));
+
+    // Handle corto ma cliccabile: nel PDF il link resta attivo.
+    var li = el('span', 'cv-header__contact');
+    li.appendChild(link('@filippo-moscatelli-52b566202', LINKEDIN));
+    contacts.appendChild(li);
+
+    var gh = el('span', 'cv-header__contact');
+    gh.appendChild(link('@filippogrande', GITHUB));
+    contacts.appendChild(gh);
 
     info.appendChild(contacts);
     header.appendChild(photo);
@@ -180,8 +197,38 @@
     return s;
   }
 
+  function buildProjects(projects) {
+    var s = section('projects-title', 'Progetti');
+    var grid = el('div', 'cv-projects');
+
+    projects.forEach(function (p) {
+      var card = el('div', 'cv-project');
+
+      var title = el('div', 'cv-project__title', p.title || '');
+      if (p.startDate) {
+        title.appendChild(el('span', 'cv-project__period', '  ' + period(p.startDate, p.endDate)));
+      }
+      card.appendChild(title);
+
+      if (p.tech && p.tech.length) {
+        var chips = el('div', 'cv-project__chips');
+        p.tech.forEach(function (tech) {
+          chips.appendChild(el('span', 'cv-project__chip', tech));
+        });
+        card.appendChild(chips);
+      }
+
+      if (p.description) card.appendChild(el('div', 'cv-project__desc', p.description));
+      grid.appendChild(card);
+    });
+
+    s.appendChild(grid);
+    return s;
+  }
+
   function buildSkills(grid) {
     var s = section('skills-title', 'Competenze');
+    var wrap = el('div', 'cv-skills');
     var cats = grid.querySelectorAll('.skill-category');
 
     Array.prototype.forEach.call(cats, function (cat) {
@@ -199,23 +246,10 @@
       var group = el('div', 'cv-skill');
       group.appendChild(el('div', 'cv-skill__cat', catName));
       group.appendChild(el('div', 'cv-skill__items', items.join(', ')));
-      s.appendChild(group);
+      wrap.appendChild(group);
     });
 
-    return s;
-  }
-
-  function buildProjects(projects) {
-    var s = section('projects-title', 'Progetti');
-    projects.forEach(function (p) {
-      var item = el('div', 'cv-project');
-      var title = el('div', 'cv-project__title', p.title || '');
-      if (p.startDate) title.appendChild(el('span', 'cv-project__period', '  (' + period(p.startDate, p.endDate) + ')'));
-      item.appendChild(title);
-      if (p.tech && p.tech.length) item.appendChild(el('div', 'cv-project__tech', p.tech.join(' · ')));
-      if (p.description) item.appendChild(el('div', 'cv-project__desc', p.description));
-      s.appendChild(item);
-    });
+    s.appendChild(wrap);
     return s;
   }
 
@@ -288,22 +322,21 @@
 
         root.appendChild(buildHeader());
         root.appendChild(buildAbout());
+        root.appendChild(buildWork(work));
+        root.appendChild(buildProjects(projects));
+        root.appendChild(buildSkills(skillsGrid));
 
-        var body = el('div', 'cv-body');
-        var main = el('div', 'cv-body__main');
-        var side = el('div', 'cv-body__side');
+        var bottom = el('div', 'cv-bottom');
+        var left = el('div', 'cv-bottom__left');
+        var right = el('div', 'cv-bottom__right');
 
-        main.appendChild(buildWork(work));
-        main.appendChild(buildProjects(projects));
-        main.appendChild(buildVolunteer());
+        left.appendChild(buildEducation());
+        left.appendChild(buildVolunteer());
+        right.appendChild(buildLanguages());
 
-        side.appendChild(buildSkills(skillsGrid));
-        side.appendChild(buildEducation());
-        side.appendChild(buildLanguages());
-
-        body.appendChild(main);
-        body.appendChild(side);
-        root.appendChild(body);
+        bottom.appendChild(left);
+        bottom.appendChild(right);
+        root.appendChild(bottom);
 
         window.PRINT_READY = true;
       })
