@@ -3,11 +3,19 @@
  *
  * Tutte le misure del sito sono in rem, quindi il font-size del root decide la
  * dimensione di TUTTO il layout in modo proporzionale: non serve toccare le
- * singole regole. Prima di questo file il root era il default del browser
- * (16px) a qualsiasi larghezza, e su monitor grandi il sito risultava troppo
- * grande (tanto da dover scendere al 67% di zoom per vederlo bene).
+ * singole regole. Una sola variabile da cambiare per ritarare tutto: --ui-root.
  *
- * Una sola variabile da cambiare per ritarare tutto: --ui-root.
+ * PERCHE' PX CSS E NON POLLICI. Il px CSS non e' il pixel del pannello: e' una
+ * unita' normalizzata (1 px CSS = 1/96 di pollice nominale) che il browser mappa
+ * sul display tramite il device pixel ratio. Un telefono 4K con DPR 3.5 dichiara
+ * ~400 px CSS, non 3840: le media query in px CSS sono gia' una misura fisica.
+ * I pollici veri richiederebbero @media (min-resolution:), che descrive la
+ * densita' del pannello e non lo spazio a disposizione — sbagliato per il layout.
+ *
+ * SOGLIE: un portatile 13" ibrido a finestra intera sta intorno a 1200-1400 px
+ * CSS, un monitor 24" 1080p intorno a 1900, un 27" 1440p intorno a 2560, un 4K
+ * (con DPR 1.5-2) intorno a 1920-2560. La prima soglia era a 1400: troppo alta,
+ * il portatile restava a 16px e sembrava non fosse cambiato nulla.
  */
 
 :root {
@@ -18,10 +26,17 @@ html {
   font-size: var(--ui-root);
 }
 
-/* Laptop grandi e monitor 1440p */
-@media (min-width: 1400px) {
+/* Portatili 13-15" e tablet orizzontali */
+@media (min-width: 1000px) {
   :root {
     --ui-root: 15px;
+  }
+}
+
+/* Monitor 24" e oltre */
+@media (min-width: 1400px) {
+  :root {
+    --ui-root: 14px;
   }
 
   /* L'header era 4rem in verticale (64px a root 16): sproporzionato rispetto
@@ -49,10 +64,10 @@ html {
   }
 }
 
-/* Monitor 4K o ultrawide */
+/* 27" 1440p, 4K e ultrawide */
 @media (min-width: 1800px) {
   :root {
-    --ui-root: 13.5px;
+    --ui-root: 13px;
   }
 }
 
