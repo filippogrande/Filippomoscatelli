@@ -50,9 +50,11 @@ RUN chmod -R 755 /usr/share/nginx/html
 # Expose port 80
 EXPOSE 80
 
-# Health check (wget di busybox: nessun pacchetto da installare)
+# Health check (wget di busybox: nessun pacchetto da installare).
+# 127.0.0.1 e non 'localhost': dentro l'immagine localhost risolve prima in IPv6
+# (::1) e il nostro nginx.conf ascolta solo su IPv4 -> connection refused.
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget -q -O /dev/null http://localhost/health || exit 1
+    CMD wget -q -O /dev/null http://127.0.0.1/health || exit 1
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
