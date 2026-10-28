@@ -6,9 +6,10 @@
  *  - competenze: il blocco .skills-grid di index.html
  *  - esperienze e progetti: data/work*.json, data/projects*.json
  *
- * Ordine: header in stile sito → Chi Sono → Competenze (3 colonne) → corpo su
- * due colonne (sinistra: Esperienza Professionale + Volontariato; destra:
- * Progetti + Istruzione + Lingue).
+ * Ordine: header → Chi Sono → Competenze (3 colonne) → flusso a due colonne.
+ * Nel flusso ogni sezione ha una PRIORITA': il browser legge in quell'ordine
+ * (riempie la prima colonna, poi la seconda) e bilancia solo le altezze.
+ * Cambiare un numero in FLOW cambia l'ordine senza toccare il layout.
  *
  * Al termine imposta window.PRINT_READY = true (usato da scripts/generate-pdfs.mjs).
  */
@@ -20,6 +21,15 @@
   var LINKEDIN = 'https://www.linkedin.com/in/filippo-moscatelli-52b566202/';
   var GITHUB = 'https://github.com/filippogrande';
   var EMAIL = 'contact@mail.filippomoscatelli.com';
+
+  // Priorita' delle sezioni nel flusso a due colonne (piu' alto = piu' in alto).
+  var FLOW = [
+    { id: 'work', p: 10 },
+    { id: 'projects', p: 9 },
+    { id: 'volunteer', p: 8 },
+    { id: 'education', p: 7 },
+    { id: 'languages', p: 6 },
+  ];
 
   var params = new URLSearchParams(window.location.search);
   var lang = params.get('lang') === 'en' ? 'en' : 'it';
@@ -53,12 +63,11 @@
   function monthLabel(ym) {
     if (!ym) return '';
     var parts = String(ym).split('-');
-    var y = parts[0];
     var m = parseInt(parts[1] || '1', 10);
     var it = ['', 'Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
     var en = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var names = lang === 'en' ? en : it;
-    return names[m] + ' ' + y;
+    return names[m] + ' ' + parts[0];
   }
 
   function period(start, end) {
@@ -144,7 +153,6 @@
     var place = tr('location', '');
     if (place) contacts.appendChild(el('span', 'cv-header__contact', place));
 
-    // Handle corto ma cliccabile: nel PDF il link resta attivo.
     var li = el('span', 'cv-header__contact');
     li.appendChild(link('@filippo-moscatelli-52b566202', LINKEDIN));
     contacts.appendChild(li);
@@ -197,8 +205,6 @@
     return s;
   }
 
-  // Nel JSON un progetto puo' avere `links` (array label+url) oppure `link` (stringa).
-  // La label di fallback e' l'URL senza schema ne' slash finale.
   function projectLinks(p) {
     var raw = [];
     if (Array.isArray(p.links) && p.links.length) {
@@ -353,24 +359,29 @@
         var projects = res[1];
         var skillsGrid = res[2];
 
+        var builders = {
+          work: function () { return buildWork(work); },
+          projects: function () { return buildProjects(projects); },
+          volunteer: function () { return buildVolunteer(); },
+          education: function () { return buildEducation(); },
+          languages: function () { return buildLanguages(); },
+        };
+
         root.appendChild(buildHeader());
         root.appendChild(buildAbout());
         root.appendChild(buildSkills(skillsGrid));
 
-        var body = el('div', 'cv-body');
-        var left = el('div', 'cv-body__left');
-        var right = el('div', 'cv-body__right');
-
-        left.appendChild(buildWork(work));
-        left.appendChild(buildVolunteer());
-
-        right.appendChild(buildProjects(projects));
-        right.appendChild(buildEducation());
-        right.appendChild(buildLanguages());
-
-        body.appendChild(left);
-        body.appendChild(right);
-        root.appendChild(body);
+        // Flusso unico a due colonne: ordine = priorita' decrescente, altezze
+        // bilanciate dal motore di stampa (column-fill: balance).
+        var flow = el('div', 'cv-flow');
+        FLOW.slice()
+          .sort(function (a, b) { return b.p - a.p; })
+          .forEach(function (item) {
+            var node = builders[item.id]();
+            node.setAttribute('data-section', item.id);
+            flow.appendChild(node);
+          });
+        root.appendChild(flow);
 
         window.PRINT_READY = true;
       })

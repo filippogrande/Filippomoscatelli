@@ -2,9 +2,11 @@
  * print-cv.css — foglio di stile della pagina print-cv.html (PDF del CV).
  * Non viene caricato dal sito.
  *
- * Ordine: header in stile sito → Chi Sono → Competenze (3 colonne) → corpo su
- * due colonne bilanciate (sinistra: Esperienza Professionale + Volontariato;
- * destra: Progetti + Istruzione + Lingue). Tutto pensato per una pagina A4.
+ * Ordine: header in stile sito → Chi Sono → Competenze (3 colonne) → flusso a
+ * due colonne gestito dal browser (CSS multicolonna). Il flusso evita il
+ * problema del bilanciamento: non decidiamo noi cosa finisce a sinistra, il
+ * browser riempie la prima colonna e tracima nella seconda, con le sezioni
+ * che non si spezzano (break-inside: avoid).
  */
 
 @page {
@@ -91,6 +93,12 @@ body {
 /* ---------------- Sezioni ---------------- */
 .cv-section {
   margin-bottom: 3.2mm;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.cv-section:last-child {
+  margin-bottom: 0;
 }
 
 .cv-section__title {
@@ -102,6 +110,8 @@ body {
   border-bottom: 1pt solid #c7d2fe;
   padding-bottom: 0.8mm;
   margin-bottom: 2mm;
+  break-after: avoid;
+  page-break-after: avoid;
 }
 
 .cv-text {
@@ -258,17 +268,11 @@ body {
   line-height: 1.32;
 }
 
-/* ---------------- Corpo a due colonne bilanciate ---------------- */
-.cv-body {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6mm;
-  align-items: start;
-}
-
-.cv-body__left,
-.cv-body__right {
-  min-width: 0;
+/* ---------------- Flusso a due colonne (multicolonna) ---------------- */
+.cv-flow {
+  column-count: 2;
+  column-gap: 6mm;
+  column-fill: balance;
 }
 
 /* ---------------- Lingue ---------------- */
