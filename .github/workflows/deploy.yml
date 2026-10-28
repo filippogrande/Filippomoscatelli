@@ -179,8 +179,12 @@ jobs:
             echo "js/config.js non presente nell'immagine: controllo saltato male"
             exit 1
           fi
-          if docker exec test-cv grep -q '192\.168\.' /usr/share/nginx/html/js/config.js; then
+          # Solo URL con IP reale: js/config.js contiene legittimamente
+          # hostname.includes('192.168.') in detectEnvironment(), che non e' un
+          # IP esposto. Il pattern richiede schema + quattro ottetti.
+          if docker exec test-cv grep -Eq 'https?://192\.168\.[0-9]{1,3}\.[0-9]{1,3}' /usr/share/nginx/html/js/config.js; then
             echo "LEAK: js/config.js contiene un IP di rete interna"
+            docker exec test-cv grep -En 'https?://[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' /usr/share/nginx/html/js/config.js
             exit 1
           fi
           echo "js/config.js senza IP interni (atteso)"
