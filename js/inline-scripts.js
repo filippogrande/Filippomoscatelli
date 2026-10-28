@@ -1,18 +1,23 @@
 /**
  * Inline Scripts Module
- * Contiene gli script che erano inline nell'HTML per conformità CSP
+ * Script che prima stavano inline nell'HTML per conformita' CSP.
+ *
+ * UMAMI: il loader puntava a https://filippomoscatelli.com/analytics/script.js,
+ * ma nginx non aveva nessuna location /analytics/: la richiesta cadeva nel
+ * fallback SPA, tornava index.html come text/html e il browser si rifiutava di
+ * eseguirlo (3 errori in console, zero dati raccolti).
+ *
+ * Ora nginx.conf proxa /analytics/ verso l'istanza self-hosted (10.0.0.5:3010),
+ * quindi il path torna valido e first-party: niente dominio nuovo, niente CORS.
  */
 
-// Auto-detect environment e configurazione Umami
 (function() {
-    
     const umamiConfig = {
         websiteId: 'a912f285-ced0-4c7f-9260-434d0ee8674a',
         tag: 'cv-production',
-        src: 'https://filippomoscatelli.com/analytics/script.js'
+        src: '/analytics/script.js'
     };
-    
-    // Carica script Umami dinamicamente
+
     const script = document.createElement('script');
     script.defer = true;
     script.src = umamiConfig.src;
@@ -21,43 +26,20 @@
     script.setAttribute('data-exclude-search', 'false');
     script.setAttribute('data-exclude-hash', 'true');
     script.setAttribute('data-do-not-track', 'false');
-    script.setAttribute('data-cache', 'true');
     script.setAttribute('data-domains', 'filippomoscatelli.com');
-    script.setAttribute('data-before-send', 'beforeSendHandler');
-    
-    // Headers per privacy (GDPR)
     script.setAttribute('data-respect-dnt', 'true');
-    script.setAttribute('data-cookie-consent', 'true');
-    
+
+    // Se Umami e' giu' (502) lo si vede in console e nei log nginx: meglio di un
+    // fallback silenzioso che nasconde il problema.
+    script.onerror = function() {
+        console.error('Umami: /analytics/script.js non caricato (istanza giu\' o proxy non raggiungibile)');
+    };
+
     document.head.appendChild(script);
 })();
 
-// Debug immediato HTML
-(function() {
-    
-    // Controlla se beforeSendHandler è già definito
-    if (typeof beforeSendHandler !== 'undefined') {
-    } else {
-        // Definisci beforeSendHandler per preservare IP reale
-        window.beforeSendHandler = function(type, payload) {
-            
-            // Aggiungi informazioni aggiuntive per geolocalizzazione
-            if (payload && typeof payload === 'object') {
-                // Preserva CF-Connecting-IP se disponibile (Cloudflare)
-                if (window.navigator && window.navigator.userAgent) {
-                    payload.user_agent_full = window.navigator.userAgent;
-                }
-                
-                // Aggiungi informazioni browser per analisi
-                payload.screen_resolution = `${window.screen.width}x${window.screen.height}`;
-                payload.viewport_size = `${window.innerWidth}x${window.innerHeight}`;
-                payload.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                payload.language_full = navigator.language;
-                
-            }
-            
-            return payload; // Procedi con l'invio
-        };
-    }
-})();
-
+// beforeSendHandler legacy: lo script non lo usa piu' (data-before-send rimosso),
+// resta definito per non rompere eventuali chiamate salvate in cache lunga.
+window.beforeSendHandler = function (type, payload) {
+    return payload;
+};

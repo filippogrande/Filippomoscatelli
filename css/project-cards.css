@@ -1,0 +1,36 @@
+/*
+ * project-cards.css — dettagli delle card progetto del sito.
+ *
+ * Esiste perche' js/projects.js crea <div class="project-links"> per i progetti
+ * con piu' link, ma quella classe non era stilata da nessuna parte: i pulsanti
+ * restavano inline e attaccati, senza spazio tra l'uno e l'altro.
+ */
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+/* Il periodo del progetto era gia' un <p class="project-period"> senza stile:
+ * ereditava 1rem e si mangiava spazio sotto i chip. */
+.project-period {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0 0 1rem;
+}
+
+.project-links + .project-period,
+.project-period + .project-links {
+  margin-top: 0;
+}
+
+/* Spazio riservato: le card arrivano da data/*.json dopo una fetch, quindi senza
+ * un'altezza minima il blocco si espande a pagina gia' disegnata e spinge in
+ * basso tutto quello che segue (uno dei layout shift misurati). Il valore e'
+ * basso apposta: deve evitare il salto, non lasciare un buco se i progetti
+ * fossero pochi. */
+.projects-grid {
+  min-height: 18rem;
+}

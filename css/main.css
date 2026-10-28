@@ -1,5 +1,9 @@
 /* Modular CSS Architecture */
 /* Import all CSS modules in the correct order */
+/* Non lo carica nessuno direttamente: js/css-manager.js inserisce nel <head> il
+ * solo main.css, e questa catena di @import fa il resto. Un foglio solo invece
+ * di undici <link> inseriti a mano uno alla volta: meno ricalcoli di layout
+ * durante il caricamento (CLS). */
 
 /* Base styles first */
 @import url('base.css');
@@ -10,6 +14,7 @@
 @import url('sections.css');
 @import url('timeline.css');
 @import url('components.css');
+@import url('project-cards.css');
 @import url('footer.css');
 
 /* Effects and responsive last */
