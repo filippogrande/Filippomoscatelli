@@ -17,7 +17,7 @@
 
   var AVATAR = 'https://avatars.githubusercontent.com/u/35425860?s=400&u=67f3f62f5d202537c1fed54db800531662db392a&v=4';
   var SITE = 'https://filippomoscatelli.com';
-  var LINKEDIN = 'https://www.linkedin.com/in/filippo-moscatelli-52b566202/';
+  var LINKEDIN = 'https://www.linkedin.com/in/filippomoscatelli/';
   var GITHUB = 'https://github.com/filippogrande';
   var EMAIL = 'contact@mail.filippomoscatelli.com';
 
@@ -190,8 +190,7 @@
     var place = tr('location', '');
     if (place) contacts.appendChild(contactItem(place, null, null));
 
-    // Handle corto ma cliccabile: il link resta quello vero.
-    contacts.appendChild(contactItem('filippo-moscatelli', LINKEDIN, 'linkedin'));
+    contacts.appendChild(contactItem('filippomoscatelli', LINKEDIN, 'linkedin'));
     contacts.appendChild(contactItem('filippogrande', GITHUB, 'github'));
 
     info.appendChild(contacts);
