@@ -36,10 +36,32 @@ jobs:
 
     outputs:
       image_digest: ${{ steps.buildpush.outputs.digest }}
+      version: ${{ steps.ver.outputs.version }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
+
+      # Regola dei tag: `latest` solo sulle major/minor (patch 0), le patch
+      # vanno su `pre-release`. Cosi' chi consuma l'immagine sceglie se stare
+      # sul ramo stabile o sulle patch, senza inventarsi tag a mano.
+      - name: Compute release tag
+        id: ver
+        run: |
+          VERSION="$(tr -d '[:space:]' < VERSION)"
+          if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "VERSION non valida: '$VERSION' (atteso X.Y.Z)"
+            exit 1
+          fi
+          PATCH="${VERSION##*.}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if [ "$PATCH" = "0" ]; then
+            echo "is_release=true" >> "$GITHUB_OUTPUT"
+            echo "v$VERSION e' un rilascio: andra' anche su :latest"
+          else
+            echo "is_release=false" >> "$GITHUB_OUTPUT"
+            echo "v$VERSION e' una patch: andra' su :pre-release, latest resta fermo"
+          fi
 
       # I PDF del CV non sono piu' file caricati a mano: si generano da
       # print-cv.html, che legge gli stessi JSON e le stesse traduzioni del
@@ -105,7 +127,9 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=sha,prefix=sha-
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ steps.ver.outputs.version }}
+            type=raw,value=latest,enable=${{ steps.ver.outputs.is_release == 'true' }}
+            type=raw,value=pre-release,enable=${{ steps.ver.outputs.is_release == 'false' }}
 
       # PR: build locale single-platform (load nel runner, nessun push) con un
       # tag esplicito, cosi' lo smoke test puo' avviare davvero l'immagine.
@@ -164,30 +188,39 @@ jobs:
           fi
           echo "healthcheck interno (wget su 127.0.0.1) OK"
 
-          # Guardie anti-regressione sui leak chiusi nella 1.0.1. Il controllo e'
-          # sul FILESYSTEM del container, non via HTTP: il sito ha un fallback SPA
-          # (try_files $uri $uri/ /index.html + error_page 404 /index.html), quindi
-          # qualsiasi path inesistente risponde 200 con index.html. Un check HTTP
-          # segnalerebbe un falso leak proprio quando il file NON c'e' piu'.
+          # --- Guardie anti-regressione -------------------------------------
+          # 1. nginx.conf non deve finire nella web root: era servito su
+          #    /nginx.conf ed esponeva header policy, cache e path interni.
           if docker exec test-cv test -e /usr/share/nginx/html/nginx.conf; then
             echo "LEAK: nginx.conf presente nella web root dell'immagine"
             exit 1
           fi
           echo "nginx.conf assente dalla web root (atteso)"
 
+          # 2. js/config.js non deve contenere URL con IP di rete interna.
           if ! docker exec test-cv test -f /usr/share/nginx/html/js/config.js; then
             echo "js/config.js non presente nell'immagine: controllo saltato male"
             exit 1
           fi
-          # Solo URL con IP reale: js/config.js contiene legittimamente
-          # hostname.includes('192.168.') in detectEnvironment(), che non e' un
-          # IP esposto. Il pattern richiede schema + quattro ottetti.
           if docker exec test-cv grep -Eq 'https?://192\.168\.[0-9]{1,3}\.[0-9]{1,3}' /usr/share/nginx/html/js/config.js; then
             echo "LEAK: js/config.js contiene un IP di rete interna"
             docker exec test-cv grep -En 'https?://[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' /usr/share/nginx/html/js/config.js
             exit 1
           fi
           echo "js/config.js senza IP interni (atteso)"
+
+          # 3. Di Umami si espongono solo gli endpoint del tracker. Dashboard,
+          #    login e API di autenticazione devono rispondere 410, non la SPA:
+          #    con `error_page 404 /index.html` un `return 404` tornerebbe 200 con
+          #    la home, quindi il codice atteso e' 410 e va verificato davvero.
+          for p in /analytics/login /analytics/api/auth/login /analytics/api/websites /analytics/share/abc; do
+            code="$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:8080$p")"
+            if [ "$code" != "410" ]; then
+              echo "ESPOSTO: $p risponde $code (atteso 410)"
+              exit 1
+            fi
+          done
+          echo "Umami: solo gli endpoint del tracker sono raggiungibili"
 
           docker stop test-cv || true
 
