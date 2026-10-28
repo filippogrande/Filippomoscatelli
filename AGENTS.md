@@ -4,12 +4,14 @@
 <!-- Tutto cio' che non serve ad OGNI task e' a un link di distanza. -->
 
 Sito statico single-page con il curriculum di Filippo Moscatelli (IT/EN), servito da
-nginx dentro un container e deployato su Kubernetes. Non c'e' backend e non c'e' build:
-i contenuti che cambiano (progetti, esperienze) sono file JSON in `data/` che il browser
-legge con `fetch`.
+nginx dentro un container Docker. Non c'e' backend e non c'e' build: i contenuti che
+cambiano (progetti, esperienze) sono file JSON in `data/` che il browser legge con `fetch`.
 
-- Stack: HTML/CSS/JavaScript vanilla, nginx, Docker; niente `package.json`, niente npm
-- Deploy: immagine `filippogrande/cv-website:latest` (buildata da GitHub Actions), manifest in `k8s/`
+- Stack: HTML/CSS/JavaScript vanilla, nginx, Docker. Niente build del sito: l'unico
+  `package.json` e' in `scripts/` e serve solo a generare i PDF.
+- Rilascio: `VERSION` (SemVer) + tag `vX.Y.Z` + deployment `production` sulla pagina
+  Deployments. L'immagine la pubblica la CI su Docker Hub; sul master si aggiorna con
+  `docker compose pull`.
 - Mappa del codice: `docs/REFERENCE.md`
 
 ## Comandi
@@ -18,9 +20,8 @@ legge con `fetch`.
 |---|---|
 | Avvia in locale | `make dev` |
 | Build dell'immagine da GitHub | `make build-github` |
+| Rigenera i PDF del CV | `make pdf` |
 | Test del container | `make test-full` |
-| Deploy su Kubernetes | `make deploy` |
-| Stato / rollback | `make status` / `make rollback` |
 | Tutti i target | `make help` |
 
 ## Indice — richiesta -> dove
@@ -29,7 +30,7 @@ legge con `fetch`.
 |---|---|
 | Trovare un file o un simbolo | `docs/REFERENCE.md` |
 | Capire come funziona il sito o il deploy | `docs/ARCHITECTURE.md` |
-| Buildare, testare, deployare, cambiare i contenuti | `docs/OPERATIONS.md` |
+| Buildare, testare, rilasciare, cambiare i contenuti | `docs/OPERATIONS.md` |
 | Conoscere le regole prima di toccare il repo | `docs/CONVENTIONS.md` |
 
 ## Documenti
@@ -37,8 +38,8 @@ legge con `fetch`.
 | Doc | Tipo | A cosa serve |
 |---|---|---|
 | `docs/REFERENCE.md` | reference | la mappa: richiesta -> file -> entry point |
-| `docs/ARCHITECTURE.md` | explanation | moduli, eventi, i due script di build, i due Dockerfile |
-| `docs/OPERATIONS.md` | how-to | build, test, deploy, contenuti |
+| `docs/ARCHITECTURE.md` | explanation | moduli, eventi, build dell'immagine, generazione PDF |
+| `docs/OPERATIONS.md` | how-to | build, test, rilascio, contenuti |
 | `docs/CONVENTIONS.md` | how-to | regole di codice e di repo |
 
 ## Regole
