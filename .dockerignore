@@ -34,12 +34,6 @@ build
 # Documentation
 README.md
 
-# Kubernetes manifests
-k8s/
-kubernetes/
-*.yaml
-*.yml
-
 # Docker
 Dockerfile
 .dockerignore
