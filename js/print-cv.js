@@ -6,9 +6,9 @@
  *  - competenze: il blocco .skills-grid di index.html
  *  - esperienze e progetti: data/work*.json, data/projects*.json
  *
- * Struttura: header in stile sito (banda + foto tonda), Chi Sono, Esperienza,
- * Progetti a card, Competenze a tutta larghezza su tre colonne, poi in basso
- * Istruzione + Volontariato a sinistra e Lingue a destra.
+ * Ordine: header in stile sito → Chi Sono → Competenze (3 colonne) →
+ * parte finale su due colonne (sinistra: Esperienza, Progetti; destra:
+ * Istruzione, Volontariato, Lingue).
  *
  * Al termine imposta window.PRINT_READY = true (usato da scripts/generate-pdfs.mjs).
  */
@@ -44,8 +44,8 @@
     return a;
   }
 
-  function section(titleKey, fallbackTitle, modifier) {
-    var s = el('section', 'cv-section' + (modifier ? ' ' + modifier : ''));
+  function section(titleKey, fallbackTitle) {
+    var s = el('section', 'cv-section');
     s.appendChild(el('h2', 'cv-section__title', tr(titleKey, fallbackTitle)));
     return s;
   }
@@ -197,9 +197,31 @@
     return s;
   }
 
+  // Nel JSON un progetto puo' avere `links` (array label+url) oppure `link` (stringa).
+  // La label di fallback e' l'URL senza schema ne' slash finale.
+  function projectLinks(p) {
+    var raw = [];
+    if (Array.isArray(p.links) && p.links.length) {
+      raw = p.links.map(function (l) {
+        return { label: l.label || shortUrl(l.url), url: l.url };
+      });
+    } else if (p.link && p.link !== '#') {
+      raw = [{ label: shortUrl(p.link), url: p.link }];
+    }
+    return raw.filter(function (l) { return l.url && l.url !== '#'; });
+  }
+
+  function shortUrl(url) {
+    return String(url)
+      .replace(/^https?:\/\//, '')
+      .replace(/^www\./, '')
+      .replace(/\/$/, '')
+      .replace(/\/index\.html$/, '');
+  }
+
   function buildProjects(projects) {
     var s = section('projects-title', 'Progetti');
-    var grid = el('div', 'cv-projects');
+    var list = el('div', 'cv-projects');
 
     projects.forEach(function (p) {
       var card = el('div', 'cv-project');
@@ -219,10 +241,21 @@
       }
 
       if (p.description) card.appendChild(el('div', 'cv-project__desc', p.description));
-      grid.appendChild(card);
+
+      var links = projectLinks(p);
+      if (links.length) {
+        var box = el('div', 'cv-project__links');
+        links.forEach(function (l, i) {
+          if (i > 0) box.appendChild(el('span', 'cv-project__sep', ' · '));
+          box.appendChild(link(l.label, l.url));
+        });
+        card.appendChild(box);
+      }
+
+      list.appendChild(card);
     });
 
-    s.appendChild(grid);
+    s.appendChild(list);
     return s;
   }
 
@@ -322,21 +355,22 @@
 
         root.appendChild(buildHeader());
         root.appendChild(buildAbout());
-        root.appendChild(buildWork(work));
-        root.appendChild(buildProjects(projects));
         root.appendChild(buildSkills(skillsGrid));
 
-        var bottom = el('div', 'cv-bottom');
-        var left = el('div', 'cv-bottom__left');
-        var right = el('div', 'cv-bottom__right');
+        var body = el('div', 'cv-body');
+        var left = el('div', 'cv-body__left');
+        var right = el('div', 'cv-body__right');
 
-        left.appendChild(buildEducation());
-        left.appendChild(buildVolunteer());
+        left.appendChild(buildWork(work));
+        left.appendChild(buildProjects(projects));
+
+        right.appendChild(buildEducation());
+        right.appendChild(buildVolunteer());
         right.appendChild(buildLanguages());
 
-        bottom.appendChild(left);
-        bottom.appendChild(right);
-        root.appendChild(bottom);
+        body.appendChild(left);
+        body.appendChild(right);
+        root.appendChild(body);
 
         window.PRINT_READY = true;
       })
