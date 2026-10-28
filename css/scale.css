@@ -1,0 +1,65 @@
+/*
+ * scale.css — scala tipografica per schermi grandi.
+ *
+ * Tutte le misure del sito sono in rem, quindi il font-size del root decide la
+ * dimensione di TUTTO il layout in modo proporzionale: non serve toccare le
+ * singole regole. Prima di questo file il root era il default del browser
+ * (16px) a qualsiasi larghezza, e su monitor grandi il sito risultava troppo
+ * grande (tanto da dover scendere al 67% di zoom per vederlo bene).
+ *
+ * Una sola variabile da cambiare per ritarare tutto: --ui-root.
+ */
+
+:root {
+  --ui-root: 16px;
+}
+
+html {
+  font-size: var(--ui-root);
+}
+
+/* Laptop grandi e monitor 1440p */
+@media (min-width: 1400px) {
+  :root {
+    --ui-root: 15px;
+  }
+
+  /* L'header era 4rem in verticale (64px a root 16): sproporzionato rispetto
+   * al contenuto che segue. */
+  .header {
+    padding: 3rem 0;
+  }
+
+  .profile-image img {
+    width: 130px;
+    height: 130px;
+  }
+
+  .name {
+    font-size: 2.6rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-card {
+    padding: 1.5rem;
+  }
+}
+
+/* Monitor 4K o ultrawide */
+@media (min-width: 1800px) {
+  :root {
+    --ui-root: 13.5px;
+  }
+}
+
+/* Bottoni dei progetti: senza font-size ereditavano 1rem (16px) con padding
+ * 0.75rem 1.5rem, e su desktop sembravano pulsanti da landing page. */
+.project-link {
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
