@@ -124,8 +124,6 @@ class WorkManager {
                 item.appendChild(desc);
             }
 
-            // (divider rimosso per aderire allo stile della sezione)
-
             // Skills header and list
             if (w.tech && w.tech.length > 0) {
                 const skillsWrap = document.createElement('div');
@@ -175,17 +173,7 @@ class WorkManager {
 
 window.WorkManager = WorkManager;
 
-// Fallback: se l'AppManager non registra il modulo (es. esecuzione fuori ordine),
-// inizializza la sezione dopo il DOMContentLoaded una sola volta.
-if (typeof window !== 'undefined' && !window.appManager) {
-    document.addEventListener('DOMContentLoaded', async () => {
-        if (window._work_initialized) return;
-        try {
-            const wm = new WorkManager();
-            window._work_initialized = true;
-            await wm.initialize();
-        } catch (e) {
-            console.error('WorkManager fallback init failed', e);
-        }
-    });
-}
+// Nessun fallback: il modulo lo registra e lo inizializza AppManager (js/main.js).
+// Prima c'era un `if (!window.appManager) { ... }` che risultava SEMPRE vero,
+// perche' main.js e' l'ultimo script caricato: cosi' nascevano due istanze di
+// WorkManager, con due fetch di data/work.json e la sezione renderizzata due volte.
