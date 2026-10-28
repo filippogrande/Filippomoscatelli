@@ -24,7 +24,11 @@ env:
 jobs:
   build:
     name: Build Docker Image
-    runs-on: ubuntu-latest
+    # Runner fissato: da ottobre 2026 'ubuntu-latest' migra a Ubuntu 26.04.
+    # Qui conta davvero, perche' la generazione PDF usa il Chrome preinstallato
+    # e il job installa pacchetti npm. L'aggiornamento a 26.04 si fa qui, dopo
+    # averlo provato.
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       security-events: write
@@ -41,7 +45,7 @@ jobs:
       # print-cv.html, che legge gli stessi JSON e le stesse traduzioni del
       # sito. Girano PRIMA della build Docker cosi' il COPY . del Dockerfile
       # prende i PDF appena generati e l'immagine pubblicata li contiene
-      # sempre aggiornati. Chrome e' preinstallato sui runner ubuntu-latest
+      # sempre aggiornati. Chrome e' preinstallato sull'immagine ubuntu-24.04
       # (/usr/bin/google-chrome); puppeteer-core non scarica un browser suo.
       - name: Set up Node for PDF generation
         uses: actions/setup-node@v7
@@ -152,7 +156,7 @@ jobs:
 
   security-scan:
     name: Security Scan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: build
     if: github.event_name != 'pull_request'
 

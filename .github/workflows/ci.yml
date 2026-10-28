@@ -8,7 +8,10 @@ on:
 jobs:
   html:
     name: HTML validation
-    runs-on: ubuntu-latest
+    # Runner fissato: da ottobre 2026 'ubuntu-latest' migra a Ubuntu 26.04 e
+    # cambierebbe l'immagine sotto i piedi (versione di Node, tool preinstallati).
+    # L'aggiornamento si fa qui, quando lo si e' provato.
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -22,7 +25,7 @@ jobs:
 
   js:
     name: JS syntax check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v7
