@@ -268,8 +268,7 @@
   function buildSkills(grid) {
     var s = section('skills-title', 'Competenze');
     var wrap = el('div', 'cv-skills');
-    var cats = grid.querySelectorAll('.cv-skill');
-    if (!cats.length) cats = grid.querySelectorAll('.skill-category');
+    var cats = grid.querySelectorAll('.skill-category');
 
     Array.prototype.forEach.call(cats, function (cat) {
       var h3 = cat.querySelector('h3');
