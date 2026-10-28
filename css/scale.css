@@ -14,8 +14,7 @@
  *
  * SOGLIE: un portatile 13" ibrido a finestra intera sta intorno a 1200-1400 px
  * CSS, un monitor 24" 1080p intorno a 1900, un 27" 1440p intorno a 2560, un 4K
- * (con DPR 1.5-2) intorno a 1920-2560. La prima soglia era a 1400: troppo alta,
- * il portatile restava a 16px e sembrava non fosse cambiato nulla.
+ * (con DPR 1.5-2) intorno a 1920-2560.
  */
 
 :root {
@@ -26,17 +25,30 @@ html {
   font-size: var(--ui-root);
 }
 
-/* Portatili 13-15" e tablet orizzontali */
+/* Portatili 13-15" e tablet orizzontali.
+ * Oltre a ridurre il testo, si stringe la colonna: a finestra intera il vecchio
+ * max-width 1200px lasciava solo 40px di margine per lato, e il contenuto
+ * sembrava incollato ai bordi. 1040px lasciano ~120px per lato su un 1280. */
 @media (min-width: 1000px) {
   :root {
-    --ui-root: 15px;
+    --ui-root: 14px;
+  }
+
+  .container {
+    max-width: 1040px;
+    padding: 0 2rem;
   }
 }
 
 /* Monitor 24" e oltre */
 @media (min-width: 1400px) {
   :root {
-    --ui-root: 14px;
+    --ui-root: 13.5px;
+  }
+
+  .container {
+    max-width: 1200px;
+    padding: 0 2rem;
   }
 
   /* L'header era 4rem in verticale (64px a root 16): sproporzionato rispetto
@@ -67,7 +79,7 @@ html {
 /* 27" 1440p, 4K e ultrawide */
 @media (min-width: 1800px) {
   :root {
-    --ui-root: 13px;
+    --ui-root: 12.5px;
   }
 }
 
