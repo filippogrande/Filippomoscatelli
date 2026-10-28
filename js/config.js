@@ -159,7 +159,7 @@ const AppConfig = {
             en: 'Milan, Italy'
         },
         social: {
-            linkedin: 'https://linkedin.com/in/filippo-moscatelli',
+            linkedin: 'https://www.linkedin.com/in/filippomoscatelli/',
             github: 'https://github.com/filippogrande',
             email: 'mailto:contact@mail.filippomoscatelli.com'
         }
