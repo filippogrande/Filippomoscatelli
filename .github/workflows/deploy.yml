@@ -152,6 +152,16 @@ jobs:
             exit 1
           fi
 
+          # Nell'immagine non c'e' piu' curl: l'HEALTHCHECK usa il wget di busybox.
+          # Va provato DENTRO il container, altrimenti un'immagine senza wget
+          # resterebbe 'unhealthy' in produzione senza che la CI se ne accorga.
+          if ! docker exec test-cv wget -q -O /dev/null http://localhost/health; then
+            echo "Healthcheck interno fallito: wget assente o /health non risponde"
+            docker logs test-cv
+            exit 1
+          fi
+          echo "healthcheck interno (wget) OK"
+
           docker stop test-cv || true
 
   security-scan:
