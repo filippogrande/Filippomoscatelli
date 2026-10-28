@@ -15,10 +15,9 @@ WORKDIR /usr/share/nginx/html
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy repository files from build context and move the assets nginx must serve.
-# Volutamente NON si copiano nella web root:
-#   - nginx.conf (era servito pubblicamente su /nginx.conf: esponeva header
-#     policy, regole di cache e path interni). Serve solo in /etc/nginx.
-#   - k8s/ (manifest di un cluster in dismissione, senza alcun uso a runtime).
+# Volutamente NON si copia nella web root nginx.conf: era servito pubblicamente
+# su /nginx.conf ed esponeva header policy, regole di cache e path interni.
+# Serve solo in /etc/nginx.
 COPY . /tmp/build
 RUN cp -r /tmp/build/index.html . && \
     cp -r /tmp/build/print-cv.html . && \
