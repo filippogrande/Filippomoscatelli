@@ -28,6 +28,7 @@ RUN cp -r /tmp/build/index.html . && \
     cp -r /tmp/build/*.pdf . 2>/dev/null || true && \
     cp -r /tmp/build/*.png . 2>/dev/null || true && \
     cp -r /tmp/build/*.svg . 2>/dev/null || true && \
+    cp /tmp/build/VERSION ./version.txt && \
     rm -rf /tmp/build
 
 # Configurazione nginx: va solo in /etc/nginx, mai nella web root.
