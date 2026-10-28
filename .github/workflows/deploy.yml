@@ -211,7 +211,16 @@ jobs:
             --arg desc "Sito v$VERSION - immagine sha-$SHORT_SHA" \
             '{ref:$ref, environment:"production", description:$desc, auto_merge:false, required_contexts:[], transient_environment:false}' \
             | gh api --method POST "repos/$GITHUB_REPOSITORY/deployments" --input - > deployment.json
-          jq -r '.id' deployment.json >> "$GITHUB_OUTPUT"
+          ID="$(jq -r '.id' deployment.json)"
+          if [ -z "$ID" ] || [ "$ID" = "null" ]; then
+            echo "Creazione del deployment fallita:"
+            cat deployment.json
+            exit 1
+          fi
+          # $GITHUB_OUTPUT vuole righe chiave=valore, non il valore nudo:
+          # scrivere solo l'id fa fallire il passo con 'Invalid format'.
+          echo "id=$ID" >> "$GITHUB_OUTPUT"
+          echo "Deployment creato: id=$ID"
 
       - name: Mark deployment as pending
         env:
