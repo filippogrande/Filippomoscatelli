@@ -44,7 +44,7 @@ jobs:
       # sempre aggiornati. Chrome e' preinstallato sui runner ubuntu-latest
       # (/usr/bin/google-chrome); puppeteer-core non scarica un browser suo.
       - name: Set up Node for PDF generation
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "20"
 
