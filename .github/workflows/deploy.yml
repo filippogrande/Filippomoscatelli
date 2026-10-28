@@ -36,17 +36,17 @@ jobs:
 
     outputs:
       image_digest: ${{ steps.buildpush.outputs.digest }}
-      version: ${{ steps.ver.outputs.version }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      # Regola dei tag: `latest` solo sulle major/minor (patch 0), le patch
-      # vanno su `pre-release`. Cosi' chi consuma l'immagine sceglie se stare
-      # sul ramo stabile o sulle patch, senza inventarsi tag a mano.
-      - name: Compute release tag
-        id: ver
+      # I tag si calcolano qui, in shell, e non con docker/metadata-action: le
+      # righe `type=raw` con `enable=` non hanno prodotto nessun tag (la 1.0.4
+      # e' uscita solo come sha-cda09bd). Cosi' la lista e' scritta nel log del
+      # run, parola per parola, e si vede subito se qualcosa non torna.
+      - name: Compute image tags
+        id: tags
         run: |
           VERSION="$(tr -d '[:space:]' < VERSION)"
           if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
@@ -54,14 +54,18 @@ jobs:
             exit 1
           fi
           PATCH="${VERSION##*.}"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          BASE="${REGISTRY}/${IMAGE_NAME}"
+          LIST="${BASE}:${VERSION},${BASE}:sha-${GITHUB_SHA:0:7}"
           if [ "$PATCH" = "0" ]; then
-            echo "is_release=true" >> "$GITHUB_OUTPUT"
-            echo "v$VERSION e' un rilascio: andra' anche su :latest"
+            LIST="${LIST},${BASE}:latest"
+            echo "$VERSION e' un rilascio: va anche su :latest"
           else
-            echo "is_release=false" >> "$GITHUB_OUTPUT"
-            echo "v$VERSION e' una patch: andra' su :pre-release, latest resta fermo"
+            LIST="${LIST},${BASE}:pre-release"
+            echo "$VERSION e' una patch: va su :pre-release, latest resta fermo"
           fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "list=$LIST" >> "$GITHUB_OUTPUT"
+          echo "Tag da pubblicare: $LIST"
 
       # I PDF del CV non sono piu' file caricati a mano: si generano da
       # print-cv.html, che legge gli stessi JSON e le stesse traduzioni del
@@ -115,25 +119,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Su pull_request {{branch}} e' VUOTA: il vecchio
-      # type=sha,prefix={{branch}}- generava il tag non valido ":-<sha>"
-      # e faceva fallire il build su OGNI PR. Prefisso ora fisso.
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v6
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=sha,prefix=sha-
-            type=raw,value=${{ steps.ver.outputs.version }}
-            type=raw,value=latest,enable=${{ steps.ver.outputs.is_release == 'true' }}
-            type=raw,value=pre-release,enable=${{ steps.ver.outputs.is_release == 'false' }}
-
       # PR: build locale single-platform (load nel runner, nessun push) con un
       # tag esplicito, cosi' lo smoke test puo' avviare davvero l'immagine.
-      # Push su main: build multi-platform + push su Docker Hub.
+      # Push su main: build multi-platform + push dei tag calcolati sopra.
       - name: Build and push Docker image
         id: buildpush
         uses: docker/build-push-action@v7
@@ -142,8 +130,11 @@ jobs:
           platforms: ${{ github.event_name == 'pull_request' && 'linux/amd64' || 'linux/amd64,linux/arm64,linux/386' }}
           load: ${{ github.event_name == 'pull_request' }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: "${{ github.event_name == 'pull_request' && format('{0}/{1}:pr-{2}', env.REGISTRY, env.IMAGE_NAME, github.event.number) || steps.meta.outputs.tags }}"
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: "${{ github.event_name == 'pull_request' && format('{0}/{1}:pr-{2}', env.REGISTRY, env.IMAGE_NAME, github.event.number) || steps.tags.outputs.list }}"
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ steps.tags.outputs.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -210,9 +201,9 @@ jobs:
           echo "js/config.js senza IP interni (atteso)"
 
           # 3. Di Umami si espongono solo gli endpoint del tracker. Dashboard,
-          #    login e API di autenticazione devono rispondere 410, non la SPA:
-          #    con `error_page 404 /index.html` un `return 404` tornerebbe 200 con
-          #    la home, quindi il codice atteso e' 410 e va verificato davvero.
+          #    login e API di autenticazione devono rispondere 410: con
+          #    `error_page 404 /index.html` un `return 404` tornerebbe 200 con la
+          #    home, quindi il codice atteso e' 410 e va verificato davvero.
           for p in /analytics/login /analytics/api/auth/login /analytics/api/websites /analytics/share/abc; do
             code="$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:8080$p")"
             if [ "$code" != "410" ]; then
