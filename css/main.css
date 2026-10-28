@@ -15,4 +15,8 @@
 /* Effects and responsive last */
 @import url('animations.css');
 @import url('responsive.css');
+
+/* Scala tipografica: ultima, cosi' puo' ritarare anche quello che le regole
+ * precedenti hanno gia' impostato sulle larghezze da desktop. */
+@import url('scale.css');
 /* Cache buster: 1753697354 */
