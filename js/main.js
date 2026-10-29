@@ -141,12 +141,13 @@ class AppManager {
         
         this.initialized = true;
         
-        // Track application start
+        // Track application start. Nessuna versione nel payload: la versione
+        // vive in VERSION (/version.txt), un valore scritto a mano qui divergeva
+        // (diceva 2.0.0 mentre VERSION era 1.0.6).
         if (window.analyticsManager) {
             window.analyticsManager.track('app-initialized', {
                 timestamp: new Date().toISOString(),
-                modules: Array.from(this.modules.keys()),
-                version: '2.0.0'
+                modules: Array.from(this.modules.keys())
             });
         }
     }
