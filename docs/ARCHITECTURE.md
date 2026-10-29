@@ -4,9 +4,10 @@
 
 ## Il sito non ha backend
 
-`index.html` e' l'unica pagina del CV. Non c'e' build, non c'e' `package.json`: i file
-CSS e JS sono serviti cosi' come sono. I contenuti che cambiano spesso (progetti, esperienze)
-sono file JSON in `data/`, uno per lingua, che il browser legge con `fetch`.
+`index.html` e' l'unica pagina del CV. Il sito non ha build: i file CSS e JS sono serviti
+cosi' come sono. L'unico `package.json` e' in `scripts/` e serve solo a generare i PDF.
+I contenuti che cambiano spesso (progetti, esperienze) sono file JSON in `data/`, uno per
+lingua, che il browser legge con `fetch`.
 
 Conseguenza importante: **nginx deve rispondere 404 vero per un JSON mancante**. Se il `.json`
 cade sul fallback di `index.html`, il `fetch` riceve HTML e `res.json()` fallisce con un errore
@@ -28,8 +29,9 @@ config -> utils -> css-manager -> components -> language -> analytics -> effects
   resto = production. Da li' cambiano debug, tag analytics e livello di log.
 - `js/utils.v2.js` (`Utils`) sono le utility condivise: `debounce`, storage, e la logica delle
   durate (`formatDuration`, `monthsBetween`).
-- `js/css-manager.js` (`CSSManager`) carica i fogli di `css/` dinamicamente, in ordine, e
-  prepara i hook per tema e stampa.
+- `js/css-manager.js` (`CSSManager`) inserisce nel `<head>` il solo `css/main.css`, che importa
+  gli altri moduli con `@import`. Un foglio da caricare invece di undici `<link>` in sequenza:
+  meno ricalcoli di layout durante il caricamento.
 - `js/components.js` (`ComponentsManager`) registra i componenti UI che gia' esistono nel DOM
   (selettore lingua, back-to-top, skill tag).
 - `js/language.v2.js` (`LanguageManager`) risolve la lingua e traduce gli elementi con `data-key`.
@@ -44,39 +46,41 @@ config -> utils -> css-manager -> components -> language -> analytics -> effects
 
 ## Il pattern dei moduli
 
-Ogni modulo segue lo stesso contratto: una classe, un'istanza globale, un metodo `initialize()`,
-e un **fallback di inizializzazione** alla fine del file:
-
-```js
-if (typeof window !== 'undefined' && !window.appManager) {
-    document.addEventListener('DOMContentLoaded', () => { /* inizializza da solo */ });
-}
-```
-
-Il fallback esiste perche' i moduli possono essere eseguiti fuori ordine (o senza `main.js`):
-cosi' una pagina che ne carica solo alcuni non si rompe. Il prezzo e' che alcuni file hanno due
-percorsi di avvio: quando `window.appManager` c'e', vince `AppManager`.
+Ogni modulo segue lo stesso contratto: una classe, un'istanza globale, un metodo `initialize()`.
+**L'inizializzazione la fa solo `AppManager`**: un modulo non si auto-inizializza "se il global
+`appManager` non c'e'". Quel fallback (storicamente presente in coda ai file) e' sempre vero,
+perche' `main.js` e' l'ultimo script caricato: produceva due istanze dello stesso manager, con
+`initialize()` e `fetch` eseguiti due volte. Se un modulo deve essere usato da una pagina che
+non carica `main.js` (la pagina di stampa), si istanzia esplicitamente li'.
 
 ## Gli eventi che coordinano i moduli
 
 I moduli non si chiamano tra loro direttamente: emettono eventi custom su `document`.
 
 | Evento | Emesso da | A cosa serve |
-|---|---|
-| `languageChanged` | `LanguageManager.changeLanguage()` | `ProjectsManager` e `WorkManager` ricaricano il JSON della nuova lingua; `DurationManager` ricalcola le durate; `AnalyticsManager` raccia il cambio |
+|---|---|---|
+| `languageChanged` | `LanguageManager.changeLanguage()` | `ProjectsManager` e `WorkManager` ricaricano il JSON della nuova lingua; `DurationsManager` ricalcola le durate; `AnalyticsManager` traccia il cambio |
 | `breakpointChanged` | `UIManager.onBreakpointChange()` | cambio classe CSS mobile/tablet/desktop |
 | `themeChanged` | `UIManager.changeTheme()` | cambio tema |
 
 Questo e' il motivo per cui il modulo lingua viene caricato prima di progetti e lavoro.
 
+## La scala tipografica
+
+Tutte le misure sono in `rem`, quindi la dimensione di tutto il layout dipende dal `font-size`
+del root: la leva e' `--ui-root` in `css/scale.css` (soglie a 1000, 1400 e 1800 px CSS).
+Ritarare il sito = cambiare quel numero, non le singole regole. Le media query mobili stanno in
+`css/responsive.css`, una per blocco e **sempre chiuse**: una media query lasciata aperta fa
+finire le regole desktop dentro il blocco mobile, e il sintomo diventa "su desktop non si vede".
+
 ## Le durate non sono scritte a mano
 
-Il testo "Set 2021 - in corso" e' statico in `inde.html`, ma la durata tra parentesi
+Il testo "Set 2021 - in corso" e' statico in `index.html`, ma la durata tra parentesi
 ("(4 anni e 7 mesi)") la calcola `Utils.formatDuration()`:
 
 - `WorkManager` la aggiunge per ogni esperienza in `data/work.json`;
 - `DurationsManager` la aggiunge per ogni periodo marcato con `data-period-start`
-  (es. il volontariato in `inde.html`), e la ricalcola a ogni cambio lingua grazie a un
+  (es. il volontariato in `index.html`), e la ricalcola a ogni cambio lingua grazie a un
   `MutationObserver` (`DurationsManager.watch()`), perche' riscrivere il testo del periodo
   cancellerebbe lo span della durata.
 
@@ -95,71 +99,63 @@ Cambiare lingua sul CV non cambia la pagina Food Delivery, e viceversa.
 
 ## Il container
 
-`Dockerfile` (quello usato da CI e da `deploy.sh`) parte da `nginx:1.31.0-alpine-slim`,
-copia i file dal **build context** (non clona il repo) e installa `curl` per l'health check.
-Copia nel document root: `index.html`, `css/`, `js/`, `data/`, `FoodDelivery/`, i `k8s/`, i PDF e le
-immagini di root, e infine `nginx.conf`.
+`Dockerfile` (l'unico usato dalla CI) parte da `nginx:1.31.8-alpine-slim`, copia i file dal
+**build context** (non clona il repo) e non installa nessun pacchetto: l'health check usa il
+`wget` di busybox gia' presente. Copia nel document root solo asset del sito: `index.html`,
+`print-cv.html`, `css/`, `js/`, `data/`, `FoodDelivery/`, i PDF e le immagini di root, piu'
+`VERSION` come `version.txt`. `nginx.conf` va **solo** in `/etc/nginx`.
 
 `Dockerfile.multistage` fa la stessa cosa in due stage: il primo (`FROM alpine/git as cloner`)
-clona il repository, il secondo copia i file dal primo. Il suo health check e' piu' stretto
-(`curl -f http://localhost/` invece di `curl -f http://localhost/health`).
+clona il repository, il secondo copia i file dal primo. Non e' usato dalla CI.
 
-Nessuno dei due e' usato dalla CI: la CI builda con `docker/build-push-action` usando il
-`Dockerfile` di root.
+## Build e pubblicazione
 
-## I due modi di buildare
-
-- `build-from-github.sh`: `docker buildx build --platform linux/amd64,linux/arm64,linux/386`
-  direttamente dall'URL del repository. Nessun clone locale, nessun push (il push lo fa la CI).
-  E' il metodo raccomandato per produzione.
-- `deploy.sh`: verifica Docker e kubectl, clona il repo in una directory temporanea, builda
-  **single-platform**, crea un tag con timestamp (per il rollback manuale), poi
-  `kubectl apply` dei manifest e `kubectl rollout status`. Il push dell'immagine e' disabilitato
-  (righe commentate in `push_image()`).
-
-Sono sovrapposti (entrambi clonano GitHub e buildano) e non sono stati consolidati: sono
-script, non documentazione. Dettagli in `docs/OPERATIONS.md`.
+- La CI (`.github/workflows/deploy.yml`) builda e pubblica su Docker Hub. Su PR builda solo
+  `linux/amd64` e fa smoke test; su push in `main` builda multi-platform e pusha.
+- **Tag**: `<VERSION>`, `sha-<7>` sempre; `latest` solo quando la patch e' `0` (X.Y.0),
+  altrimenti `pre-release`. I tag si calcolano in shell e si stampano nel log del run: un
+  `image: ...:latest` nel compose non riceve le patch.
+- `build-from-github.sh` e' la build locale multi-platform dall'URL del repository: non pusha,
+  serve a provare l'immagine senza aspettare la CI.
+- Il deploy in produzione **non** e' automatico: dopo il merge l'immagine e' su Docker Hub ma il
+  container sul master gira ancora la precedente finche' non si fa `docker compose pull`.
 
 ## nginx
 
 Un solo `server` sulla porta 80 con:
 
-- `/health` che risponde `200 healthy` (usato da health check Docker, probe k8s e test);
-- fallback di `location /` a `index.html` (serve il routing `/it` e `/en`);
+- `/health` che risponde `200 healthy` (usato dall'HEALTHCHECK del container);
+- fallback di `location /` a `index.html` (serve anche il routing `/it` e `/en`);
 - blocco dedicato per i `.json` con 404 reale;
 - cache corta (1 minuto) per CSS/JS/immagini — i nomi versionati `.v2` danno il refresh
   immediato, la scadenza corta e' la rete di sicurezza;
-- cache lunga (30 giorni) per i PDF;
+- cache di 5 minuti per i PDF (30 giorni tenevano in giro un CV vecchio dopo ogni deploy);
+- proxy ristretto per Umami: solo `/analytics/script.js` e le due API di raccolta, il resto
+  di `/analytics/` risponde `410`;
 - gzip e header di sicurezza (fra cui una CSP che consente `'unsafe-inline'`).
 
 ## La CI
 
-Il repo ha due workflow:
+Il repo ha due workflow.
 
 ### `.github/workflows/deploy.yml` ("Build and Deploy CV Website")
 
-Due job:
+- `build`: su PR verso `main` builda solo `linux/amd64` e fa smoke test (incluso un controllo
+  che i PDF e `/print-cv.html` esistano **dentro** l'immagine); su push in `main` builda
+  multi-platform, pusha e pubblica i tag.
+- `security-scan`: solo su `main`, Trivy con upload SARIF e tabella nel log.
+- `release`: solo su push in `main`, crea il tag `v<VERSION>` e un deployment `production` in
+  stato `pending`, che diventa `success` con il workflow manuale `Confirm production deploy`.
 
-- `build`: su PR verso `main` builda in locale solo `linux/amd64` (nessun push) e fa uno smoke
-  test (`docker run` + `curl /health`); su push in `main` builda multi-platform e pusha su Docker
-  Hub con i tag `latest`, `main` e `sha-<short>`.
-- `security-scan`: solo su `main`, Trivy con upload SARIF nella tab Security.
+deploy.yml ignora i push che toccano solo `README.md`, `.gitignore` e `docs/**`: una PR di sola
+documentazione non builda l'immagine.
 
 ### `.github/workflows/ci.yml` ("CI")
 
-Due job, sia su push che su pull request verso `main`:
+Tre job, sia su push che su pull request verso `main`:
 
-- `html`: valida tutti i file `.html` con `html-validate` (config: `.htmlvalidate.json`,
-  preset `recommended` con regole di stile disattivate; esclusioni: `.htmlvalidateignore`
-  — `test-projects.html` e `FoodDelivery/`, non serviti dall'immagine).
-- `js`: verifica la sintassi dei file in `js/` con `eslint` (config: `eslint.config.js`,
-  flat config, solo parser, nessuna regola di stile).
-
-### Nota su entrambi
-
-Il deploy su Kubernetes **non** e' autmatizzato: il workflow deploy.yml non ha piu' job di
-deploy e l'input `deploy_to_k8s` del trigger manuale non e' piu' usato.
-
-deploy.yml gnora i push che toccano solo `README.md`, `.gitignore` e `docs/**`: una PR di
-sola documentazione non builda. ci.yml non ha filtri simili (valida HTML e JS su qualsiasi
-push/PR).
+- `html`: valida i file `.html` con `html-validate` (config: `.htmlvalidate.json`; esclusioni:
+  `.htmlvalidateignore`).
+- `js`: verifica la sintassi dei file in `js/` con `eslint` (flat config, solo parser).
+- `docs`: esegue `scripts/check-docs.mjs`, che fallisce se un doc cita un file che non esiste,
+  un target `make` che non esiste, o un pezzo della vecchia infrastruttura rimossa.
