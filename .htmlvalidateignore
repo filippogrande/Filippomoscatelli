@@ -1,10 +1,6 @@
 # File esclusi dalla validazione HTML (.htmlvalidateignore)
 # Stesso formato di .gitignore: i percorsi sono relativi a questo file.
 
-# Pagina di test locale (fetch di data/projects.json): non e' parte del sito
-# e non viene servita dall'immagine Docker (vedi commento in Dockerfile).
-test-projects.html
-
 # Pagina demo del progetto FoodDelivery: markup legacy con trailing whitespace
 # e bottoni senza type. Da ripulire prima di includerla nella validazione.
 FoodDelivery/
