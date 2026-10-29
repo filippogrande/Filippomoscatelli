@@ -49,13 +49,13 @@ clean: ## Pulisce immagini e container non utilizzati
 	docker system prune -f
 	@echo "✅ Cleanup completato!"
 
-test: ## Testa il container in locale
+# L'esito deve finire nel codice di uscita: prima la regola stampava "❌ Health
+# check failed" e usciva 0 per via del ramo else, quindi `make test` passava su un
+# container rotto. `curl -f` esce non-zero sugli errori HTTP, e con `&&` quel
+# codice arriva a make.
+test: ## Testa il container in locale (fallisce se /health non risponde 2xx)
 	@echo "🧪 Testing container..."
-	@if curl -f http://localhost:8080/health > /dev/null 2>&1; then \
-		echo "✅ Health check passed!"; \
-	else \
-		echo "❌ Health check failed!"; \
-	fi
+	@curl -fsS http://localhost:8080/health && echo "✅ Health check passed!"
 
 test-full: ## Test completo del deployment
 	@echo "🧪 Running full deployment test..."

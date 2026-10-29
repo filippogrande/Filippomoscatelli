@@ -8,7 +8,9 @@ const AppConfig = {
     // Informazioni generali
     app: {
         name: 'Filippo Moscatelli CV',
-        version: '2.0.0',
+        // Nessun campo `version` qui: la versione vive in VERSION (root) e viene
+        // servita come /version.txt. Un secondo numero in config divergeva al
+        // primo bump (diceva 2.0.0 mentre VERSION era 1.0.6).
         environment: 'production', // 'development' | 'production' | 'test'
         debug: false,
         author: 'Filippo Moscatelli',
@@ -133,7 +135,7 @@ const AppConfig = {
         },
         keywords: ['CV', 'Resume', 'Computer Science', 'Web Development', 'Self-hosted'],
         author: 'Filippo Moscatelli',
-        canonical: 'https://filippomoscatelli.it',
+        canonical: 'https://filippomoscatelli.com',
         openGraph: {
             type: 'website',
             locale: 'it_IT',
