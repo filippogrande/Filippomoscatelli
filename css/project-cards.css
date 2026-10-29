@@ -4,6 +4,9 @@
  * Esiste perche' js/projects.js crea <div class="project-links"> per i progetti
  * con piu' link, ma quella classe non era stilata da nessuna parte: i pulsanti
  * restavano inline e attaccati, senza spazio tra l'uno e l'altro.
+ *
+ * Questo foglio viene importato DOPO components.css (vedi css/main.css), quindi
+ * e' il posto giusto per ritoccare le card senza toccare il layout base.
  */
 
 .project-links {
@@ -33,4 +36,21 @@
  * fossero pochi. */
 .projects-grid {
   min-height: 18rem;
+  gap: 1.5rem;
+}
+
+/* Quattro card affiancate invece di tre.
+ *
+ * In components.css la card e' `flex: 0 0 calc(33.333% - 1.333rem)` con
+ * `min-width: 280px`: a 1040px di contenitore sono ~330px l'una, e con titolo,
+ * descrizione e chip l'altezza arriva vicino alla larghezza — card quadrate.
+ * Con il 25% diventano ~242px: piu' strette, quindi piu' verticali, e i quattro
+ * progetti stanno tutti in riga senza scrollare.
+ *
+ * Conto con gap 1.5rem: 4 * (25% - 1.125rem) + 3 * 1.5rem = 100% esatto.
+ * Per tornare a tre basta rimettere 33.333% e 1.333rem.  */
+.project-card {
+  flex: 0 0 calc(25% - 1.125rem);
+  min-width: 220px;
+  padding: 1.5rem;
 }
