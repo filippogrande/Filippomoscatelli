@@ -11,7 +11,11 @@
  *   2. un target `make <x>` che non esiste nel Makefile;
  *   3. un termine della vecchia infrastruttura rimossa.
  *
- * Uso: node scripts/check-docs.mjs   (stesso comando del job `docs` della CI)
+ * In CI ogni problema diventa un'annotazione (`::error file=...,line=...`): i log
+ * dei job non sono pubblici, le annotazioni si', quindi il rosso e' diagnosticabile
+ * anche senza accesso al repository.
+ *
+ * Uso: node scripts/check-docs.mjs
  */
 import { readFileSync, existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
@@ -31,9 +35,9 @@ const DOC_FILES = [
 // File che non stanno nel repo: li crea la build. Non sono errori.
 const ALLOWED_PATHS = new Set(['version.txt']);
 
-// La lista dei termini vietati: ognuno e' un pezzo di infrastruttura che non
-// esiste piu'. Se un doc deve citarne uno per motivi storici, si aggiunge qui
-// sotto con la ragione — meglio un'eccezione scritta che un controllo spento.
+// Ogni voce e' un pezzo di infrastruttura che non esiste piu'. Se un doc deve
+// citarne uno per motivi storici, si aggiunge qui con la ragione accanto: meglio
+// un'eccezione scritta che un controllo spento.
 const FORBIDDEN = [
   [/\bkubernetes\b/i, 'la produzione e\' un container sul master, non un cluster'],
   [/\bk8s\b/i, 'cartella e manifest rimossi dal repo'],
@@ -75,20 +79,18 @@ function checkFile(file, targets) {
   const found = [];
 
   lines.forEach((line, index) => {
-    const where = `${file}:${index + 1}`;
+    const report = (message) => found.push({ file, line: index + 1, message });
 
     for (const [pattern, reason] of FORBIDDEN) {
-      if (pattern.test(line)) found.push(`${where}  termine obsoleto — ${reason}`);
+      if (pattern.test(line)) report(`termine obsoleto — ${reason}`);
     }
 
     for (const token of inlineCode(line)) {
-      if (isPathToken(token) && !pathExists(token)) {
-        found.push(`${where}  percorso inesistente: ${token}`);
-      }
+      if (isPathToken(token) && !pathExists(token)) report(`percorso inesistente: ${token}`);
     }
 
     for (const [, target] of line.matchAll(/\bmake ([a-z][a-z0-9-]*)/g)) {
-      if (!targets.has(target)) found.push(`${where}  target inesistente nel Makefile: make ${target}`);
+      if (!targets.has(target)) report(`target inesistente nel Makefile: make ${target}`);
     }
   });
 
@@ -100,8 +102,13 @@ const problems = DOC_FILES.flatMap((file) => checkFile(file, targets));
 
 if (problems.length > 0) {
   console.error(`❌ doc non allineati alla realta' (${problems.length}):`);
-  for (const problem of problems) console.error(`   ${problem}`);
-  console.error('\nCorreggi la riga: un doc che mente e\' peggio di nessun doc.');
+  for (const problem of problems) {
+    console.error(`   ${problem.file}:${problem.line}  ${problem.message}`);
+    if (process.env.GITHUB_ACTIONS) {
+      console.log(`::error file=${problem.file},line=${problem.line}::${problem.message}`);
+    }
+  }
+  console.error('Correggi la riga: un doc che mente e\' peggio di nessun doc.');
   process.exit(1);
 }
 
