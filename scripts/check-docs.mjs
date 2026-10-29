@@ -32,8 +32,14 @@ const DOC_FILES = [
   'docs/CONVENTIONS.md',
 ];
 
-// File che non stanno nel repo: li crea la build. Non sono errori.
-const ALLOWED_PATHS = new Set(['version.txt']);
+// Token che sembrano percorsi ma non lo sono. Ognuno deve avere il motivo accanto:
+// la lista e' l'unico posto dove un'eccezione e' ammessa.
+const ALLOWED_PATHS = new Map([
+  ['version.txt', 'lo crea il Dockerfile copiando VERSION, non sta nel repo'],
+  ['linux/amd64', 'piattaforma Docker, non un percorso'],
+  ['linux/arm64', 'piattaforma Docker, non un percorso'],
+  ['filippogrande/cv-website', 'nome dell\'immagine Docker, non un percorso'],
+]);
 
 // Ogni voce e' un pezzo di infrastruttura che non esiste piu'. Se un doc deve
 // citarne uno per motivi storici, si aggiunge qui con la ragione accanto: meglio
@@ -53,14 +59,17 @@ function inlineCode(line) {
 }
 
 /**
- * Solo i percorsi con una directory: un nome di file nudo (`main.css`) e' spesso
- * citato in prosa e verificarlo produrrebbe solo falsi positivi.
+ * Un percorso verificabile e' un token con una directory **e** un'estensione (o la
+ * barra finale, se e' una cartella). Senza questa seconda condizione passano per
+ * percorsi i nomi di branch (`docs/repo-navigation-map`) e le piattaforme Docker,
+ * che sono prosa.
  */
 function isPathToken(token) {
   if (!/^[\w.@/-]+$/.test(token)) return false;
   if (!token.includes('/')) return false;
   if (token.startsWith('/') || token.includes('://')) return false;
-  return true;
+  if (token.endsWith('/')) return true;
+  return /\.[a-z0-9]{1,5}$/i.test(token);
 }
 
 function pathExists(token) {
