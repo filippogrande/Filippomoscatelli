@@ -415,7 +415,11 @@
     <script src="js/durations.v2.js"></script>
     <script src="js/main.js"></script>
     <script>
-    // CV PDF download link updater + tracking
+    // Aggiorna il link del PDF in base alla lingua attiva.
+    // Il tracking del download NON sta piu' qui: lo fa js/analytics.js con un
+    // listener delegato che manda l'evento `cv-download` con la lingua. Prima
+    // c'era anche un `umami.track('cv_download_' + lang)` inline, quindi ogni
+    // click produceva due eventi con nomi diversi.
     function updateCVLink(lang) {
       var link = document.getElementById('cv-download');
       if (!link) return;
@@ -428,33 +432,16 @@
       }
     }
 
-    // Tracking download event (Umami custom event)
-    function trackCVDownload(lang) {
-      if (window.umami) {
-        umami.track('cv_download_' + lang);
-      }
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
-      // Imposta link iniziale
       var activeBtn = document.querySelector('.lang-btn.active');
       var lang = activeBtn ? activeBtn.getAttribute('data-lang') : 'it';
       updateCVLink(lang);
-      // Aggiorna link quando si cambia lingua
+
       document.querySelectorAll('.lang-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
           updateCVLink(btn.getAttribute('data-lang'));
         });
       });
-      // Tracking click
-      var cvLink = document.getElementById('cv-download');
-      if (cvLink) {
-        cvLink.addEventListener('click', function() {
-          var activeBtn = document.querySelector('.lang-btn.active');
-          var lang = activeBtn ? activeBtn.getAttribute('data-lang') : 'it';
-          trackCVDownload(lang);
-        });
-      }
     });
     </script>
     <script>
@@ -489,6 +476,8 @@
         });
     });
     </script>
-    <script async src="https://filippomoscatelli.com/analytics/script.js" data-website-id="a912f285-ced0-4c7f-9260-434d0ee8674a"></script>
+    <!-- Umami: caricato SOLO da js/inline-scripts.js (path /analytics/script.js
+         proxato da nginx). Qui c'era un secondo tag statico con l'URL assoluto:
+         lo script veniva eseguito due volte e ogni visita contava doppio. -->
 </body>
 </html>

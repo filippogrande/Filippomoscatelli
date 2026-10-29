@@ -95,6 +95,16 @@
     return url;
   }
 
+  // Tag di provenienza: un PDF non trasmette referrer, quindi senza questo
+  // parametro chi apre il sito da un CV scaricato risulta indistinguibile da un
+  // accesso diretto. js/analytics.js lo legge e manda l'evento cv-visit.
+  // Si applica SOLO ai link verso il sito: LinkedIn, GitHub ed email restano puliti.
+  function withSource(url) {
+    if (!url || url.indexOf(SITE) !== 0) return url;
+    var sep = url.indexOf('?') === -1 ? '?' : '&';
+    return url + sep + 'src=cv_' + lang;
+  }
+
   function section(titleKey, fallbackTitle) {
     var s = el('section', 'cv-section');
     s.appendChild(el('h2', 'cv-section__title', tr(titleKey, fallbackTitle)));
@@ -253,17 +263,18 @@
       .replace(/^https?:\/\//, '')
       .replace(/^www\./, '')
       .replace(/\/$/, '')
-      .replace(/\/index\.html$/, '');
+      .replace(/\/index\.html$/, '')
+      .replace(/\?.*$/, '');
   }
 
   function projectLinks(p) {
     var raw = [];
     if (Array.isArray(p.links) && p.links.length) {
       raw = p.links.map(function (l) {
-        return { label: l.label || shortUrl(l.url), url: absUrl(l.url) };
+        return { label: l.label || shortUrl(l.url), url: withSource(absUrl(l.url)) };
       });
     } else if (p.link && p.link !== '#') {
-      raw = [{ label: shortUrl(p.link), url: absUrl(p.link) }];
+      raw = [{ label: shortUrl(p.link), url: withSource(absUrl(p.link)) }];
     }
     return raw.filter(function (l) { return l.url && l.url !== '#'; });
   }
