@@ -161,11 +161,11 @@
     }
 }
 
-/* Base styles - desktop view */
-.projects-grid {
-    display: grid;
-}
-
+/* Base styles - desktop view.
+ * La disposizione delle card viene da css/components.css: flex, tre card
+ * affiancate (flex-basis 33.333%) con scroll orizzontale per quelle in piu'.
+ * Non ridichiarare `display` qui: `display: grid` senza grid-template-columns
+ * impila le card in una colonna sola, e sembra la vista mobile. */
 .projects-mobile-accordion {
     display: none;
 }
