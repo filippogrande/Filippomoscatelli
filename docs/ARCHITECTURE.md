@@ -105,9 +105,6 @@ Cambiare lingua sul CV non cambia la pagina Food Delivery, e viceversa.
 `print-cv.html`, `css/`, `js/`, `data/`, `FoodDelivery/`, i PDF e le immagini di root, piu'
 `VERSION` come `version.txt`. `nginx.conf` va **solo** in `/etc/nginx`.
 
-`Dockerfile.multistage` fa la stessa cosa in due stage: il primo (`FROM alpine/git as cloner`)
-clona il repository, il secondo copia i file dal primo. Non e' usato dalla CI.
-
 ## Build e pubblicazione
 
 - La CI (`.github/workflows/deploy.yml`) builda e pubblica su Docker Hub. Su PR builda solo
@@ -155,7 +152,7 @@ documentazione non builda l'immagine.
 Tre job, sia su push che su pull request verso `main`:
 
 - `html`: valida i file `.html` con `html-validate` (config: `.htmlvalidate.json`; esclusioni:
-  `.htmlvalidateignore`).
+  `.htmlvalidateignore`, oggi solo `FoodDelivery/`).
 - `js`: verifica la sintassi dei file in `js/` con `eslint` (flat config, solo parser).
 - `docs`: esegue `scripts/check-docs.mjs`, che fallisce se un doc cita un file che non esiste,
   un target `make` che non esiste, o un pezzo della vecchia infrastruttura rimossa.
