@@ -22,7 +22,7 @@ make stop          # docker-compose down
 Alternative senza `make`:
 
 ```bash
-docker run -d -p 8080:80 --name cv-test filippogrande/cv-website:latest
+docker run -d -p 8080:80 --name cv-test filippogrande/cv-website:pre-release
 curl -f http://localhost:8080/health     # deve rispondere "healthy"
 
 # Build locale
@@ -36,7 +36,7 @@ docker build -t filippogrande/cv-website:latest .
 | `make build` | build locale single-platform dal build context |
 | `make build-github` | `./build-from-github.sh` — buildx multi-platform da GitHub, niente clone locale |
 | `make push` | buildx multi-platform con `--push` su Docker Hub |
-| `make pdf` | rigenera `filippomoscatelli_it.pdf` e `_en.pdf` da `print-cv.html` |
+| `make pdf` | rigenera `filippomoscatelli_it.pdf` e `filippomoscatelli_en.pdf` da `print-cv.html` |
 
 `./build-from-github.sh <tag>` accetta un tag come primo argomento (default `latest`).
 
@@ -115,7 +115,7 @@ Su **Actions** > *Build and Deploy CV Website* > **Run workflow**.
 - **Periodi in `index.html`**: per avere la durata calcolata basta aggiungere
   `data-period-start` (e `data-period-end`), come gia' fatto per il volontariato.
 - **Colori e misure**: i colori sono valori letterali nei fogli in `css/`; la dimensione di
-  tutto il layout dipende da `--ui-root` in `css/scale.css`. Non esiste `styles.css`.
+  tutto il layout dipende da `--ui-root` in `css/scale.css`.
 - **Pagina Food Delivery**: modificare `FoodDelivery/index.html`; usa `data-lang-it` e
   `data-lang-en`, non `data-key`.
 - **PDF del CV**: non si toccano a mano. Dopo una modifica a contenuti o traduzioni lancia
@@ -129,7 +129,7 @@ Su **Actions** > *Build and Deploy CV Website* > **Run workflow**.
   **nella stessa PR**. Una riga che punta a un file sbagliato va corretta, non annotata.
 - Prima di aprire la PR, lancia `node scripts/check-docs.mjs`: e' lo stesso controllo del job
   `docs` della CI. Fallisce se un doc cita un file inesistente, un target `make` inesistente, o
-  un pezzo della vecchia infrastruttura (per esempio Kubernetes).
+  un pezzo della vecchia infrastruttura rimossa (una cartella, uno script, un target).
 - I doc sono 4 tipi, dichiarati in testa al file: `reference` (fatti), `explanation`
   (come funziona), `how-to` (passi), `tutorial` (imparare facendo).
 - Un solo doc per concetto: se due doc dicono la stessa cosa, si consolidano.
