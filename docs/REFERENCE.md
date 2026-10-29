@@ -58,13 +58,13 @@ risponde alla tua domanda, apri il file e cerca il simbolo. Tre letture, non di 
 | Configurazione html-validate | `.htmlvalidate.json` | preset `recommended`, stile off |
 | File esclusi dalla validazione HTML | `.htmlvalidateignore` | `test-projects.html`, `FoodDelivery/` |
 | Configurazione ESLint (solo parser) | `eslint.config.js` | flat config, nessuna regola |
-| Chi verifica che i doc non derivino dal codice | `scripts/check-docs.mjs` | `FORBIDDEN`, `collectPaths()`, exit 1 |
+| Chi verifica che i doc non derivino dal codice | `scripts/check-docs.mjs` | `FORBIDDEN`, `ALLOWED_PATHS`, exit 1 |
 | Aggiornamenti automatici delle dipendenze | `.github/dependabot.yml` | voci `docker`, `docker-compose`, `github-actions`, `npm` (`/scripts`) |
 | Pagina sorgente dei PDF del CV (non in navigazione) | `print-cv.html` | `<main id="cv">`, parametro `?lang=it\|en` |
 | Chi renderizza il CV in formato A4 per i PDF | `js/print-cv.js` | `buildWork()`, `buildSkills()`, `window.PRINT_READY` |
 | Chi adatta la scala del PDF a una sola pagina A4 | `js/print-cv.js` | `window.PRINT_APPLY_FIT()` |
 | Dove sta lo stile della pagina di stampa | `css/print-cv.css` | `@page`, `.cv-section`, `.cv-entry` |
-| Chi produce `filippomoscatelli_it.pdf` / `_en.pdf` | `scripts/generate-pdfs.mjs` | `main()`, `renderPdf()`, `startServer()` |
+| Chi produce `filippomoscatelli_it.pdf` / `filippomoscatelli_en.pdf` | `scripts/generate-pdfs.mjs` | `main()`, `renderPdf()`, `startServer()` |
 | Come si lancia la generazione dei PDF in locale | `Makefile` | target `pdf` |
 | PDF del CV scaricabili dal sito | `filippomoscatelli_it.pdf`, `filippomoscatelli_en.pdf` | generati da `scripts/generate-pdfs.mjs`, link in `updateCVLink()` |
 | Altre versioni del CV (solo su git, non servite) | `Altre versioni pdf/` | `Filippo-moscatelli-CV.pdf`, `filippomoscatelli_it.pdf`, `filippomoscatelli_en.pdf` |
@@ -91,8 +91,8 @@ risponde alla tua domanda, apri il file e cerca il simbolo. Tre letture, non di 
   il solo `css/main.css`, che importa gli altri moduli con `@import` nell'ordine dichiarato:
   un foglio da caricare, un ricalcolo di layout (CLS). Un foglio nuovo si aggiunge **alla
   catena di `@import`**, non a un array nel JS. `css/print-cv.css` e' l'eccezione: e' linkato
-  solo da `print-cv.html`. Le variabili CSS esistono (`--ui-root` in `css/scale.css`),
-  non esiste `styles.css`.
+  solo da `print-cv.html`. Le variabili CSS esistono (`--ui-root` in `css/scale.css`); i colori
+  sono valori letterali dentro i moduli.
 - **Analytics**: Umami e' self-hosted su `10.0.0.5:3010` e si raggiunge first-party via proxy
   nginx (`/analytics/script.js`, `/analytics/api/send`, `/analytics/api/collect`). L'id sito
   compare in `js/config.js` (`AppConfig.analytics.websiteId`) e in `js/inline-scripts.js`.
