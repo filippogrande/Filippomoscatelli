@@ -13,7 +13,7 @@
   fallback silenzioso.
 - **No file di test usa-e-getta** — verifica sulla build reale, non su frammenti temporanei.
 - **Niente codice duplicato per concetto**: se due file risolvono lo stesso problema, si
-  consolida (es. due sistemi di lingua, due script di build).
+  consolida (es. due sistemi di lingua, due loader di analytics).
 
 ## Documentazione
 
@@ -22,6 +22,14 @@
 - **Un solo doc per concetto**: se due doc dicono la stessa cosa, si consolidano.
 - **Un doc che mente e' peggio di nessuna doc**: va corretto o cancellato nella stessa PR, non
   annotato a margine.
+- **La doc e' verificata dalla CI, non dalla buona volonta'**: il job `docs` esegue
+  `scripts/check-docs.mjs` e fa fallire la PR se un doc cita un percorso inesistente, un target
+  `make` inesistente o un pezzo di infrastruttura rimossa (es. un cluster). In locale:
+  `node scripts/check-docs.mjs`. Lo stesso comando va lanciato prima di aprire la PR.
+  Un'eccezione (un file che esiste solo dopo la build, una menzione storica) si scrive nella
+  lista dentro lo script con il motivo accanto: non si spegne il controllo.
+- **Rimuovere una cosa = aggiornare tutte le righe che la citano**, non solo `REFERENCE.md`:
+  `AGENTS.md`, `README.md` e i doc in `docs/` sono tutti nella lista controllata.
 - **File `.md` vuoti o di 0 byte**: eliminati, non preservati.
 - **File usa-e-getta**: eliminati.
 - **Quattro tipi, uno per doc**, dichiarato in testa al file:
@@ -73,6 +81,9 @@
   `localhost` (dentro il container risolve prima in IPv6, nginx ascolta su IPv4).
 - **Rilascio = tag**: il numero sta in `VERSION`, il tag `vX.Y.Z` lo crea la CI. Il deployment
   resta `pending` finche' non si lancia `Confirm production deploy` dopo il pull sul master.
+- **La CI non aggiorna il sito**: pubblica l'immagine su Docker Hub. Il passaggio in produzione
+  e' il pull manuale sul master; la prova che e' avvenuto e' `/version.txt`, non il colore del
+  check sulla PR ne' la pagina Deployments.
 - **Il sito ha un fallback SPA**: `try_files $uri $uri/ /index.html` piu' `error_page 404`,
   quindi qualsiasi path inesistente risponde **200 con index.html**. I controlli del tipo "il file
   X non deve essere servito" vanno fatti sul filesystem del container (`docker exec ... test -e`),

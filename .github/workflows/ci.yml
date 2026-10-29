@@ -38,3 +38,18 @@ jobs:
         run: |
           npm install --save-dev eslint
           npx eslint js/
+
+  docs:
+    name: Doc alignment
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # Impedisce che i doc derivino dal codice: fallisce se un doc cita un
+      # percorso che non esiste, un target `make` inesistente, o un pezzo della
+      # vecchia infrastruttura rimossa. Gira su ogni PR, quindi una rimozione
+      # fatta senza aggiornare la mappa non passa. Nessuna dipendenza da
+      # installare: Node e' preinstallato sul runner.
+      - name: Check docs against the repo
+        run: node scripts/check-docs.mjs

@@ -25,9 +25,11 @@ make pdf           # rigenera i due PDF del CV (richiede Node 20+ e Chrome)
 Alternative:
 
 ```bash
-make build-github                                         # build multi-platform da GitHub
-docker run -d -p 8080:80 filippogrande/cv-website:latest   # immagine gia' pubblicata
+make build-github                                              # build multi-platform da GitHub
+docker run -d -p 8080:80 filippogrande/cv-website:pre-release  # immagine gia' pubblicata
 ```
+
+Le patch finiscono su `pre-release`; `latest` si muove solo sulle X.Y.0.
 
 ## Rilascio
 
@@ -42,7 +44,8 @@ cd /mnt/applicazioni/yml/docker/filippomoscatelli
 docker compose pull && docker compose up -d
 ```
 
-Il sito espone `/version.txt` con versione e commit dell'immagine in esecuzione.
+Il sito espone `/version.txt` con la versione in esecuzione: e' quella la prova che il
+deploy e' avvenuto, non il check verde sulla PR.
 
 ## Struttura
 
@@ -60,7 +63,7 @@ filippomoscatelli_it.pdf   CV scaricabile (italiano, generato)
 filippomoscatelli_en.pdf   CV scaricabile (inglese, generato)
 Dockerfile, Dockerfile.multistage, nginx.conf, docker-compose.yml
 Makefile, build-from-github.sh, test-deployment.sh
-.github/                   workflow CI (html-validate+ESLint), build/release, dependabot
+.github/                   workflow CI (html-validate+ESLint+doc check), build/release, dependabot
 ```
 
 ## Indice
@@ -77,7 +80,8 @@ Makefile, build-from-github.sh, test-deployment.sh
 
 Quattro doc in `docs/`, uno per tipo: `REFERENCE.md` (la mappa richiesta -> file -> simbolo),
 `ARCHITECTURE.md` (come funziona), `OPERATIONS.md` (i passi), `CONVENTIONS.md` (le regole).
-La mappa si aggiorna nella stessa PR che sposta o rinomina qualcosa.
+La mappa si aggiorna nella stessa PR che sposta o rinomina qualcosa, e la CI la verifica
+(`node scripts/check-docs.mjs`).
 
 ## Supporto
 
