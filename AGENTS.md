@@ -22,6 +22,7 @@ cambiano (progetti, esperienze) sono file JSON in `data/` che il browser legge c
 | Build dell'immagine da GitHub | `make build-github` |
 | Rigenera i PDF del CV | `make pdf` |
 | Test del container | `make test-full` |
+| Verifica che i doc siano allineati | `node scripts/check-docs.mjs` |
 | Tutti i target | `make help` |
 
 ## Indice — richiesta -> dove
@@ -48,4 +49,6 @@ cambiano (progetti, esperienze) sono file JSON in `data/` che il browser legge c
 - I doc si aggiornano NELLA STESSA PR che sposta, rinomina o rimuove qualcosa.
 - Limiti: 50 righe/funzione, 500 righe/file, niente fallback silenziosi.
 - In root solo: `README.md`, `AGENTS.md`, manifest, `Dockerfile`/`docker-compose.yml`, cartelle.
-- Mappa onesta: una riga che indica un file o un simbolo sbagliato si corregge subito, non si annota.
+- Mappa onesta: una riga che indica un file o un simbolo sbagliato si corregge subito, non si
+  annota. Il job `docs` della CI lo verifica a ogni PR (`scripts/check-docs.mjs`): percorso
+  inesistente, target `make` inesistente o pezzo di infrastruttura rimossa = PR rossa.
