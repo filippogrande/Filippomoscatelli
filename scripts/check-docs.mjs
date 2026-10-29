@@ -4,8 +4,7 @@
  * Perche' esiste: i doc citano file, comandi e pezzi di infrastruttura. Quando
  * una cosa viene rimossa (una cartella, uno script, un target) le righe che la
  * citano restano, continuano a sembrare vere, e chi legge la mappa perde tempo
- * dietro a file che non esistono. E' successo con la cartella dei manifest del
- * cluster e con lo script di deploy.
+ * dietro a file che non esistono.
  *
  * Tre controlli, tutti deterministici:
  *   1. un percorso in backtick che non esiste nel repo;
@@ -44,8 +43,6 @@ const FORBIDDEN = [
   [/\bstyles\.css\b/, 'foglio inesistente: i moduli sono in css/'],
   [/\bjs\/language\.js\b/, 'il modulo vivo e\' js/language.v2.js'],
 ];
-
-const WITH_EXTENSION = /\.(md|json|js|mjs|css|html|yml|yaml|sh|pdf|png|svg|txt|conf)$/;
 
 function inlineCode(line) {
   return [...line.matchAll(/`([^`\n]+)`/g)].map((match) => match[1]);
