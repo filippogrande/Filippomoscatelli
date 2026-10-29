@@ -82,7 +82,8 @@
     .projects-mobile-accordion {
         display: block;
     }
-    
+}
+
 /* Food Delivery Page - Mobile Text Centering */
 @media (max-width: 768px) {
     .food-delivery-page .section h2,
