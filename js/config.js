@@ -183,12 +183,6 @@ const AppConfig = {
                 github: 'https://github.com/filippogrande/Software-Inc-Print-Manager',
                 demo: null,
                 featured: true
-            },
-            {
-                id: 'nao-challenge-2020',
-                github: null,
-                demo: null,
-                featured: true
             }
         ]
     },
