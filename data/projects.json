@@ -28,14 +28,5 @@
     "startDate": "2024-07",
     "endDate": null,
     "link": "https://github.com/filippogrande/Software-Inc-Print-Manager"
-  },
-  {
-    "id": "nao-challenge",
-    "title": "NAO Challenge 2020",
-    "description": "Competizione di robotica con robot umanoide NAO. Partecipazione alle fasi di selezione e regionali.",
-    "tech": ["Robotica", "NAO Robot", "Teamwork", "Problem Solving"],
-    "startDate": "2019-11",
-    "endDate": "2020-02",
-    "link": "#"
   }
 ]

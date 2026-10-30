@@ -101,6 +101,10 @@ risponde alla tua domanda, apri il file e cerca il simbolo. Tre letture, non di 
 - **Versione in esecuzione**: `VERSION` viene copiato in `version.txt` dalla build, quindi
   `/version.txt` dice cosa sta girando davvero. E' l'unica fonte della versione: `js/config.js`
   e `js/main.js` non la duplicano piu'.
+- **Progetti**: le card arrivano da `data/projects.json` (IT) e `data/projects.en.json` (EN):
+  oggi tre voci (cv-website, food-delivery, software-inc). La voce NAO Challenge e' stata
+  rimossa il 30/10 insieme alla task: per riaggiungerla serve una voce in entrambi i JSON e,
+  se ha una pagina, il relativo link.
 - **Dipendenze**: il sito non ha dipendenze npm. L'unico `package.json` e' in `scripts/`
   (`puppeteer-core`) e serve solo a generare i PDF: non entra nell'immagine (`.dockerignore`
   esclude `scripts/` e `**/node_modules`).
@@ -121,5 +125,5 @@ risponde alla tua domanda, apri il file e cerca il simbolo. Tre letture, non di 
   due versioni coesistono, e `index.html` linka quelli di root.
 - `Dockerfile` copia i PDF di root (`cp -r /tmp/build/*.pdf`): `Altre versioni pdf/` resta su git
   e non viene pubblicata dal sito.
-- `AppConfig.projects.featured` (`js/config.js`) elenca 3 progetti "featured", ma la sezione
-  progetti arriva da `data/projects.json` (4 voci): la lista featured non e' usata dal rendering.
+- `AppConfig.projects.featured` (`js/config.js`) elenca 2 progetti "featured", ma la sezione
+  progetti arriva da `data/projects.json` (3 voci): la lista featured non e' usata dal rendering.
