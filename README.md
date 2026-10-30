@@ -61,9 +61,9 @@ scripts/                   generatore dei PDF (puppeteer-core, unico package.jso
 FoodDelivery/              pagina del progetto Food Delivery (+ screenshot)
 filippomoscatelli_it.pdf   CV scaricabile (italiano, generato)
 filippomoscatelli_en.pdf   CV scaricabile (inglese, generato)
-Dockerfile, Dockerfile.multistage, nginx.conf, docker-compose.yml
+Dockerfile, nginx.conf, docker-compose.yml
 Makefile, build-from-github.sh, test-deployment.sh
-.github/                   workflow CI (html-validate+ESLint+doc check), build/release, dependabot
+.github/                   workflow CI (html-validate, ESLint, doc check), build/release, dependabot
 ```
 
 ## Indice

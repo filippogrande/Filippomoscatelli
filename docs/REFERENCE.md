@@ -23,7 +23,7 @@ risponde alla tua domanda, apri il file e cerca il simbolo. Tre letture, non di 
 | Quali fogli CSS esistono e in che ordine | `css/main.css` | catena di `@import` |
 | Dove sta la scala tipografica (dimensione di TUTTO il layout) | `css/scale.css` | `:root { --ui-root }` e `html { font-size }` |
 | Perche' su desktop una regola non si applica | `css/responsive.css` | media query `max-width: 768px` (una per blocco, sempre chiusa) |
-| Stile dei link/bottoni delle card progetto | `css/project-cards.css` | `.project-links`, `.projects-grid` |
+| Stile e proporzioni delle card progetto | `css/project-cards.css` | `.project-links`, `.projects-grid`, `.project-card` |
 | Chi carica i progetti da JSON | `js/projects.js` | `ProjectsManager.fetchProjects()` |
 | Chi disegna le card progetto (desktop e mobile) | `js/projects.js` | `ProjectsManager.render()` / `renderMobile()` |
 | Chi carica le esperienze lavorative | `js/work.v2.js` | `WorkManager.fetchWork()` |
@@ -47,7 +47,6 @@ risponde alla tua domanda, apri il file e cerca il simbolo. Tre letture, non di 
 | Come e' esposto Umami (solo tracker, non dashboard) | `nginx.conf` | `location = /analytics/script.js`, `/analytics/api/*`, `return 410` |
 | Chi definisce l'immagine di produzione | `Dockerfile` | `FROM nginx:1.31.8-alpine-slim`, `HEALTHCHECK` |
 | Cosa finisce dentro l'immagine | `Dockerfile` | `COPY . /tmp/build` e i `cp -r /tmp/build/...` |
-| Qual e' l'alternativa multi-stage | `Dockerfile.multistage` | `FROM alpine/git as cloner` |
 | Come si avvia con Docker Compose | `docker-compose.yml` | servizio `cv-website`, porta `8080:80` |
 | Chi builda l'immagine da GitHub | `build-from-github.sh` | `docker buildx build --platform` |
 | Chi testa il container | `test-deployment.sh` | `test_container()` |
@@ -56,7 +55,7 @@ risponde alla tua domanda, apri il file e cerca il simbolo. Tre letture, non di 
 | Chi rigenera i PDF del CV a ogni build | `.github/workflows/deploy.yml` | step `Generate CV PDFs` (prima della build Docker) |
 | Chi valida HTML, JS e doc su ogni push/PR | `.github/workflows/ci.yml` | job `html`, `js`, `docs` |
 | Configurazione html-validate | `.htmlvalidate.json` | preset `recommended`, stile off |
-| File esclusi dalla validazione HTML | `.htmlvalidateignore` | `test-projects.html`, `FoodDelivery/` |
+| File esclusi dalla validazione HTML | `.htmlvalidateignore` | oggi solo `FoodDelivery/` |
 | Configurazione ESLint (solo parser) | `eslint.config.js` | flat config, nessuna regola |
 | Chi verifica che i doc non derivino dal codice | `scripts/check-docs.mjs` | `FORBIDDEN`, `ALLOWED_PATHS`, exit 1 |
 | Aggiornamenti automatici delle dipendenze | `.github/dependabot.yml` | voci `docker`, `docker-compose`, `github-actions`, `npm` (`/scripts`) |
@@ -69,8 +68,7 @@ risponde alla tua domanda, apri il file e cerca il simbolo. Tre letture, non di 
 | PDF del CV scaricabili dal sito | `filippomoscatelli_it.pdf`, `filippomoscatelli_en.pdf` | generati da `scripts/generate-pdfs.mjs`, link in `updateCVLink()` |
 | Altre versioni del CV (solo su git, non servite) | `Altre versioni pdf/` | `Filippo-moscatelli-CV.pdf`, `filippomoscatelli_it.pdf`, `filippomoscatelli_en.pdf` |
 | Favicon | `cv.svg`, `cv.png` | `<link rel="icon">` in `index.html` |
-| Variabili d'ambiente previste (solo nomi, nessun valore) | `.env.example` | `IMAGE_NAME`, `DOMAIN` |
-| Pagina di test dello JSON progetti | `test-projects.html` | `testProjectsJSON()` |
+| Variabili d'ambiente previste (solo nomi, nessun valore) | `.env.example` | `IMAGE_NAME`, `IMAGE_TAG`, `LOCAL_PORT`, `DOMAIN` |
 | Pagina dedicata al progetto Food Delivery | `FoodDelivery/index.html` | `FoodDeliveryLanguageManager` |
 | Screenshot dell'app Food Delivery | `FoodDelivery/Kotlin/`, `FoodDelivery/React/` | immagini `.png` |
 
@@ -101,7 +99,8 @@ risponde alla tua domanda, apri il file e cerca il simbolo. Tre letture, non di 
   `10.0.0.5:8083 -> 80`). Dopo il merge serve `docker compose pull && docker compose up -d`
   sul master: la CI pubblica l'immagine, non aggiorna il sito.
 - **Versione in esecuzione**: `VERSION` viene copiato in `version.txt` dalla build, quindi
-  `/version.txt` dice cosa sta girando davvero (non il tag dell'immagine ne' la pagina Deployments).
+  `/version.txt` dice cosa sta girando davvero. E' l'unica fonte della versione: `js/config.js`
+  e `js/main.js` non la duplicano piu'.
 - **Dipendenze**: il sito non ha dipendenze npm. L'unico `package.json` e' in `scripts/`
   (`puppeteer-core`) e serve solo a generare i PDF: non entra nell'immagine (`.dockerignore`
   esclude `scripts/` e `**/node_modules`).
@@ -111,18 +110,16 @@ risponde alla tua domanda, apri il file e cerca il simbolo. Tre letture, non di 
 - `js/analytics.js` silenzia gli errori (`track()` esce senza log se Umami non e' pronto): viola la
   regola "no fallback silenziosi" di `docs/CONVENTIONS.md`.
 - `FoodDelivery/index.html` reimplementa la lingua invece di riusare `js/language.v2.js`:
-  due sistemi di traduzione da mantenere.
+  due sistemi di traduzione da mantenere, ed e' l'unica pagina esclusa da html-validate.
 - `index.html` contiene script inline (link PDF, auto-detect da URL, fallback traduzioni) oltre ai
-  moduli: la sezione "moduli" da sola non spiega tutta la pagina.
+  moduli: la sezione "moduli" da sola non spiega tutta la pagina, ed e' cio' che impedisce di
+  stringere la CSP oltre `'unsafe-inline'`.
+- `index.html` ha due URL LinkedIn diversi dal resto del sito: il link visibile e il JSON-LD
+  usano `filippo-moscatelli-52b566202`, mentre `js/config.js` e `js/print-cv.js` usano
+  `filippomoscatelli`. Da decidere quale sia l'handle buono.
 - I PDF di root e quelli in `Altre versioni pdf/` hanno lo stesso nome ma dimensioni diverse:
   due versioni coesistono, e `index.html` linka quelli di root.
-- `AppConfig.projects.featured` (`js/config.js`) elenca 3 progetti "featured", ma la sezione
-  progetti arriva da `data/projects.json` (4 voci): la lista featured non e' usata dal rendering.
-- `AppConfig.app.version` (`js/config.js`, `2.0.0`) non segue `VERSION`: due numeri di versione
-  nello stesso repo.
-- `AppConfig.seo.canonical` punta a `filippomoscatelli.it`, mentre il sito e' `.com`.
-- `make test` stampa l'esito ma non esce in errore: un health check fallito non fa fallire `make`.
 - `Dockerfile` copia i PDF di root (`cp -r /tmp/build/*.pdf`): `Altre versioni pdf/` resta su git
   e non viene pubblicata dal sito.
-- `test-projects.html` e `FoodDelivery/` sono esclusi da html-validate (`test-projects.html` perche'
-  pagina di test manuale, `FoodDelivery/` perche' ha un suo HTML non ancora ripulito).
+- `AppConfig.projects.featured` (`js/config.js`) elenca 3 progetti "featured", ma la sezione
+  progetti arriva da `data/projects.json` (4 voci): la lista featured non e' usata dal rendering.
