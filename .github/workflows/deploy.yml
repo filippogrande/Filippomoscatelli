@@ -10,12 +10,6 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      deploy_to_k8s:
-        description: "Deploy to Kubernetes"
-        required: false
-        default: "false"
-        type: boolean
 
 env:
   IMAGE_NAME: filippogrande/cv-website
