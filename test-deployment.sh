@@ -160,7 +160,7 @@ main() {
     log_success "🎉 All tests passed! The website is ready for deployment."
     echo ""
     echo "Next steps:"
-    echo "- Deploy to Kubernetes: make deploy"
+    echo "- Deploy sul master: docker compose pull && docker compose up -d"
     echo "- Push to registry: docker push $IMAGE_NAME:latest"
     echo "- Access website: http://localhost:$TEST_PORT"
 }
